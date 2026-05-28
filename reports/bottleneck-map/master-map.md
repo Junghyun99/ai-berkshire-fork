@@ -1,6 +1,6 @@
 # 供应链瓶颈总地图（持续更新）
 
-最后更新：2026-05-28 第三十五轮（日间扫描）：TrendForce 2026-04-20新报告入库——AI光收发器市场$26B（+57% YoY），"component shortages"被定性为首要扩容瓶颈（新权威来源，支持EML/InP S级）；变压器Bloomberg April 1新源确认"超过一半美国数据中心推迟/取消"；WF6无breaking news、距"中"临界约3-4周；Chemring June 2财报4天后（无预告）；Centrus DOE续约33天倒计时无公告；稀土/钨/锑/NC全部S/A/B级状态不变；无新可投资标的；不生成报告文件。本轮之前：第三十四轮（晚间扫描）：无新突破性信号；Almonty(AII.TO)本周-11%至约C$24.35（近月-20%），Sphene Capital新发Buy，Diamond Equity Research上调FY2027 EPS至US$1.68
+最后更新：2026-05-28 第三十六轮（11:30扫描）：3项新信号——①CoWoS(A级)缓解路线首次可见：SK Hynix+Intel EMIB 2.5D封装良率达90%（TrendForce 2026-05-11），SK Hynix Indiana封装厂2028投产，2028+替代路线进入视野，但近期CoWoS A级不变；②Ga/Ge价格更新：镓$2,269/kg（+141% YTD），锗US仓库$5,800/kg（中国内$2,418/kg，8.5x裂缝），哈萨克斯坦Padvolar小规模锗产出H2 2026；③UAMY Stibnite Hill矿山采矿重启补录（2026-04-02，早于预期，前次漏录）。所有watchlist评级不变；Chemring June 2财报5天后。本轮之前：第三十五轮（日间扫描）：TrendForce 2026-04-20新报告入库——AI光收发器市场$26B（+57% YoY），"component shortages"被定性为首要扩容瓶颈；变压器Bloomberg April 1新源确认
 
 ---
 
@@ -202,8 +202,17 @@
 ---
 
 ### 4. CoWoS先进封装
-**核心数据**：TSMC CoWoS月产能从~80K片扩至年底约140K片，Nvidia预订60%  
-**紧张程度**：高——TSMC满产，OSAT（ASE、Amkor）在紧急扩产
+**核心数据**：TSMC CoWoS月产能从~80K片扩至年底约140K片，Nvidia预订60%（+Broadcom/AMD 26%≈总占用86%）  
+**紧张程度**：高——TSMC满产，OSAT（ASE、Amkor）在紧急扩产  
+**【2026-05-28 第三十六轮 2028+替代路线首次可见】SK Hynix + Intel EMIB 2.5D封装**：
+- Intel EMIB（Embedded Multi-die Interconnect Bridge）良率已达**90%+**（2026年4月），具备商业竞争水准
+- Intel 2026年初发布AI封装测试车辆，结合EMIB + HBM4
+- SK Hynix Indiana West Lafayette封装厂（$38.7亿，**2028年投产**）+ 清州KRW 19万亿设施
+- EMIB是CoWoS的潜在2.5D替代路线；与CoWoS区别：EMIB使用嵌入式硅桥而非全晶圆级硅中介层
+- **近期（2026-2027）CoWoS A级维持**：无商业产能；SK Hynix封装厂2028年才投产
+- **中期（2028+）**：第一条有良率支撑的替代路线进入视野，CoWoS垄断程度将有所弱化
+- **对IC基板/T-glass的影响**：EMIB同样需要IC载板，Nittobo等L3材料供应商不受替代路线冲击
+- 来源：[TrendForce SK Hynix Intel EMIB 2026-05-11](https://www.trendforce.com/news/2026/05/11/news-sk-hynix-reportedly-tests-intel-emib-2-5d-packaging-with-hbm-amid-tsmc-cowos-tightness/) | [Tom's Hardware](https://www.tomshardware.com/tech-industry/semiconductors/sk-hynix-shares-surge-to-all-time-high-on-reports-of-intel-emib-partnership)
 
 ### 5. HBM（高带宽内存）
 **核心数据**：SK Hynix + Samsung + Micron全部产能售罄至2026年底，部分客户已锁定2027年配额  
@@ -426,9 +435,11 @@
   - 中国对日镓出口 2026年1-2月：**0 kg**（vs 2025年同期8,007 kg，同比-100%）
   - 中国对日锗出口 2026年1-2月：**0 kg**（vs 2025年同期400 kg，同比-100%）
   - 中国2026年1月起对日本实施涵盖镓/锗/锑/石墨/稀土/钨的国家管制出口许可，**无类似对美暂停豁免**
-  - 镓价格：$2,100/kg（+123% since 2025年初）
+  - 镓价格：**$2,269.40/kg（April 30, 2026，+141% since 2025年初）**【2026-05-28更新，前次$2,100/+123%】
+  - 锗US仓库价：**$5,800/kg**（vs 中国国内$2,418/kg，西方溢价8.5x）；锗YTD +47.88%，since 2025年初+108.64%【2026-05-28首次量化】
   - 住友电工、三菱电机称"库存充足"——但实测已2个月零进口，消耗时间线未披露
 - **中国占全球镓产量99%**（2024年），无西方短期替代来源
+- **【2026-05-28 西方小规模来源首现】**：哈萨克斯坦Padvolar炼厂H2 2026起锗年产15吨；德国Stade炼厂2027年重启+40吨/年镓。合计体量极小（锗15t vs 全球~150t需求），不影响B+评级，但为长期供给多元化路径首批迹象
 - 应用场景：GaN（氮化镓）→ EV功率芯片、5G RF、数据中心电源转换；GaAs（砷化镓）→ RF前端、光器件
 
 **对美 vs 对日关键区别**：
@@ -545,4 +556,5 @@
 
 | 2026-05-28 第三十三轮（午后扫描） | **4项更新：EML新独立来源+InP月度数据+钨Kazakhstan风险核实+Almonty投票日期修正** | ①**EML激光器（条目2）新独立来源**：TechTimes 2026-05-27报道Nvidia $4B锁仓（$2B各给Lumentum和Coherent）；非Nvidia EML买家交期推至2027年后；Lumentum是唯一批量交付200G-per-lane EML供应商；分析师预计2026年200G EML双位数涨价；条目来源更新，S级不变。②**InP衬底（条目1）月度供需量化**：月需求2026年700-800k片 vs 月产能约400k片（缺口约50%）；AXT对部分客户提价~70%；S级不变。③**钨（条目0c）中期竞争风险核实**：哈萨克斯坦Severniy Katpar（Kaz Resources）：14亿吨资源，12,000 MT/年理论产能，$1.1B开发成本，Trump儿子投资，ExIm Bank/DFC融资兴趣。关键：最少5-8年到投产，2031年前不影响S级或Almonty近期护城河；写入0c条目为中期风险注释。④**Almonty Phase 2投票日期修正（master-map 0c及watchlist）**：多来源确认Phase 2投票为6月8日（非9日），AGM为6月9日。⑤背景信号：Goldman Sachs将2026年DRAM供需缺口预测从3.3%升至4.9%（15年最严重短缺）；Centrus续约无新公告（33天倒计时）；Chemring June 2财报5天后（无预告）；全部S/A/B级评级不变。生成daily/2026-05-28-pm.md |
 | 2026-05-28 第三十四轮（晚间扫描） | **无新信号；2项watchlist状态更新** | 覆盖五大超级趋势全部方向（英文+中文）。①**WF6（A级3b）**：无breaking news；"2026年中"临界状态不变；②**InP/EML（S级）**：无新信号，IntelliEPI CEO"InP shortage is bottleneck for entire AI infrastructure"为已追踪信号；③**变压器（S级）新背景数据**：美国GSU（发电机升压变压器）需求自2019年+274%，配电变压器+116%；$20亿已投向北美变压器产能扩张（2028年新增），不改变S级近期评级；④**Almonty（★★）两项分析师更新**：股价本周约-11%至C$24.35（近月约-20%，距52周高约-25%）；**Sphene Capital GmbH新发Buy评级**（新增第9位分析师）；**Diamond Equity Research上调FY2027 EPS至US$1.68（前US$1.43，+17.5%）**；Forward P/S约7.2x（$3.37B/$470M，略好于前次8x）；仍高于分析师平均目标C$20.46（16%上行空间），不改变★★评级；⑤**Chemring June 2财报**：官方网站再次确认6月2日（4天后）；第三方源仍有误报"June 9"，以Chemring官方investor relations为准；⑥**Centrus DOE续约**：无新公告，32天倒计时；⑦Nittobo/UAMY/Kanto Denka/稀土/镓/锗/钨/锑全部S/A/B瓶颈状态不变。**无新可投资标的。不生成报告文件。** |
+| 2026-05-28 第三十六轮（11:30扫描）| **3项新信号；生成信号扫描报告** | ①**CoWoS(A级) 2028+缓解路线首次可见**：SK Hynix + Intel EMIB 2.5D封装合作（TrendForce 2026-05-11），Intel EMIB良率90%+，SK Hynix Indiana $38.7亿封装厂2028投产，近期CoWoS A级不变，2028+替代路线首次进入时间窗口；写入条目4。②**Ga/Ge（B+）价格更新**：镓$2,269.40/kg（+141% YTD，April 30），锗US仓库$5,800/kg（中国$2,418/kg，8.5x裂缝）；哈萨克Padvolar H2 2026锗年产15吨+德国Stade 2027重启；均为小规模，B+不变；写入条目14。③**UAMY Stibnite Hill矿山采矿重启补录**（2026-04-02，早于预期，前次漏录）；写入watchlist UAMY。生成报告：11-30-信号扫描.md |
 | 2026-05-28 第三十五轮（日间扫描） | **无新信号；2项新来源入库，无报告文件** | 覆盖五大超级趋势全部方向（英文+中文）。①**EML/光模块（S级2）TrendForce 2026-04-20报告入库**：AI光收发器市场2026年达$26B（+57% YoY），TrendForce明确将"component shortages（EML、CW激光器）"定性为全行业扩容"Primary Capacity Expansion Bottleneck"；此权威来源此前未入库，写入条目2 EML来源列表；EML S级评级不变，但获行业研究机构最高级别交叉验证 [来源：TrendForce 2026-04-20](https://www.trendforce.com/presscenter/news/20260420-13017.html)；②**变压器（S级3）Bloomberg April 1 "超过一半美国数据中心推迟/取消"**：PowerMag新文章补录为额外来源，S级不变；③**WF6**：无breaking news，距"6-7月临界"约3-4周，Semiconductor Digest特种气体供给收紧文章为已知状态背景确认；④**Chemring June 2财报**：4天后（无预告，状态不变）；⑤**Centrus DOE续约**：33天倒计时，Phase III $110M确认至6/30，DOE持8年期权待行使，无新公告；⑥**Almonty Phase 2**：June 8投票，June 1新CFO就职，C$24-27区间（9位分析师全Buy）；⑦稀土/钨/锑/NC/NF3全部S/A/B级状态不变。**无新可投资标的。不生成报告文件。** |

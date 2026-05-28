@@ -1,6 +1,6 @@
 # 瓶颈猎手观察名单（持续更新）
 
-最后更新：2026-05-28 第三十五轮（日间扫描）：全部评级不变；TrendForce 4/20报告新入库（EML/光模块S级额外权威来源）；无新状态变化。本轮之前：第三十四轮（晚间扫描）：Almonty本周-11%至约C$24.35，Sphene Capital新Buy，Diamond Equity Research FY2027 EPS上调至US$1.68
+最后更新：2026-05-28 第三十六轮（11:30扫描）：全部评级不变；3项更新——①UAMY补录Stibnite Hill矿山采矿重启（2026-04-02，前次漏录）；②Centrus Oklo JV升级状态（从"洽谈"到"2026-03-09正式公告"）；③各催化剂倒计时更新。本轮之前：第三十五轮（日间扫描）：全部评级不变；TrendForce 4/20报告新入库（EML/光模块S级额外权威来源）
 
 下次复查：**June 2 Chemring半年财报**（**4天后**，最紧迫）；**本周核实Kanto Denka FY2027指引原始公告**（高优先级）；**WF6中断新闻**（<3周临界，随时可能触发）；**June 1** Almonty新CFO Jorge Beristain就职；**June 8** Almonty Phase 2投票+首批Q2产量数据；**June 9** Almonty AGM；Centrus DOE续约（June 30到期，33天，若June 15前无公告升为实质风险事件）；日本GaN/GaAs厂商库存消耗时间线披露
 
@@ -279,7 +279,7 @@ FY2026全年业绩（2026-05-15发布）同时披露FY2027经营指引：
 - ✅ DOE 任务指令 $900M HALEU（2026-01-05确认，固定价格任务订单，Piketon Ohio扩产） + $2.3B 商业 LEU 积压（收入可见度高）
 - ✅ Piketon 设施已投产（2025-12），12 MT/年产能
 - ✅ **Oak Ridge $560M扩产（2026-05-26新增）**：投资超$5.6亿将Oak Ridge, Tennessee离心机工厂升级为高速率制造，创430+新岗位；Fluor负责工程/项目管理；Palantir AI平台识别约$3亿潜在节省
-- ✅ Oklo JV 洽谈（HALEU 脱转化服务，Piketon 成燃料中枢）
+- ✅ **Oklo JV 正式公告（2026-03-09）**：Oklo与Centrus宣布就Piketon俄亥俄州站点的HALEU脱转化服务"计划中的JV"——两家公司已同意开展JV谈判（非约束性，但已公开宣示）；JV将利用Centrus富集设施旁边的Oklo 1.2 GW电力园区；前次记录"洽谈"低估了公告级别。来源：[PRNewswire 2026-03-09](https://www.prnewswire.com/news-releases/oklo-centrus-announce-planned-joint-venture-to-advance-nuclear-fuel-services-in-ohio-302708075.html)
 - ✅ 2026 年收入指引上调至 $450-500M（已确认）
 - ⚠️ **Q1 2026净利润大幅下滑（2026-05-26新增）**：收入$76.7M(+5% YoY)，但净利润从$27.2M降至$10M——同比-63%。需关注盈利质量下降是否结构性
 - ⚠️ **【2026-05-27 午后 紧急：DOE Phase III到期6月30日（约34天）】**：DOE HALEU Phase III合同到期日2026-06-30。若无续约公告则HALEU生产可能暂停，影响$450-500M年收入指引。**本周必须搜索DOE续约公告**。ASP Isotopes（ASPI）2028年HALEU交付MOU为信号，但不影响Centrus近期垄断
@@ -300,6 +300,7 @@ FY2026全年业绩（2026-05-15发布）同时披露FY2027经营指引：
 **财务快照**：FY2025收入$39.3M（+163% YoY）；毛利率25%；净亏损$4.34M；2026年收入指引$125M（合同积压$354M）；**Q1 2026 miss**：收入$6.8M，净亏$11.3M，毛利率16%  
 **2026-05-26 11:10 操作更新（重要）**：
 - ✅ Thompson Falls冶炼厂扩产**已于2026年4月完成**（早于7月预测），nameplate产能翻3倍至300-400 t/月；**【2026-05-27 第23轮 Q1财报电话会修正】现代化资金支持目标约400-500 t/月成品（高于早期nameplate 300-400 t/月）**；7月中旬目标是新炉灶80%负荷爬坡
+- ✅ **【2026-05-28 第三十六轮 补录】Stibnite Hill矿山采矿重启（2026-04-02，早于预期）**：Thompson Falls矿产地Stibnite Hill露天采矿因冬季较暖比原计划提前重启；已移运800+吨锑矿石至加工线；新增GPS基站优化矿脉勘探。矿山采矿提前启动 = 冶炼扩产侧有矿石供应保障，配套冶炼厂满负荷爬坡计划。来源：[StockTitan 2026-04-27](https://www.stocktitan.net/news/UAMY/united-states-antimony-announces-restart-of-mining-operations-on-4k5cfz5l8zna.html)
 - ✅ **水冶（hydromet）路径新增**：玻利维亚设施产出~150 t/月高纯锑片运至Montana加工；配合Montana nameplate，综合潜在吞吐量达~700-1,000 t/月
 - ✅ **$44M DOE资助申请**：申请将玻利维亚水冶流程复制至美国国内，进一步降低对玻利维亚的地缘依赖
 
