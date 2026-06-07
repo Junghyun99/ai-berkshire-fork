@@ -879,3 +879,80 @@ FY2026全年业绩（2026-05-15发布）同时披露FY2027经营指引：
 - Q1 2026：营收$26.9M（+39% YoY），净亏损$1.6M，毛利率29.6%（改善中）
 - 估值维持红灯：市值~$6.94B，TTM收入~$100-108M，P/S ~65-69x >> 30x，增速+39% < 100%豁免门槛
 - **★★维持**。关键跟踪事项：中国商务部许可证批准状态；北京同美产能爬坡进度
+
+---
+
+## 【2026-06-07 23:00 观察名单更新】
+
+### ALM（Almonty Industries）★★★ — 新催化剂：Russell指数纳入6/29 + 股价-21%入场区间改善
+
+**【2026-06-07 23:00 重大状态更新】**
+
+**新事件**：
+- $700M可转债（2.25%，2031年到期，转股价$27.40，溢价32.5%）超额认购；结算6月9日（明日）
+- 股价暴跌-21%至USD ~$16.49（C$22.70）——市场对稀释的恐慌反应
+- **6月29日纳入Russell 1000 + Russell 3000**：预估被动资金净买入~1,300万股（约3倍ADTV），机械催化剂时间点精确
+- Q1 2026业绩（5/11）：营收$25.4M（+221% YoY），调整后EBITDA $6.1M（vs Q1 2025 -$2.4M），经营现金流+$9.7M（vs Q1 2025 -$4.4M）
+- Sangdong矿3月17日完成商业投产委任仪式，从开发阶段正式过渡至商业运营
+
+**更新后估值**（基于USD $16.49）：
+
+| 指标 | 数据 | 信号灯 |
+|------|------|-------|
+| 市值（基本，~90M股估） | ~$1.48B USD | — |
+| 年化营收（Q1×4） | ~$101.6M | — |
+| 当前PS（年化Q1） | ~14.6x（基本）/ ~18.7x（完全稀释） | 🟡 黄灯（增速221%>100%，PS豁免红线） |
+| 前瞻PE（2027E $1.68 EPS，Diamond Equity，估计） | **9.8x** | 🟢 绿灯 |
+| 10年25xPE退出（完全稀释） | 需$197M净利，2027E $193M（可达），年化回报~10% | 🟡 边界合格 |
+
+**信号强度评级**：★★★（维持）；**置于"Russell纳入前高度关注"状态**
+- 等6/9 AGM无负面意外 → 评估升至★★★★
+- 等Q2营收确认Sangdong爬坡 → 升至★★★★
+
+**主要风险**：①$700M CB稀释（+$100M超额选择权，最高$800M）；②2027E EPS来自单一分析师，未多方验证；③Sangdong产量爬坡可能延迟；④Russell纳入日"消息兑现抛售"风险
+
+**核心看多逻辑**：
+1. 钨价+500%（自2025年2月中国出口许可证管制），近一周再+20%，China MRL法律框架6月15日生效强化结构供给缺口
+2. Russell指数纳入6/29：被动资金强制买入，时间点精确，与AGM结算后稀释恐慌消散可能形成双向共振
+3. 前瞻PE 9.8x——在具备定价权的真实瓶颈标的中属低估区间
+
+*来源：[ad-hoc-news.de June 9 Doubleheader](https://www.ad-hoc-news.de/boerse/news/ueberblick/june-9-doubleheader-almonty-s-convertible-bond-settlement-and-agm-collide/69496145) | [BusinessWire Q1 2026](https://www.businesswire.com/news/home/20260511950425/en/Almonty-Industries-Reports-First-Quarter-2026-Financial-Results)*
+
+---
+
+### 4047.T（Kanto Denka Kogyo）★★★★ — 双重瓶颈确认：WF₆ + NF₃唯一供应商
+
+**【2026-06-07 23:00 论点升级】**
+
+**新信息**：Mitsui Chemicals因成本压力和竞争，**已于2026年3月完全退出NF₃生产**。Kanto Denka现为日本唯一主要NF₃供应商（此前2025年8月7日工厂火灾后，两条产线于2026年1月6日全面恢复满产）。
+
+| 产品 | 瓶颈级别 | 市场结构 | 价格动向 |
+|------|---------|---------|---------|
+| WF₆（钨六氟化物） | S级 | 少数寡头，库存6月见底 | +70-90%（已宣布） |
+| NF₃（三氟化氮） | **S级（新升级）** | **日本唯一主力供应商**（Mitsui退出3月） | 供应紧张，价格待确认 |
+
+NF₃主要客户：TSMC、Samsung、Micron、Kioxia、Rapidus——几乎覆盖全部先进节点晶圆厂。
+
+**评级**：★★★★（维持）；**论点厚度大幅增加（从单一WF₆→双重S级）**
+- 入场区间¥3,800-4,200（维持，等6/8东京开盘观察市场消化）
+- 风险：日本经济产业省正推动从韩国扩大NF₃进口作为替代（12-18个月缓解风险）
+
+*来源：[Sourceability NF₃ plant fire](https://sourceability.com/post/supply-chain-shocks-nf3-fire-natcast-fallout) | [Mitsui退出背景](https://www.ic-pcb.com/fatal-fire-halts-nf-production-at-major-japanese-supplier-raising-semiconductor-supply-concerns.html)*
+
+---
+
+### CHG.L（Chemring Group）★★★★ — 伊朗战争需求量化
+
+**【2026-06-07 23:00 论点强化】**
+
+**新数据（H1 2026，截至4/30）**：
+- 订单簿：£14亿（历史记录）
+- 三个能量剂新工厂（芝加哥/苏格兰/挪威）：投产后"连续运营5年才能补充伊朗战争耗用"
+- 分析师目标价：隐含14.31%上行空间（DirectorsTalk）
+- 伊朗战争背景：美国战斧+爱国者库存大幅消耗，参议员Kelly表示补充需"数年"
+
+**评级**：★★★★（维持），当前价格484p
+- 伊朗战争叠加西方结构性重整军备周期→需求确定性显著提升
+- 三工厂运营5年的量化表述首次出现，比此前的"多年"定性更具说服力
+
+*来源：[ADVFN CHG.L业绩](https://uk.advfn.com/market-news/article/16805/chemring-reports-higher-revenue-and-record-order-book-as-defence-spending-drives-demand-chg) | [Massif Substack战争需求](https://massif.substack.com/p/chemring-war-demand-and-old-lessons)*
