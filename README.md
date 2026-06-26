@@ -1,3 +1,5 @@
+中文 | [English](README_EN.md)
+
 # AI Berkshire - AI 时代的价值投资研究框架
 
 > "Price is what you pay, value is what you get." — Warren Buffett
@@ -614,6 +616,8 @@ cp ai-berkshire/skills/*.md ~/.claude/commands/
 ## Star History
 
 如果这个项目对你有帮助，请给一个 Star 支持！
+
+[![Star History Chart](https://api.star-history.com/svg?repos=xbtlin/ai-berkshire&type=Date)](https://star-history.com/#xbtlin/ai-berkshire&Date)
 
 ## License
 

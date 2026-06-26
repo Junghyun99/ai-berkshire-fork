@@ -618,7 +618,9 @@ This project is for educational and research purposes only and does not constitu
 
 ## Star History
 
-If this project has been helpful to you, please give it a Star!
+如果这个项目对你有帮助，请给一个 Star 支持！
+
+[![Star History Chart](https://api.star-history.com/svg?repos=xbtlin/ai-berkshire&type=Date)](https://star-history.com/#xbtlin/ai-berkshire&Date)
 
 ## License
 
@@ -629,6 +631,3 @@ MIT License
 > "The best investment you can make is in yourself." — Warren Buffett
 >
 > AI Berkshire: Giving everyone their own investment research team.
-
-
-[![Star History Chart](https://api.star-history.com/svg?repos=xbtlin/ai-berkshire&type=Date)](https://star-history.com/#xbtlin/ai-berkshire&Date)
