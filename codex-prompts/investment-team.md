@@ -1,5 +1,5 @@
 ---
-description: "AI Berkshire slash entry for 投研团队：四角色并行分析框架."
+description: "AI Berkshire slash entry for 투자 리서치 팀: 4개 역할 병렬 분석 프레임워크."
 argument-hint: $ARGUMENTS
 ---
 

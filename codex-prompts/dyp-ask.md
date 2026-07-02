@@ -1,5 +1,5 @@
 ---
-description: "AI Berkshire slash entry for 段永平问答：以他的方式思考."
+description: "AI Berkshire slash entry for 돤융핑(段永平) 문답: 그의 방식으로 사고하기."
 argument-hint: $ARGUMENTS
 ---
 

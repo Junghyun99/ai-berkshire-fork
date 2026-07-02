@@ -1,5 +1,5 @@
 ---
-description: "AI Berkshire slash entry for 管理层纵深研究：买股票就是买人."
+description: "AI Berkshire slash entry for 경영진 심층 연구: 주식을 사는 것은 사람을 사는 것이다."
 argument-hint: $ARGUMENTS
 ---
 

@@ -1,4 +1,4 @@
-English | [中文](README.md)
+English | [한국어](README.md)
 
 [![GitHub Trending](https://trendshift.io/api/badge/repositories/63696)](https://trendshift.io/repositories/63696)
 

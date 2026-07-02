@@ -1,5 +1,5 @@
 ---
-description: "AI Berkshire slash entry for 巴菲特价值投资买入前 Checklist."
+description: "AI Berkshire slash entry for 버핏 가치투자 매수 전 Checklist."
 argument-hint: $ARGUMENTS
 ---
 

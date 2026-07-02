@@ -1,5 +1,5 @@
 ---
-description: "AI Berkshire slash entry for 投资研究：巴菲特-芒格-段永平-李录 四大师综合分析框架."
+description: "AI Berkshire slash entry for 투자 리서치: 버핏-멍거-돤융핑-리루 4대 거장 종합 분석 프레임워크."
 argument-hint: $ARGUMENTS
 ---
 

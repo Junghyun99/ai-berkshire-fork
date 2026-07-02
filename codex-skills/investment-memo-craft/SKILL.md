@@ -75,11 +75,11 @@ This is a Codex-only hand-written skill kept under `codex-skills/` for simple in
 
 For long-form research reports, prefer a calm stepped layout:
 
-- Use a simple title: `公司名（ticker）研究报告`. Avoid adding "四大师综合" or "投资备忘录" to the title unless the user asks for that framing.
-- Use dated filenames for reports: `公司名研究报告-YYYYMMDD.md`.
+- Use a simple title: `회사명(ticker) 연구보고서`. Avoid adding "4대 거장 종합" or "투자 메모" to the title unless the user asks for that framing.
+- Use dated filenames for reports: `회사명-연구보고서-YYYYMMDD.md`.
 - Start with one compact metadata block: research date, price, market cap, key multiples, and a one-sentence thesis.
 - Use horizontal separators between major sections.
-- Use Chinese step headings for readability, for example "第一步：核心数据总览", "第二步：生意本质分析", and "第八步：最终决策与行动清单".
+- Use Korean step headings for readability, for example "1단계: 핵심 데이터 총람", "2단계: 사업 본질 분석", and "8단계: 최종 결정과 행동 목록".
 - Keep section titles short and concrete; avoid dense numbering such as "2.3.1" unless the document is technical.
 - Use quote blocks for master-style questions, not inline bold paragraphs.
 - Treat GitHub Markdown as the typography system: use heading levels, tables, quote blocks, and bold text; do not add HTML/CSS font styling unless the user explicitly asks for a non-GitHub artifact.
@@ -94,37 +94,37 @@ For long-form research reports, prefer a calm stepped layout:
 
 For AI Berkshire company reports, use this order unless the user asks otherwise:
 
-1. `AI研究偏见自觉`
+1. `AI 리서치 편향 자각`
    - State the information-richness rating, consensus trap, bias checklist, and AI research limitation.
 
-2. `第一步：核心数据总览`
+2. `1단계: 핵심 데이터 총람`
    - Show segment revenue, key operating assets or units, 3-5 year financial trend, and cross-source validation.
 
-3. `第二步：生意本质分析`
+3. `2단계: 사업 본질 분석`
    - Define the business in one sentence, map revenue/cost/customer/asset life/growth drivers, and explain the real profit variables.
 
-4. `第三步：护城河评估`
+4. `3단계: 해자 평가`
    - Score moat sources, explain evidence, and state what can destroy or weaken the moat.
 
-5. `第四步：逆向思考与风险清单`
+5. `4단계: 역발상과 리스크 목록`
    - Put the bear case in serious language. Include failure paths, probability, impact, and observable warning indicators.
 
-6. `第五步：管理层评估`
+6. `5단계: 경영진 평가`
    - Judge management through capital allocation, governance, incentives, dividends/buybacks, leverage, and whether the business is system-driven.
 
-7. `第六步：行业与文明趋势`
+7. `6단계: 산업과 문명 트렌드`
    - Separate broad trend from investable economics and explain where the company captures value.
 
-8. `第七步：估值与安全边际`
+8. `7단계: 밸류에이션과 안전마진`
    - Show current valuation, reverse-DCF intuition, scenario valuation, comparable companies if useful, and explicit price bands.
 
-9. `第八步：最终决策与行动清单`
+9. `8단계: 최종 결정과 행동 목록`
    - Put the full decision here, not at the top: summary table, advice for empty-handed investors, advice for holders, add/sell triggers, and master-style comments if useful.
 
-10. `AI分析置信度 vs 投资确定性`
+10. `AI 분석 신뢰도 vs 투자 확실성`
     - Separate data confidence from investment certainty.
 
-11. `数据来源与审计记录`
+11. `데이터 출처와 감사 기록`
     - List key sources and concise audit results. Keep command lines out of the report unless explicitly requested.
 
 ## Quality Bar

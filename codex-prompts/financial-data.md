@@ -1,5 +1,5 @@
 ---
-description: "AI Berkshire slash entry for 财务数据获取与交叉验证规范."
+description: "AI Berkshire slash entry for 재무 데이터 수집 및 교차 검증 규범."
 argument-hint: $ARGUMENTS
 ---
 

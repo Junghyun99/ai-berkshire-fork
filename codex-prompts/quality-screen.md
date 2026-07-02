@@ -1,5 +1,5 @@
 ---
-description: "AI Berkshire slash entry for 去劣筛选：7条指标快速排除非一流公司."
+description: "AI Berkshire slash entry for 부실기업 걸러내기: 7가지 지표로 일류 기업이 아닌 기업을 빠르게 배제."
 argument-hint: $ARGUMENTS
 ---
 
