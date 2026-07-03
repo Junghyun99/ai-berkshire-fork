@@ -7,9 +7,9 @@ DEST="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}"
 mkdir -p "$DEST"
 
 for skill_dir in "$ROOT"/skills/*/; do
-  name="$(basename "$skill_dir")"
-  mkdir -p "$DEST/$name"
-  cp -R "$skill_dir." "$DEST/$name/"
+  [ -d "$skill_dir" ] || continue
+  # 소스 경로의 trailing slash 제거: BSD cp는 "src/"를 내용물 복사로 해석한다
+  cp -R "${skill_dir%/}" "$DEST/"
 done
 
 chmod +x "$ROOT"/tools/*.py "$ROOT"/tools/*.sh 2>/dev/null || true
@@ -20,6 +20,7 @@ echo "Installed Claude Code skills to $DEST"
 OLD_DEST="$HOME/.claude/commands"
 leftovers=()
 for skill_dir in "$ROOT"/skills/*/; do
+  [ -d "$skill_dir" ] || continue
   name="$(basename "$skill_dir")"
   [ -f "$OLD_DEST/$name.md" ] && leftovers+=("$OLD_DEST/$name.md")
 done
