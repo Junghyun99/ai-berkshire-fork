@@ -28,11 +28,7 @@
     "MSTR",
     "CRCL"
   ],
-  "hk_internet": [
-    "0700.HK",
-    "9888.HK",
-    "1024.HK",
-    "9992.HK"
-  ],
-  "a_share": []
+  "korea_stocks": [
+    "005930.KS"
+  ]
 }
