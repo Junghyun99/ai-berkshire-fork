@@ -8,9 +8,9 @@ English | [한국어](README.md)
 >
 > Redefining the depth and efficiency of investment research with AI.
 
-**AI Berkshire** is a collection of investment research skills compatible with both Claude Code and Codex. It systematizes the methodologies of four value investing masters — Buffett, Munger, Duan Yongping, and Li Lu — and delivers professional-grade research through AI Agents.
+**AI Berkshire** is a collection of investment research skills for Claude Code. It systematizes the methodologies of four value investing masters — Buffett, Munger, Duan Yongping, and Li Lu — and delivers professional-grade research through AI Agents.
 
-One person + Claude Code / Codex = an entire investment research team.
+One person + Claude Code = an entire investment research team.
 
 [Track Record](#real-track-record) · [Why Not Just Ask AI?](#why-cant-you-just-ask-ai-directly) · [Skills](#skills-overview-18-skills) · [Quick Start](#quick-start) · [Reports](#live-research-reports) · [Design Philosophy](#design-philosophy)
 
@@ -222,35 +222,13 @@ Ask AI directly, and you have one context window. Four parallel Agents means 4×
 
 ## Quick Start
 
-### 1. Install an AI Client
+### 1. Install Claude Code
 
-This repository keeps one canonical workflow and provides Claude Code commands plus Codex skills. Install the client you plan to use.
-
-For Claude Code users:
+> This fork is maintained for Claude Code only. The upstream Codex compatibility layer (`codex-skills/`, `codex-prompts/`) has been removed — see the [upstream repository](https://github.com/xbtlin/ai-berkshire) if you need Codex support.
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
-
-For Codex users:
-
-```bash
-# macOS / Linux
-curl -fsSL https://chatgpt.com/codex/install.sh | sh
-
-# Or use npm
-npm install -g @openai/codex
-
-# Or use Homebrew
-brew install --cask codex
-
-# Verify installation
-codex --version
-```
-
-Windows users can use the official PowerShell installer: `powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 | iex"`.
-
-If `codex --version` prints a version, you can continue with this project's Codex skills installation.
 
 #### Reducing Approval Prompts
 
@@ -266,33 +244,16 @@ Warning: this disables Claude Code's tool-approval guardrails. Use it only when 
 
 ### 2. Install Skills
 
-For Claude Code users:
-
 ```bash
 # Clone the repository
-git clone https://github.com/xbtlin/ai-berkshire.git
+git clone https://github.com/Junghyun99/ai-berkshire-fork.git ai-berkshire
 
 # Copy skills to Claude Code global commands directory
 cd ai-berkshire
 ./scripts/install-claude-commands.sh
 ```
 
-For Codex users:
-
-```bash
-# Clone the repository
-git clone https://github.com/xbtlin/ai-berkshire.git
-
-# Generate and install Codex skills to ~/.codex/skills
-cd ai-berkshire
-./scripts/install-codex-skills.sh
-
-# Optional: install Codex slash prompts to ~/.codex/prompts
-# for a Claude Code-like /investment-research entry point
-./scripts/install-codex-prompts.sh
-```
-
-The repository maintains three entry points: `skills/*.md` are the Claude Code command sources; `codex-skills/*/SKILL.md` are Codex skill packages generated from `skills/*.md` by `scripts/sync-codex-skills.py`; `codex-prompts/*.md` are an optional Codex slash-prompt compatibility layer.
+`skills/*.md` are the Claude Code command sources.
 
 ### 3. Use
 
@@ -325,22 +286,6 @@ Invoke directly in Claude Code:
 # Thinking Tools
 /dyp-ask Where is Pinduoduo's real moat?
 /wechat-article Meituan
-```
-
-After installing for Codex, restart Codex and refer to skills by name, for example:
-
-```text
-Use investment-research to research Tencent
-Use earnings-review to analyze PDD 2025 annual results
-Use industry-funnel to screen AI compute
-Use bottleneck-hunter to scan AI infrastructure bottlenecks
-Use wechat-article to write a Meituan investment article
-```
-
-If you install Codex slash prompts, restart Codex and search for them in the `/` menu. Codex's official custom prompt entry point usually appears as `prompts:<name>`, for example:
-
-```text
-/prompts:investment-research Tencent
 ```
 
 ---
