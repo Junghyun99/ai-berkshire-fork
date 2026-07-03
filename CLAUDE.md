@@ -8,7 +8,7 @@ Claude Code 기반의 가치투자 리서치 Skill 모음집. 4대 거장 프레
 ## 프로젝트 구조
 
 ```
-skills/          — 투자 리서치 Skill 정의(skills/{이름}/SKILL.md), ~/.claude/skills/ 에 복사해 사용
+.claude/skills/  — 투자 리서치 Skill 정의({이름}/SKILL.md), 프로젝트 스킬로 자동 로드
 tools/           — 보조 도구 (financial_rigor.py 정밀 계산)
 reports/         — 투자 리서치 보고서 출력
 assets/          — 이미지 등 정적 리소스
