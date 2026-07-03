@@ -1,3 +1,8 @@
+---
+name: thesis-tracker
+description: "투자 논지(thesis) 추적: 매수 이후의 규율 시스템. 매수 논지가 반증되고 있는지 지속 점검하고 reports/{회사명}/{회사명}-thesis.md 를 갱신."
+---
+
 # 투자 논지 추적: 매수 이후의 규율 시스템
 
 $ARGUMENTS 에 대해 투자 논지(thesis) 추적 점검을 수행한다.

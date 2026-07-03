@@ -179,44 +179,44 @@ Ask AI directly, and you have one context window. Four parallel Agents means 4×
 
 | Skill | Purpose | When to Use |
 |-------|---------|-------------|
-| [`/investment-research`](skills/investment-research.md) | Four-master comprehensive analysis | Full-spectrum research on a public company |
-| [`/investment-team`](skills/investment-team.md) | Multi-Agent parallel research team | 4 Agents in parallel — fastest and most comprehensive |
-| [`/management-deep-dive`](skills/management-deep-dive.md) | Management deep dive | "Buying a stock is buying its people" — when management is the key variable |
-| [`/private-company-research`](skills/private-company-research.md) | Private company research | Research info-scarce private companies like Ant Group, SpaceX |
-| [`/deep-company-series`](skills/deep-company-series.md) | 8-part long-form deep dive series | Publication-grade series, ~120K words from cognitive reset to decision closure |
+| [`/investment-research`](.claude/skills/investment-research/SKILL.md) | Four-master comprehensive analysis | Full-spectrum research on a public company |
+| [`/investment-team`](.claude/skills/investment-team/SKILL.md) | Multi-Agent parallel research team | 4 Agents in parallel — fastest and most comprehensive |
+| [`/management-deep-dive`](.claude/skills/management-deep-dive/SKILL.md) | Management deep dive | "Buying a stock is buying its people" — when management is the key variable |
+| [`/private-company-research`](.claude/skills/private-company-research/SKILL.md) | Private company research | Research info-scarce private companies like Ant Group, SpaceX |
+| [`/deep-company-series`](.claude/skills/deep-company-series/SKILL.md) | 8-part long-form deep dive series | Publication-grade series, ~120K words from cognitive reset to decision closure |
 
 ### 📊 Earnings Analysis
 
 | Skill | Purpose | When to Use |
 |-------|---------|-------------|
-| [`/earnings-review`](skills/earnings-review.md) | Earnings deep read (primary sources) | Read raw filings only — no sell-side reports — like Buffett reads annual reports |
-| [`/earnings-team`](skills/earnings-team.md) | Earnings team + publishable article | Four masters interpret earnings in parallel → editor polish → reader review → publish-ready |
+| [`/earnings-review`](.claude/skills/earnings-review/SKILL.md) | Earnings deep read (primary sources) | Read raw filings only — no sell-side reports — like Buffett reads annual reports |
+| [`/earnings-team`](.claude/skills/earnings-team/SKILL.md) | Earnings team + publishable article | Four masters interpret earnings in parallel → editor polish → reader review → publish-ready |
 
 ### 🏭 Industry Screening
 
 | Skill | Purpose | When to Use |
 |-------|---------|-------------|
-| [`/industry-research`](skills/industry-research.md) | Industry value chain scan | Map all investment opportunities across an industry's value chain |
-| [`/industry-funnel`](skills/industry-funnel.md) | Industry funnel screening | Full market → rough cut ≤10 → final pick 3, with deep analysis |
-| [`/quality-screen`](skills/quality-screen.md) | Quality screen (7 hard metrics) | Quickly eliminate non-first-class companies; supports single stock / industry / index / thematic batch screening |
-| [`/bottleneck-hunter`](skills/bottleneck-hunter.md) | Supply-chain bottleneck hunter | Start from a supertrend and find physical supply-chain bottlenecks and arbitrage opportunities |
-| [`/investment-checklist`](skills/investment-checklist.md) | Buffett pre-buy checklist | Six gates, 10-minute decision on whether to dig deeper |
+| [`/industry-research`](.claude/skills/industry-research/SKILL.md) | Industry value chain scan | Map all investment opportunities across an industry's value chain |
+| [`/industry-funnel`](.claude/skills/industry-funnel/SKILL.md) | Industry funnel screening | Full market → rough cut ≤10 → final pick 3, with deep analysis |
+| [`/quality-screen`](.claude/skills/quality-screen/SKILL.md) | Quality screen (7 hard metrics) | Quickly eliminate non-first-class companies; supports single stock / industry / index / thematic batch screening |
+| [`/bottleneck-hunter`](.claude/skills/bottleneck-hunter/SKILL.md) | Supply-chain bottleneck hunter | Start from a supertrend and find physical supply-chain bottlenecks and arbitrage opportunities |
+| [`/investment-checklist`](.claude/skills/investment-checklist/SKILL.md) | Buffett pre-buy checklist | Six gates, 10-minute decision on whether to dig deeper |
 
 ### 📈 Portfolio Management
 
 | Skill | Purpose | When to Use |
 |-------|---------|-------------|
-| [`/portfolio-review`](skills/portfolio-review.md) | Portfolio review & optimization | Graduate from "researching companies" to "managing a portfolio" — sizing, concentration, rebalancing |
-| [`/thesis-tracker`](skills/thesis-tracker.md) | Investment thesis tracker | Post-buy discipline system: continuously track whether your thesis has been falsified |
-| [`/news-pulse`](skills/news-pulse.md) | Price-move rapid attribution | When a stock surges or drops — figure out "what happened" in 10 minutes |
+| [`/portfolio-review`](.claude/skills/portfolio-review/SKILL.md) | Portfolio review & optimization | Graduate from "researching companies" to "managing a portfolio" — sizing, concentration, rebalancing |
+| [`/thesis-tracker`](.claude/skills/thesis-tracker/SKILL.md) | Investment thesis tracker | Post-buy discipline system: continuously track whether your thesis has been falsified |
+| [`/news-pulse`](.claude/skills/news-pulse/SKILL.md) | Price-move rapid attribution | When a stock surges or drops — figure out "what happened" in 10 minutes |
 
 ### 🧠 Thinking Tools
 
 | Skill | Purpose | When to Use |
 |-------|---------|-------------|
-| [`/dyp-ask`](skills/dyp-ask.md) | Duan Yongping Q&A | Think through any question the Duan Yongping way — business, investing, life |
-| [`/financial-data`](skills/financial-data.md) | Financial data retrieval & cross-validation | Ensure key data comes from 2+ independent sources; alerts on >1% deviation |
-| [`/wechat-article`](skills/wechat-article.md) | WeChat article workflow | Author, editor, and reader Agents collaborate to produce a publishable article |
+| [`/dyp-ask`](.claude/skills/dyp-ask/SKILL.md) | Duan Yongping Q&A | Think through any question the Duan Yongping way — business, investing, life |
+| [`/financial-data`](.claude/skills/financial-data/SKILL.md) | Financial data retrieval & cross-validation | Ensure key data comes from 2+ independent sources; alerts on >1% deviation |
+| [`/wechat-article`](.claude/skills/wechat-article/SKILL.md) | WeChat article workflow | Author, editor, and reader Agents collaborate to produce a publishable article |
 
 ---
 
@@ -242,18 +242,15 @@ claude --dangerously-skip-permissions
 
 Warning: this disables Claude Code's tool-approval guardrails. Use it only when you trust the repository, commands, and working directory.
 
-### 2. Install Skills
+### 2. Get the Skills
 
 ```bash
 # Clone the repository
 git clone https://github.com/Junghyun99/ai-berkshire-fork.git ai-berkshire
-
-# Copy skills to Claude Code global commands directory
 cd ai-berkshire
-./scripts/install-claude-commands.sh
 ```
 
-`skills/*.md` are the Claude Code command sources.
+That's it — no install step. The skills live in `.claude/skills/<name>/SKILL.md` as project skills, so Claude Code loads them automatically whenever you open this directory. Invoke them directly as slash commands (e.g. `/investment-research Tencent`), or let Claude load them automatically when the conversation calls for it.
 
 ### 3. Use
 

@@ -1,3 +1,8 @@
+---
+name: industry-research
+description: "산업 투자 리서치: 산업 밸류체인 전경을 스캔하고 단계별 투자 기회를 매핑한 뒤 4대 거장 프레임워크로 핵심 종목을 분석. 산업 전체를 조망할 때 사용."
+---
+
 # 산업 투자 리서치: 밸류체인 전경 스캔 + 4대 거장 개별 종목 분석 프레임워크
 
 $ARGUMENTS 산업에 대해 체계적인 밸류체인 투자 리서치를 수행한다.
@@ -258,7 +263,7 @@ Task 도구로 백그라운드 Agent를 띄워 해당 산업의 모든 상장사
 python3 ~/ai-berkshire/tools/report_audit.py extract \
   --report <보고서 파일 경로>
 
-# Step 2 — 목록의 각 항목을 신뢰할 수 있는 출처에서 재확인 (skills/financial-data.md 참조)
+# Step 2 — 목록의 각 항목을 신뢰할 수 있는 출처에서 재확인 (.claude/skills/financial-data/SKILL.md 참조)
 
 # Step 3 — 출고/반려 판정 출력
 python3 ~/ai-berkshire/tools/report_audit.py verdict \

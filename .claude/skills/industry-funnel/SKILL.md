@@ -1,3 +1,8 @@
+---
+name: industry-funnel
+description: "산업 퍼널 스크리닝: 전체 시장 스캔 → 1차 스크리닝 ≤10개 → 최종 3개 종목 정선. 산업/테마에서 가치투자 후보를 층층이 걸러낼 때 사용."
+---
+
 # 산업 퍼널 스크리닝: 전체 시장에서 3개 종목까지 가치투자 정선 프로세스
 
 $ARGUMENTS 산업/방향에 대해 퍼널식 가치투자 스크리닝을 실행하여, 전체 시장 스캔에서 층층이 걸러 3개 최종 종목까지 정선한다.
@@ -284,7 +289,7 @@ A = 데이터 충분하고 신뢰 가능; B = 일부 누락되나 주 결론에 
 python3 ~/ai-berkshire/tools/report_audit.py extract \
   --report <보고서 파일 경로>
 
-# Step 2 — 목록의 각 항목을 신뢰할 수 있는 출처에서 재확인 (skills/financial-data.md 참조)
+# Step 2 — 목록의 각 항목을 신뢰할 수 있는 출처에서 재확인 (.claude/skills/financial-data/SKILL.md 참조)
 
 # Step 3 — 출고/반려 판정 출력
 python3 ~/ai-berkshire/tools/report_audit.py verdict \
