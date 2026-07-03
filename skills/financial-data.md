@@ -1,103 +1,111 @@
-# 财务数据获取与交叉验证规范
+# 재무 데이터 수집 및 교차 검증 규범
 
-本规范适用于所有涉及企业财务数据的研究。**每个关键数据必须来自两个独立来源，误差>1%须标记。**
-
----
-
-## 数据源优先级
-
-### 美股（PDD、腾讯ADR、网易ADR等）
-
-| 优先级 | 来源 | URL | 获取方式 |
-|--------|------|-----|---------|
-| 1（主） | **macrotrends** | macrotrends.net/stocks/charts/{ticker} | 直接访问，无需注册 |
-| 2（副） | **stockanalysis** | stockanalysis.com/stocks/{ticker}/financials | 直接访问，无需注册 |
-| 原始一手 | SEC EDGAR | sec.gov/cgi-bin/browse-edgar | 10-K / 10-Q 原文 |
-
-### 港股（腾讯0700、网易9999、美团3690等）
-
-| 优先级 | 来源 | URL | 获取方式 |
-|--------|------|-----|---------|
-| 1（主） | **aastocks** | aastocks.com/tc/stocks/analysis/company-fundamental | 直接访问 |
-| 2（副） | **macrotrends**（ADR代码） | 腾讯用TCEHY，网易用NTES | 直接访问 |
-| 原始一手 | HKEX披露易 | hkexnews.hk | 年报PDF |
-
-### A股（三七互娱、吉比特等）
-
-| 优先级 | 来源 | URL | 获取方式 |
-|--------|------|-----|---------|
-| 1（主） | **东方财富** | eastmoney.com → 搜股票代码 → 财务报表 | 直接访问 |
-| 2（副） | **巨潮资讯** | cninfo.com.cn | 原始年报/季报PDF |
+본 규범은 기업 재무 데이터를 다루는 모든 리서치에 적용된다. **모든 핵심 데이터는 두 개의 독립된 출처에서 가져와야 하며, 오차가 1%를 초과하면 반드시 표기한다.**
 
 ---
 
-## 执行规范
+## 데이터 소스 우선순위
 
-### 第一步：获取数据
+### 미국 주식 (PDD, 텐센트 ADR, 넷이즈 ADR 등)
 
-对每个财务指标（收入、净利润、毛利率、经营现金流、资产负债率等），分别从**来源1**和**来源2**取数。
+| 우선순위 | 출처 | URL | 접근 방법 |
+|--------|------|-----|---------|
+| 1 (주) | **macrotrends** | macrotrends.net/stocks/charts/{ticker} | 직접 접속, 가입 불필요 |
+| 2 (부) | **stockanalysis** | stockanalysis.com/stocks/{ticker}/financials | 직접 접속, 가입 불필요 |
+| 원본 1차 자료 | SEC EDGAR | sec.gov/cgi-bin/browse-edgar | 10-K / 10-Q 원문 |
 
-### 第二步：误差计算与标记
+### 홍콩 주식 (텐센트 0700, 넷이즈 9999, 메이투안 3690 등)
+
+| 우선순위 | 출처 | URL | 접근 방법 |
+|--------|------|-----|---------|
+| 1 (주) | **aastocks** | aastocks.com/tc/stocks/analysis/company-fundamental | 직접 접속 |
+| 2 (부) | **macrotrends** (ADR 코드) | 텐센트는 TCEHY, 넷이즈는 NTES | 직접 접속 |
+| 원본 1차 자료 | HKEX 공시 시스템 | hkexnews.hk | 연차보고서 PDF |
+
+### 중국 A주 (37 Interactive, G-bits 등)
+
+| 우선순위 | 출처 | URL | 접근 방법 |
+|--------|------|-----|---------|
+| 1 (주) | **East Money** | eastmoney.com → 종목코드 검색 → 재무제표 | 직접 접속 |
+| 2 (부) | **cninfo** | cninfo.com.cn | 원본 연차/분기 보고서 PDF |
+
+### 한국 주식 (삼성전자, SK하이닉스 등)
+
+| 우선순위 | 출처 | URL | 접근 방법 |
+|--------|------|-----|---------|
+| 1 (주) | **DART 전자공시** | dart.fss.or.kr | 사업보고서/분기보고서 원문 |
+| 2 (부) | **네이버 금융** | finance.naver.com | 종목코드 검색 → 재무분석 |
+
+---
+
+## 실행 규범
+
+### 1단계: 데이터 수집
+
+각 재무 지표(매출, 순이익, 매출총이익률, 영업현금흐름, 부채비율 등)에 대해 **출처 1**과 **출처 2**에서 각각 수치를 가져온다.
+
+### 2단계: 오차 계산 및 표기
 
 ```
-误差率 = |来源1数值 - 来源2数值| / 来源1数值 × 100%
+오차율 = |출처1 수치 - 출처2 수치| / 출처1 수치 × 100%
 ```
 
-| 误差 | 处理方式 |
+| 오차 | 처리 방법 |
 |------|---------|
-| ≤ 1% | ✅ 一致，取来源1数值，标注两个来源 |
-| 1% ~ 5% | ⚠️ 标记"数据存在差异"，注明两个数值，说明可能原因（汇率/会计口径） |
-| > 5% | ❌ 标记"数据存在重大差异"，必须查原始财报核实，不得直接使用 |
+| ≤ 1% | ✅ 일치. 출처 1의 수치를 사용하고 두 출처를 모두 표기 |
+| 1% ~ 5% | ⚠️ "데이터 차이 존재"로 표기. 두 수치를 병기하고 가능한 원인(환율/회계 기준) 설명 |
+| > 5% | ❌ "데이터 중대 차이"로 표기. 반드시 원본 재무제표로 검증해야 하며 그대로 사용 금지 |
 
-### 第三步：数据呈现格式
+### 3단계: 데이터 표기 형식
 
-每个关键数据必须按以下格式标注：
+모든 핵심 데이터는 아래 형식으로 표기한다:
 
 ```
-收入：1,239亿元 ✅
-  - macrotrends: 1,241亿元
-  - stockanalysis: 1,237亿元
-  - 误差: 0.3%
+매출: 1,239억 위안 ✅
+  - macrotrends: 1,241억 위안
+  - stockanalysis: 1,237억 위안
+  - 오차: 0.3%
 ```
 
-差异示例：
+차이가 있는 경우의 예시:
 ```
-净利润：245亿元 ⚠️ 数据存在差异
-  - macrotrends: 245亿元（GAAP）
-  - stockanalysis: 278亿元（Non-GAAP）
-  - 误差: 13.5% — 原因：会计口径不同（GAAP vs Non-GAAP）
+순이익: 245억 위안 ⚠️ 데이터 차이 존재
+  - macrotrends: 245억 위안 (GAAP)
+  - stockanalysis: 278억 위안 (Non-GAAP)
+  - 오차: 13.5% — 원인: 회계 기준 차이 (GAAP vs Non-GAAP)
 ```
 
 ---
 
-## 常见差异原因（不一定是数据错误）
+## 흔한 차이 원인 (데이터 오류가 아닐 수 있음)
 
-| 原因 | 说明 |
+| 원인 | 설명 |
 |------|------|
-| GAAP vs Non-GAAP | 最常见，尤其是利润类数据 |
-| 汇率换算 | 港币/人民币/美元换算时间点不同 |
-| 财年定义 | 自然年 vs 财年（如苹果财年10月结束） |
-| 合并口径 | 是否含少数股东权益 |
-| 数据更新滞后 | 某平台尚未更新最新一期财报 |
+| GAAP vs Non-GAAP | 가장 흔한 원인. 특히 이익 관련 데이터 |
+| 환율 환산 | 홍콩달러/위안/달러/원화 환산 시점 차이 |
+| 회계연도 정의 | 역년 vs 회계연도 (예: 애플은 회계연도가 10월 종료) |
+| 연결 기준 | 비지배지분(소수주주지분) 포함 여부 |
+| 데이터 갱신 지연 | 일부 플랫폼이 최신 분기 실적을 아직 반영하지 않음 |
 
 ---
 
-## 特别规则
+## 특별 규칙
 
-1. **未上市公司**（米哈游、莉莉丝等）：只有一手数据来源时，数据前标记 `[估计]`，不执行交叉验证
-2. **季度数据 vs 年度数据**：优先使用年度数据做交叉验证，季度数据部分来源可能有滞后
-3. **原始财报优先**：若两个来源均与原始财报（10-K/年报PDF）不符，以原始财报为准，标记来源错误
+1. **비상장 회사** (miHoYo, Lilith 등): 1차 데이터 출처가 하나뿐인 경우 데이터 앞에 `[추정]`을 표기하고 교차 검증은 생략한다
+2. **분기 데이터 vs 연간 데이터**: 교차 검증은 연간 데이터를 우선 사용한다. 분기 데이터는 일부 출처에서 갱신이 지연될 수 있다
+3. **원본 재무제표 우선**: 두 출처 모두 원본 재무제표(10-K/연차보고서 PDF)와 다르면 원본 재무제표를 기준으로 하고, 출처 오류를 표기한다
 
 ---
 
-## 快速索引
+## 빠른 참조
 
-| 场景 | 主要来源 | 备用来源 |
+| 대상 | 주 출처 | 보조 출처 |
 |------|---------|---------|
-| PDD / 拼多多 | macrotrends.net/stocks/charts/PDD | stockanalysis.com/stocks/pdd |
-| 腾讯 | macrotrends.net/stocks/charts/TCEHY | aastocks（0700.HK） |
-| 网易 | macrotrends.net/stocks/charts/NTES | aastocks（9999.HK） |
-| 三七互娱 | eastmoney.com（002555） | cninfo.com.cn |
-| 吉比特 | eastmoney.com（603444） | cninfo.com.cn |
+| PDD / 핀둬둬 | macrotrends.net/stocks/charts/PDD | stockanalysis.com/stocks/pdd |
+| 텐센트 | macrotrends.net/stocks/charts/TCEHY | aastocks (0700.HK) |
+| 넷이즈 | macrotrends.net/stocks/charts/NTES | aastocks (9999.HK) |
+| 37 Interactive | eastmoney.com (002555) | cninfo.com.cn |
+| G-bits | eastmoney.com (603444) | cninfo.com.cn |
 | Nintendo | macrotrends.net/stocks/charts/NTDOY | stockanalysis.com/stocks/ntdoy |
-| Capcom | macrotrends（CCOEY） | stockanalysis（CCOEY） |
+| Capcom | macrotrends (CCOEY) | stockanalysis (CCOEY) |
+| 삼성전자 | dart.fss.or.kr (005930) | finance.naver.com |
