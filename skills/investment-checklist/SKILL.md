@@ -1,3 +1,8 @@
+---
+name: investment-checklist
+description: "버핏 가치투자 매수 전 Checklist: 6관문 빠른 스크리닝으로 10분 안에 깊이 팔 가치가 있는지 판단. 단일/복수 회사 입력 지원."
+---
+
 # 버핏 가치투자 매수 전 Checklist
 
 $ARGUMENTS 에 대해 버핏 가치투자 매수 전 Checklist 분석을 수행한다.

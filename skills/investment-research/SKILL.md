@@ -1,3 +1,8 @@
+---
+name: investment-research
+description: "버핏·멍거·돤융핑·리루 4대 거장 프레임워크로 상장사 하나를 전방위 심층 투자 리서치. 특정 회사의 사업 모델·재무·경쟁 구도·리스크를 종합 분석하고 싶을 때 사용."
+---
+
 # 투자 리서치: 버핏-멍거-돤융핑-리루 4대 거장 종합 분석 프레임워크
 
 $ARGUMENTS 에 대해 체계적인 투자 리서치 분석을 수행한다.
@@ -34,7 +39,7 @@ $ARGUMENTS 에 대해 체계적인 투자 리서치 분석을 수행한다.
 
 ### 1단계: 데이터 수집
 
-> **데이터 소스 규범**: `skills/financial-data.md` 참조. 모든 재무 데이터는 두 개의 독립 출처에서 가져와야 하며, 오차 >1%는 표기.
+> **데이터 소스 규범**: `skills/financial-data/SKILL.md` 참조. 모든 재무 데이터는 두 개의 독립 출처에서 가져와야 하며, 오차 >1%는 표기.
 > - 미국 주식: macrotrends (주) + stockanalysis (부)
 > - 홍콩 주식: aastocks (주) + macrotrends ADR (부)
 > - 중국 A주: East Money (주) + cninfo (부)
@@ -221,7 +226,7 @@ python3 ~/ai-berkshire/tools/report_audit.py extract \
 JSON 템플릿을 출력하며, 각 항목에 `fetched_value`(채울 값)가 있다.
 
 **Step 2 — 데이터 재확인:**
-목록의 각 데이터 포인트를 `skills/financial-data.md` 규범에 따라 신뢰할 수 있는 출처에서 가져온다
+목록의 각 데이터 포인트를 `skills/financial-data/SKILL.md` 규범에 따라 신뢰할 수 있는 출처에서 가져온다
 (미국: macrotrends+stockanalysis; 홍콩: aastocks+macrotrends; 중국 A주: East Money+cninfo; 한국: DART+네이버 금융).
 `fetched_value` / `fetched_source` / `fetched_value2` / `fetched_source2`를 채운다.
 

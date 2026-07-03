@@ -1,3 +1,8 @@
+---
+name: private-company-research
+description: "비상장 기업 심층 연구. 앤트그룹, SpaceX, Stripe처럼 공개 정보가 희소한 비상장 회사의 진짜 가치를 멀티 Agent 병렬 리서치로 복원할 때 사용."
+---
+
 # 비상장 기업 연구: 멀티 Agent 병렬 심층 리서치 프레임워크
 
 $ARGUMENTS 에 대해 팀 기반 심층 리서치 분석을 수행한다. 앤트그룹, 샤오홍슈, SpaceX, Stripe 같은 비상장 기업 전용으로 설계되었다.

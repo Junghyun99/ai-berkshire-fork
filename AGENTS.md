@@ -7,17 +7,17 @@ scripts. See the upstream repo if you need Codex support.)
 
 ## Project Layout
 
-- `skills/*.md`: Claude Code slash-command source files (canonical workflows).
+- `skills/<name>/SKILL.md`: Claude Code Skill source files (canonical workflows).
 - `tools/*.py`: shared financial validation and data tools.
 - `reports/`: research outputs. Do not rewrite unrelated reports while changing
   tooling or skills.
 - `스크리닝/`: archived screening results (upstream author's output).
 - `실전기록/`: trading log kept for reference (upstream author's records).
-- `scripts/install-claude-commands.sh`: installs Claude Code commands locally.
+- `scripts/install-claude-skills.sh`: installs the skills into `~/.claude/skills`.
 
 ## Compatibility Rules
 
-- Treat `skills/*.md` as the canonical workflow source.
+- Treat `skills/<name>/SKILL.md` as the canonical workflow source.
 - Keep tool paths compatible with the documented checkout path:
   `~/ai-berkshire/tools/...`
 - Keep `CLAUDE.md` as the primary behavior guide; this `AGENTS.md` is a
