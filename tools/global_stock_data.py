@@ -216,6 +216,32 @@ def cmd_quote(code: str):
         print("  ⚠️ 시총/PER/PBR 조회 실패 — valuation 명령 또는 WebSearch로 보완 필요")
 
 
+def _parse_krw_big(text: str):
+    """네이버 시총 표기('1,809조 4,232억' / '4,232억')를 원 단위 숫자로 변환."""
+    if not text:
+        return None
+    total = 0.0
+    m_jo = re.search(r"([\d,]+)\s*조", text)
+    m_eok = re.search(r"([\d,]+)\s*억", text)
+    if m_jo:
+        total += float(m_jo.group(1).replace(",", "")) * 1e12
+    if m_eok:
+        total += float(m_eok.group(1).replace(",", "")) * 1e8
+    return total or None
+
+
+def _naver_market_cap(code6: str):
+    """네이버 모바일 API에서 시가총액(원)을 조회. 실패 시 None."""
+    try:
+        data = _naver_json(f"{_NAVER_API}/stock/{code6}/integration")
+        for item in data.get("totalInfos", []):
+            if item.get("key") == "시총":
+                return _parse_krw_big(item.get("value", ""))
+    except Exception:
+        pass
+    return None
+
+
 def cmd_valuation(code: str):
     """밸류에이션 지표 + 시가총액 검산(주가 × 발행주식수)."""
     symbol, m = _resolve(code)
@@ -257,6 +283,25 @@ def cmd_valuation(code: str):
         print(f"               API 시총 대비 편차 {diff:.1f}% → {mark}")
     else:
         print("\n  ⚠️ 시총 검산 불가(주식수 또는 시총 데이터 없음)")
+
+    # 한국 종목: 네이버 시총으로 교차 검산 (야후 주식수의 우선주/자기주식 포함 문제 보정)
+    if symbol.endswith((".KS", ".KQ")) and price:
+        code6 = symbol.split(".")[0]
+        naver_mcap = _naver_market_cap(code6)
+        if naver_mcap:
+            implied = naver_mcap / price
+            print(f"\n  [네이버 교차 검산 — 한국 종목]")
+            print(f"  네이버 시총:        {_fmt_big(naver_mcap, 'KRW')} (보통주, 자기주식 제외 기준)")
+            print(f"  역산 유통 보통주수: {implied:,.0f}주 (네이버 시총 ÷ 현재가)")
+            if shares:
+                gap = abs(shares - implied) / implied * 100
+                if gap > 1:
+                    print(f"  ⚠️ 야후 주식수({shares:,.0f}주)와 {gap:.1f}% 차이 — 야후는 우선주/자기주식을")
+                    print(f"     포함할 수 있으므로, 한국 종목 시총·주당지표는 네이버 기준 사용을 권장")
+                else:
+                    print(f"  ✅ 야후 주식수와 일치 (편차 {gap:.1f}%)")
+        else:
+            print("\n  ⚠️ 네이버 시총 조회 실패 — 야후 주식수의 우선주/자기주식 포함 여부를 수동 확인 필요")
 
 
 def cmd_financials(code: str):

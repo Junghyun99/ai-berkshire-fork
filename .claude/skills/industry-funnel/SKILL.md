@@ -286,13 +286,13 @@ A = 데이터 충분하고 신뢰 가능; B = 일부 누락되나 주 결론에 
 
 ```bash
 # Step 1 — 표본 검사 목록 추출 (15% 무작위 샘플링)
-python3 ~/ai-berkshire/tools/report_audit.py extract \
+python3 tools/report_audit.py extract \
   --report <보고서 파일 경로>
 
 # Step 2 — 목록의 각 항목을 신뢰할 수 있는 출처에서 재확인 (.claude/skills/financial-data/SKILL.md 참조)
 
 # Step 3 — 출고/반려 판정 출력
-python3 ~/ai-berkshire/tools/report_audit.py verdict \
+python3 tools/report_audit.py verdict \
   --results '<채워진 JSON>' \
   --report <보고서 파일명>
 ```

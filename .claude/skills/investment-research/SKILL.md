@@ -73,20 +73,20 @@ Task 도구로 백그라운드 Agent를 띄워 웹에서 아래 데이터를 수
 
 Step 1 — 시가총액 검산 (정밀 십진수, 부동소수점 아님):
 ```bash
-python3 ~/ai-berkshire/tools/financial_rigor.py verify-market-cap \
+python3 tools/financial_rigor.py verify-market-cap \
   --price {주가} --shares {총주식수} --reported {보고된 시총} --currency {통화}
 ```
 
 Step 2 — 핵심 데이터 다중 출처 교차 검증:
 ```bash
-python3 ~/ai-berkshire/tools/financial_rigor.py cross-validate \
+python3 tools/financial_rigor.py cross-validate \
   --field {필드명} --values '{"출처1": 수치, "출처2": 수치}' --unit {단위}
 ```
 매출, 순이익, 현금 보유에 대해 각각 실행.
 
 Step 3 — 밸류에이션 지표 정밀 검산 (PER/PBR/ROE/FCF Yield 등):
 ```bash
-python3 ~/ai-berkshire/tools/financial_rigor.py verify-valuation \
+python3 tools/financial_rigor.py verify-valuation \
   --price {주가} --eps {EPS} --bvps {주당순자산} --fcf-per-share {주당 FCF} --dividend {주당 배당}
 ```
 
@@ -168,7 +168,7 @@ python3 ~/ai-berkshire/tools/financial_rigor.py verify-valuation \
 - 역방향 DCF: 현재 주가에는 어떤 성장 기대가 내포되어 있는가?
 - 3개 시나리오 밸류에이션 — **반드시 도구로 정밀 계산, 암산 금지**:
 ```bash
-python3 ~/ai-berkshire/tools/financial_rigor.py three-scenario \
+python3 tools/financial_rigor.py three-scenario \
   --price {주가} --eps {EPS} --shares {총주식수(억)} \
   --growth {낙관 성장률} {중립 성장률} {비관 성장률} \
   --pe {낙관PE} {중립PE} {비관PE} --years 3 --currency {통화}
@@ -207,7 +207,7 @@ python3 ~/ai-berkshire/tools/financial_rigor.py three-scenario \
 1. 모든 분석에 데이터 근거와 출처 첨부
 2. 핵심 데이터는 Markdown 표로 제시
 3. 각 모듈 말미에 해당 거장의 "되물음" 포함
-4. 최종적으로 완전한 보고서를 `~/[회사명]-투자연구보고서.md`에 저장
+4. 최종적으로 완전한 보고서를 `reports/{회사명}/{회사명}-research-{YYYYMMDD}.md`에 저장 (CLAUDE.md 명명 규칙)
 5. 결론은 명확하게. 매수/관망/회피 제안을 회피하지 않는다
 6. 밸류에이션 부분은 구체적인 가격 구간을 제시해야 한다
 7. **보고서 서두**에 "정보 풍부도 등급"(A/B/C)과 "AI 리서치 한계 고지"를 포함해야 한다
@@ -220,7 +220,7 @@ python3 ~/ai-berkshire/tools/financial_rigor.py three-scenario \
 
 **Step 1 — 표본 검사 목록 추출 (15% 무작위 샘플링):**
 ```bash
-python3 ~/ai-berkshire/tools/report_audit.py extract \
+python3 tools/report_audit.py extract \
   --report <보고서 파일 경로>
 ```
 JSON 템플릿을 출력하며, 각 항목에 `fetched_value`(채울 값)가 있다.
@@ -232,7 +232,7 @@ JSON 템플릿을 출력하며, 각 항목에 `fetched_value`(채울 값)가 있
 
 **Step 3 — 판정 출력:**
 ```bash
-python3 ~/ai-berkshire/tools/report_audit.py verdict \
+python3 tools/report_audit.py verdict \
   --results '<채워진 JSON>' \
   --report <보고서 파일명>
 ```
