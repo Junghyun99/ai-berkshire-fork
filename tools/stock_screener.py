@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
-stock_screener.py — 动量发现 + 价值验证 选股筛
-用法：
-  python3 stock_screener.py                   # 扫描全部 watchlist
-  python3 stock_screener.py NVDA TSLA GOOG    # 扫描指定标的
-  python3 stock_screener.py --update MU       # 更新 MU 的基本面数据
+stock_screener.py — 모멘텀 발견 + 가치검증 주식선택 화면
+용법：
+  python3 stock_screener.py                   # 모두 스캔 watchlist
+  python3 stock_screener.py NVDA TSLA GOOG    # 지정된 대상을 스캔
+  python3 stock_screener.py --update MU       # 고쳐 쓰다 MU 기본 데이터
 
-框架：
-  第一层（动量发现）：60日新高 + 放量确认 → 进入待选池
-  第二层（价值验证）：6维评分 ≥ 3/6 → 买入信号
-  信号分级：3/6=试探仓3% | 4/6=标准仓5% | 5-6/6=确信仓8%
+액자：
+  레이어 1(모멘텀 발견）：60일일 최고 + 볼륨 확인 → 대기 풀에 입장
+  두 번째 레이어(값 검증）：6차원 점수 ≥ 3/6 → 매수 신호
+  신호 분류：3/6=테스트 챔버3% | 4/6=표준창고5% | 5-6/6=입장을 확실히 하세요8%
 
-改进点（来自NVDA/AMD/MU回测）：
-  1. 毛利率连续2季改善 → 独立买入条件（解决NVDA 2023-01漏判）
-  2. EPS超预期>30% → 周期股独立条件（解决MU底部信号）
-  3. 信号分级替代二元判断
+개선 사항(~NVDA/AMD/MU백테스트）：
+  1. 매출총이익률 연속2분기별 개선 → 독립적인 바이인 조건(해결NVDA 2023-01판단을 놓쳤다）
+  2. EPS기대를 초과했습니다>30% → 순환적 재고독립조건(solveMU하단 신호）
+  3. 신호 등급은 이진 판단을 대체합니다.
 """
 
 import json
@@ -25,7 +25,7 @@ from datetime import datetime, timedelta
 from collections import OrderedDict
 
 # ============================================================
-# 配置
+# 구성
 # ============================================================
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data")
@@ -38,15 +38,15 @@ DEFAULT_WATCHLIST = {
     "us_ai_infra": ["ETN", "PWR", "VRT", "CRWV"],
     "us_crypto": ["COIN", "HOOD", "MSTR", "CRCL"],
     "hk_internet": ["0700.HK", "9888.HK", "1024.HK", "9992.HK"],
-    "a_share": [],  # A股需要不同数据源，后续扩展
+    "a_share": [],  # A주식에는 다양한 데이터 소스가 필요하며 나중에 확장될 예정입니다.
 }
 
 # ============================================================
-# 价格数据获取（通过curl绕过Python SSL问题）
+# 가격 데이터 수집(경유curl우회로Python SSL질문）
 # ============================================================
 
 def fetch_prices_curl(ticker, days=120):
-    """用curl获取Yahoo Finance日线数据"""
+    """사용curl얻다Yahoo Finance일일 데이터"""
     end_ts = int(datetime.now().timestamp())
     start_ts = int((datetime.now() - timedelta(days=days)).timestamp())
     url = (
@@ -78,11 +78,11 @@ def fetch_prices_curl(ticker, days=120):
 
 
 # ============================================================
-# 基本面数据管理
+# 기초 데이터 관리
 # ============================================================
 
 def load_fundamentals():
-    """加载基本面数据"""
+    """기본 데이터 로드"""
     if os.path.exists(FUND_FILE):
         with open(FUND_FILE) as f:
             return json.load(f)
@@ -96,52 +96,52 @@ def save_fundamentals(data):
 
 
 def update_fundamental_interactive(ticker):
-    """交互式更新基本面数据"""
+    """기본 데이터를 대화형으로 업데이트"""
     funds = load_fundamentals()
     if ticker not in funds:
         funds[ticker] = {"quarters": {}}
-    print(f"\n  更新 {ticker} 基本面数据")
-    print(f"  已有季度：{', '.join(funds[ticker]['quarters'].keys()) or '无'}")
-    date = input("  财报发布日 (YYYY-MM-DD): ").strip()
-    label = input("  标签 (如 Q1 2024): ").strip()
-    rev_yoy = float(input("  营收同比增速 (%): "))
-    gm = float(input("  毛利率 (%): "))
-    eps_beat = float(input("  EPS超预期 (%): "))
+    print(f"\n  고쳐 쓰다 {ticker} 기본 데이터")
+    print(f"  이미 분기가 있습니다：{', '.join(funds[ticker]['quarters'].keys()) or '없음'}")
+    date = input("  재무 보고서 발표일 (YYYY-MM-DD): ").strip()
+    label = input("  상표 (좋다 Q1 2024): ").strip()
+    rev_yoy = float(input("  전년 대비 매출 성장 (%): "))
+    gm = float(input("  매출총이익률 (%): "))
+    eps_beat = float(input("  EPS기대를 초과했습니다 (%): "))
 
     funds[ticker]["quarters"][date] = {
         "label": label, "rev_yoy": rev_yoy, "gm": gm, "eps_beat": eps_beat
     }
     save_fundamentals(funds)
-    print(f"  ✅ 已保存 {ticker} {label}")
+    print(f"  ✅ 저장됨 {ticker} {label}")
 
 
 # ============================================================
-# 第一层：动量发现
+# 레벨 1: 추진력 발견
 # ============================================================
 
 def check_momentum(prices):
-    """检查最近交易日是否触发动量信号"""
+    """가장 최근 거래일에 모멘텀 신호가 발생했는지 확인하세요."""
     if len(prices) < 61:
         return None
 
     latest = prices[-1]
     close = latest["close"]
 
-    # 60日新高
+    # 60일일 최고
     past_60_highs = [p["high"] for p in prices[-61:-1]]
     is_60d_high = close > max(past_60_highs)
 
-    # 放量：近5日均量 > 20日均量 × 1.5
+    # 큰 볼륨: 거의5일일 평균 거래량 > 20일일 평균 거래량 × 1.5
     vol_5 = sum(p["volume"] for p in prices[-5:]) / 5
     vol_20 = sum(p["volume"] for p in prices[-20:]) / 20
     vol_ratio = vol_5 / vol_20 if vol_20 > 0 else 0
     is_volume = vol_ratio > 1.5
 
-    # 30日涨幅
+    # 30일일 증가
     close_30d = prices[-31]["close"] if len(prices) > 30 else prices[0]["close"]
     pct_30d = (close - close_30d) / close_30d * 100
 
-    # 近5日有突破日（不一定是今天）
+    # 닫다5매일매일 돌파하는 날이 있다(꼭 오늘은 아니다)）
     recent_breakout = False
     for i in range(-5, 0):
         if prices[i]["close"] > max(p["high"] for p in prices[i-60:i]):
@@ -161,11 +161,11 @@ def check_momentum(prices):
 
 
 # ============================================================
-# 第二层：价值验证（6维，含回测改进）
+# 두 번째 수준: 가치 검증（6백테스트 개선을 포함한 차원）
 # ============================================================
 
 def check_value(ticker, signal_date=None):
-    """6维价值验证"""
+    """6치수 값 확인"""
     funds = load_fundamentals()
     if ticker not in funds or not funds[ticker].get("quarters"):
         return None
@@ -173,7 +173,7 @@ def check_value(ticker, signal_date=None):
     quarters = funds[ticker]["quarters"]
     sorted_q = sorted(quarters.items(), key=lambda x: x[0])
 
-    # 找最近两个季度
+    # 지난 2분기 찾기
     if signal_date:
         valid = [(d, q) for d, q in sorted_q if d <= signal_date]
     else:
@@ -192,50 +192,50 @@ def check_value(ticker, signal_date=None):
 
     checks = {}
 
-    # 1. 营收加速（同比增速在改善）
+    # 1. 매출이 가속화되고 있습니다 (전년 대비 성장이 개선되고 있습니다)）
     if pd:
-        checks["营收加速"] = d["rev_yoy"] > pd["rev_yoy"]
+        checks["수익 가속화"] = d["rev_yoy"] > pd["rev_yoy"]
     else:
-        checks["营收加速"] = d["rev_yoy"] > 20
+        checks["수익 가속화"] = d["rev_yoy"] > 20
 
-    # 2. 毛利率方向
+    # 2. 매출총이익률 방향
     if pd:
-        checks["毛利率扩张"] = d["gm"] > pd["gm"] or d["gm"] > 55
+        checks["매출총이익률 확대"] = d["gm"] > pd["gm"] or d["gm"] > 55
     else:
-        checks["毛利率扩张"] = d["gm"] > 45
+        checks["매출총이익률 확대"] = d["gm"] > 45
 
-    # 3. EPS超预期 > 10%
-    checks["盈利惊喜"] = d["eps_beat"] > 10
+    # 3. EPS기대를 초과했습니다 > 10%
+    checks["놀라운 이익"] = d["eps_beat"] > 10
 
-    # 4. 营收高增长 > 15%
-    checks["营收高增长"] = d["rev_yoy"] > 15
+    # 4. 높은 수익 성장 > 15%
+    checks["높은 수익 성장"] = d["rev_yoy"] > 15
 
-    # 5. 毛利率健康 > 40%
-    checks["毛利率健康"] = d["gm"] > 40
+    # 5. 건전한 매출총이익률 > 40%
+    checks["건전한 매출총이익률"] = d["gm"] > 40
 
-    # 6. ★改进：毛利率连续2季改善（解决NVDA 2023-01漏判）
+    # 6. ★개선: 매출총이익률 지속2분기별 개선(해결NVDA 2023-01판단을 놓쳤다）
     if pd and pd2:
-        checks["毛利连续改善"] = d["gm"] > pd["gm"] > pd2["gm"]
+        checks["총이익은 지속적으로 개선되고 있습니다."] = d["gm"] > pd["gm"] > pd2["gm"]
     elif pd:
-        checks["毛利连续改善"] = d["gm"] > pd["gm"]
+        checks["총이익은 지속적으로 개선되고 있습니다."] = d["gm"] > pd["gm"]
     else:
-        checks["毛利连续改善"] = False
+        checks["총이익은 지속적으로 개선되고 있습니다."] = False
 
     score = sum(1 for v in checks.values() if v)
 
-    # ★改进：独立通过条件
+    # ★개선: 독립 합격 조건
     independent_pass = False
     independent_reason = ""
 
-    # 条件A：毛利率连续2季改善 + 毛利>45%（NVDA 2023-01场景）
-    if checks.get("毛利连续改善") and d["gm"] > 45:
+    # 상태A：매출총이익률 연속2분기별 개선 + 총 이익>45%（NVDA 2023-01장면）
+    if checks.get("총이익은 지속적으로 개선되고 있습니다.") and d["gm"] > 45:
         independent_pass = True
-        independent_reason = "毛利率连续改善+>45%"
+        independent_reason = "매출총이익률은 지속적으로 개선되고 있습니다.+>45%"
 
-    # 条件B：EPS超预期>30%（MU底部场景）
+    # 상태B：EPS기대를 초과했습니다>30%（MU하단 장면）
     if d["eps_beat"] > 30:
         independent_pass = True
-        independent_reason = "EPS超预期>30%（周期股信号）"
+        independent_reason = "EPS기대를 초과했습니다>30%（순환적인 주식 신호）"
 
     return {
         "score": score,
@@ -250,42 +250,42 @@ def check_value(ticker, signal_date=None):
 
 
 # ============================================================
-# 信号分级
+# 신호 분류
 # ============================================================
 
 def grade_signal(momentum, value):
-    """综合评级"""
+    """종합평가"""
     if not momentum or not momentum["triggered"]:
-        return "SKIP", "无动量信号", ""
+        return "SKIP", "모멘텀 신호 없음", ""
 
     if not value:
-        return "WATCH", "动量触发但无基本面数据", "补充基本面"
+        return "WATCH", "모멘텀 트리거이지만 기본 데이터가 없음", "보충 기초"
 
     score = value["score"]
     ind = value["independent_pass"]
 
     if score >= 5 or (score >= 4 and ind):
-        return "BUY_8%", f"确信仓（{score}/6）", "建议8%仓位"
+        return "BUY_8%", f"입장을 확실히 하세요（{score}/6）", "제안8%위치"
     elif score >= 4 or (score >= 3 and ind):
-        return "BUY_5%", f"标准仓（{score}/6）", "建议5%仓位"
+        return "BUY_5%", f"표준창고（{score}/6）", "제안5%위치"
     elif score >= 3:
-        return "BUY_3%", f"试探仓（{score}/6）", "建议3%仓位"
+        return "BUY_3%", f"테스트 챔버（{score}/6）", "제안3%위치"
     elif ind:
-        return "BUY_3%", f"独立条件通过：{value['independent_reason']}", "建议3%仓位"
+        return "BUY_3%", f"독립조건 통과：{value['independent_reason']}", "제안3%위치"
     else:
-        return "PASS", f"动量有但基本面不足（{score}/6）", "继续观察"
+        return "PASS", f"모멘텀은 있으나 펀더멘탈이 부족함（{score}/6）", "계속해서 관찰하세요"
 
 
 # ============================================================
-# 扫描一个标的
+# 대상 스캔
 # ============================================================
 
 def scan_ticker(ticker, verbose=True):
-    """扫描单个标的"""
+    """단일 대상 스캔"""
     prices = fetch_prices_curl(ticker)
     if not prices:
         if verbose:
-            print(f"  {ticker:<8} ⚠️  无法获取价格数据")
+            print(f"  {ticker:<8} ⚠️  가격 데이터를 가져올 수 없습니다.")
         return None
 
     momentum = check_momentum(prices)
@@ -302,50 +302,50 @@ def scan_ticker(ticker, verbose=True):
     }
 
     if verbose:
-        # 紧凑输出
+        # 컴팩트한 출력
         m = momentum
         symbol = {"BUY_8%": "🔴", "BUY_5%": "🟡", "BUY_3%": "🟢", "WATCH": "👀", "PASS": "⬜", "SKIP": "  "}
         s = symbol.get(grade, "  ")
 
         if grade.startswith("BUY"):
-            print(f"  {s} {ticker:<8} ${m['close']:<8} 30日+{m['pct_30d']}% 放量{m['vol_ratio']}x  → {grade} {reason}")
+            print(f"  {s} {ticker:<8} ${m['close']:<8} 30낮+{m['pct_30d']}% 볼륨을 높이세요{m['vol_ratio']}x  → {grade} {reason}")
             if value:
                 v = value
                 checks_str = " ".join(f"{'✅' if val else '❌'}{k}" for k, val in v["checks"].items())
-                print(f"     基本面({v['fund_label']}): 营收{v['fund']['rev_yoy']}% 毛利{v['fund']['gm']}% EPS超{v['fund']['eps_beat']}%")
+                print(f"     기초({v['fund_label']}): 수익{v['fund']['rev_yoy']}% 총 이익{v['fund']['gm']}% EPS추월하다{v['fund']['eps_beat']}%")
                 print(f"     {checks_str}")
                 if v["independent_pass"]:
-                    print(f"     ★独立通过：{v['independent_reason']}")
+                    print(f"     ★독립적으로 통과：{v['independent_reason']}")
         elif grade == "WATCH":
-            print(f"  {s} {ticker:<8} ${m['close']:<8} 30日+{m['pct_30d']}%  → 动量触发！需补充基本面数据")
+            print(f"  {s} {ticker:<8} ${m['close']:<8} 30낮+{m['pct_30d']}%  → 모멘텀 트리거! 기초자료 보완 필요")
         elif grade == "PASS":
             print(f"  {s} {ticker:<8} ${m['close']:<8}  → {reason}")
-        # SKIP不输出
+        # SKIP출력 없음
 
     return result
 
 
 # ============================================================
-# 主程序
+# 메인 프로그램
 # ============================================================
 
 def main():
     args = sys.argv[1:]
 
-    # 更新模式
+    # 업데이트 모드
     if args and args[0] == "--update":
-        ticker = args[1] if len(args) > 1 else input("  标的代码: ").strip().upper()
+        ticker = args[1] if len(args) > 1 else input("  타겟 코드: ").strip().upper()
         update_fundamental_interactive(ticker)
         return
 
-    # 初始化默认watchlist
+    # 기본값 초기화watchlist
     os.makedirs(DATA_DIR, exist_ok=True)
     if not os.path.exists(WATCHLIST_FILE):
         with open(WATCHLIST_FILE, "w") as f:
             json.dump(DEFAULT_WATCHLIST, f, indent=2)
-        print(f"  已创建默认watchlist: {WATCHLIST_FILE}")
+        print(f"  기본 생성됨watchlist: {WATCHLIST_FILE}")
 
-    # 确定扫描范围
+    # 스캔 범위 결정
     if args:
         tickers = [t.upper() for t in args]
     else:
@@ -355,11 +355,11 @@ def main():
         for group, syms in wl.items():
             tickers.extend(syms)
 
-    # 执行扫描
+    # 스캔 수행
     today = datetime.now().strftime("%Y-%m-%d")
     print(f"\n{'='*70}")
-    print(f"  动量发现 + 价值验证 选股筛  {today}")
-    print(f"  扫描范围：{len(tickers)} 个标的")
+    print(f"  모멘텀 발견 + 가치검증 주식선택 화면  {today}")
+    print(f"  스캔 범위：{len(tickers)} 목표")
     print(f"{'='*70}\n")
 
     buy_signals = []
@@ -373,28 +373,28 @@ def main():
             elif result["grade"] == "WATCH":
                 watch_signals.append(result)
 
-    # 汇总
+    # 요약
     print(f"\n{'='*70}")
-    print(f"  📋 扫描结果汇总")
+    print(f"  📋 스캔 결과 요약")
     print(f"{'='*70}")
 
     if buy_signals:
-        print(f"\n  🎯 买入信号：{len(buy_signals)} 个")
+        print(f"\n  🎯 매수 신호：{len(buy_signals)} 개인")
         for s in sorted(buy_signals, key=lambda x: x["grade"], reverse=True):
             m = s["momentum"]
             print(f"     {s['grade']:<8} {s['ticker']:<8} ${m['close']:<8} {s['reason']}")
     else:
-        print(f"\n  无买入信号")
+        print(f"\n  매수 신호 없음")
 
     if watch_signals:
-        print(f"\n  👀 观察（需补基本面）：{len(watch_signals)} 个")
+        print(f"\n  👀 관찰(기본 보충 필요）：{len(watch_signals)} 개인")
         for s in watch_signals:
             m = s["momentum"]
-            print(f"     {s['ticker']:<8} ${m['close']:<8} 30日+{m['pct_30d']}% — 请用 --update {s['ticker']} 补充")
+            print(f"     {s['ticker']:<8} ${m['close']:<8} 30낮+{m['pct_30d']}% — 이용해주세요 --update {s['ticker']} 다시 채우다")
 
-    print(f"\n  基本面数据文件：{FUND_FILE}")
-    print(f"  Watchlist文件：{WATCHLIST_FILE}")
-    print(f"  用 --update TICKER 补充/更新基本面\n")
+    print(f"\n  기본 데이터 파일：{FUND_FILE}")
+    print(f"  Watchlist문서：{WATCHLIST_FILE}")
+    print(f"  사용 --update TICKER 다시 채우다/기본 사항 업데이트\n")
 
 
 if __name__ == "__main__":
