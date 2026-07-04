@@ -96,9 +96,9 @@ TaskCreate로 아래 4개 태스크를 만든다:
   1. **셀사이드 등급 변동**: 골드만삭스, 모건스탠리 등의 최근 등급/목표가 조정
   2. **기관 보유 변화**: 13F 공시(미국 주식), 홍콩 주식 남향 자금, 외국인 자금 흐름
   3. **공매도 데이터**: 공매도 비율, 새로 발표된 공매도 리포트 (있는 경우)
-  4. **유명 투자자 관점**: `python3 ~/ai-berkshire/tools/xueqiu_scraper.py`로 돤융핑 등 유명 투자자의 최근 관련 발언 수집 가능
+  4. **유명 투자자 관점**: `python3 tools/xueqiu_scraper.py`로 돤융핑 등 유명 투자자의 최근 관련 발언 수집 가능
      - 돤융핑 user_id: `1247347556`
-     - 명령 예시: `python3 ~/ai-berkshire/tools/xueqiu_scraper.py --user-id 1247347556 --keywords {회사명},{종목코드} --output /tmp/dyp-{회사명}.md`
+     - 명령 예시: `python3 tools/xueqiu_scraper.py --user-id 1247347556 --keywords {회사명},{종목코드} --output /tmp/dyp-{회사명}.md`
      - 해당 회사가 돤융핑/리루의 관심 종목일 때만 호출, 아니면 건너뛰어 시간 절약
   5. **루머와 소문**: 미디어가 확인하지 못한 루머, 소셜미디어 토론 이슈 (X/Reddit 등)
   6. **기술적 신호**: 핵심 지지선/저항선 도달 여부, 대량 매매 여부, 신용거래 이상
@@ -106,7 +106,7 @@ TaskCreate로 아래 4개 태스크를 만든다:
 
 ### 5단계: 4개 Agent 병렬 실행
 
-**반드시 같은 메시지에서 Task 도구를 4번 병렬 호출한다**. 각 Agent 설정:
+**반드시 같은 메시지에서 Task 도구를 4번 병렬 호출한다**. 팀 도구가 없는 환경이거나 병렬 Agent 실행이 실패(세션 한도 등)하면 team-lead가 4개 정찰 축을 **순차 수행**한다 — 이 skill은 속도가 생명이므로 폴백 시에는 축당 검색 1~2회로 압축한다. 각 Agent 설정:
 - `subagent_type`: `general-purpose`
 - `run_in_background`: `true`
 - `team_name`: `{회사명}-newspulse`

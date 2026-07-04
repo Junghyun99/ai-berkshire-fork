@@ -55,7 +55,7 @@ def fmt_number(d: Decimal, unit: str = "") -> str:
 
 
 # ---------------------------------------------------------------------------
-# 1. Market Cap Verification (주가×총 자본금 vs 보고된 시가총액)
+# 1. Market Cap Verification (주가×총주식수 vs 보고된 시가총액)
 # ---------------------------------------------------------------------------
 
 def verify_market_cap(price, shares, reported_cap, currency=""):
@@ -71,7 +71,7 @@ def verify_market_cap(price, shares, reported_cap, currency=""):
     print("시장가치 검증 (Market Cap Verification)")
     print("=" * 60)
     print(f"  주가 (Price):       {p} {currency}")
-    print(f"  총 자본금 (Shares):    {fmt_number(s)}")
+    print(f"  총주식수 (Shares):    {fmt_number(s)}")
     print(f"  시가총액 계산:           {fmt_number(calculated)} {currency}")
     print(f"  보고된 시가총액:           {fmt_number(r)} {currency}")
     print(f"  편차:               {deviation:.2f}%")
@@ -87,7 +87,7 @@ def verify_market_cap(price, shares, reported_cap, currency=""):
         print(f"  ⚠️  편차 {deviation:.1f}% 허용 범위 내, 주가변동에 따른 것일 수도 있음/자본 변동")
         return True
     else:
-        print(f"  ✅ 확인 통과, 편차불과 {deviation:.2f}%")
+        print(f"  ✅ 검산 통과 — 편차 {deviation:.2f}%")
         return True
 
 
@@ -103,7 +103,7 @@ def verify_valuation(price, eps=None, bvps=None, fcf_per_share=None,
     print("=" * 60)
     print("평가지표 계산 (Valuation Verification)")
     print("=" * 60)
-    print(f"  현재의주가: {p}")
+    print(f"  현재 주가: {p}")
     print()
 
     results = {}
@@ -156,7 +156,7 @@ def verify_valuation(price, eps=None, bvps=None, fcf_per_share=None,
             results["PS"] = float(ps)
 
     print()
-    print("  ✅ 위의 지표는 정확한 십진법을 사용하여 계산됩니다., 부동 소수점 오류 없음")
+    print("  ✅ 모든 지표는 정밀 십진수(Decimal)로 계산 — 부동소수점 오차 없음")
     return results
 
 
@@ -331,19 +331,24 @@ def three_scenario_valuation(current_price, current_eps, shares_billion,
     shares = exact(shares_billion)
 
     scenarios = [
-        ("낙천주의 (Bull)", growth_optimistic, pe_optimistic),
-        ("중립적 (Base)", growth_neutral, pe_neutral),
-        ("비관적인 (Bear)", growth_pessimistic, pe_pessimistic),
+        ("낙관 (Bull)", growth_optimistic, pe_optimistic),
+        ("중립 (Base)", growth_neutral, pe_neutral),
+        ("비관 (Bear)", growth_pessimistic, pe_pessimistic),
     ]
 
-    print(f"  현재의주가: {p} {currency}")
-    print(f"  현재의EPS:  {eps}")
-    print(f"  예측 기간:   {years}년도")
+    print(f"  현재 주가: {p} {currency}")
+    print(f"  현재 EPS:  {eps}")
+    print(f"  예측 기간:   {years}년")
     print()
-    print(f"  {'장면':12} {'년도성장률':>8} {'목표PE':>8} {'목표EPS':>10} {'목표주가':>10} {'증가 또는 감소':>8}")
+    print(f"  {'시나리오':10} {'연 성장률':>8} {'목표PE':>8} {'목표EPS':>10} {'목표주가':>10} {'등락률':>8}")
     print(f"  {'-'*12} {'-'*8} {'-'*8} {'-'*10} {'-'*10} {'-'*8}")
 
+    pct_notice = False
     for name, growth, pe in scenarios:
+        # |growth| > 1 이면 % 입력으로 간주해 자동 변환 (예: 15 → 0.15)
+        if abs(growth) > 1:
+            growth = growth / 100.0
+            pct_notice = True
         g = exact(growth)
         target_pe = exact(pe)
         # Future EPS = current EPS × (1 + growth)^years
@@ -357,7 +362,9 @@ def three_scenario_valuation(current_price, current_eps, shares_billion,
               f"{float(future_eps):>10.2f} {float(target_price):>9.1f} {change:>+7.1f}%")
 
     print()
-    print("  ✅ 모든 계산은 정확한 소수점을 사용합니다., 결과를 감사하고 재현할 수 있습니다.")
+    if pct_notice:
+        print("  ⚠️ 성장률 입력값 |x| > 1 감지 → %로 간주해 100으로 나눠 계산했습니다 (권장 형식: 소수, 예: 0.15).")
+    print("  ✅ 모든 계산은 정밀 십진수(Decimal) 기반 — 결과는 재현·감사 가능합니다.")
 
 
 # ---------------------------------------------------------------------------
@@ -380,9 +387,9 @@ Examples:
     sub = parser.add_subparsers(dest="command")
 
     # verify-market-cap
-    mc = sub.add_parser("verify-market-cap", help="시장 가치 확인 = 주가 × 총 자본금")
+    mc = sub.add_parser("verify-market-cap", help="시장 가치 확인 = 주가 × 총주식수")
     mc.add_argument("--price", type=float, required=True)
-    mc.add_argument("--shares", type=float, required=True, help="총 자본금")
+    mc.add_argument("--shares", type=float, required=True, help="총주식수")
     mc.add_argument("--reported", type=float, required=True, help="보고된 시가총액")
     mc.add_argument("--currency", default="", help="통화")
 
@@ -414,11 +421,11 @@ Examples:
     ts = sub.add_parser("three-scenario", help="3가지 시나리오 평가")
     ts.add_argument("--price", type=float, required=True)
     ts.add_argument("--eps", type=float, required=True)
-    ts.add_argument("--shares", type=float, required=True, help="총 자본금(1억)")
+    ts.add_argument("--shares", type=float, required=True, help="총주식수(억 주)")
     ts.add_argument("--growth", nargs=3, type=float, required=True,
-                    help="세 가지 시나리오의 연간 성장률 (낙관적 중립 비관적), 좋다 0.15 0.08 0.0")
+                    help="낙관/중립/비관 연 성장률 — 소수 형식 (예: 0.15 -0.05 -0.25). |x|>1이면 %%로 간주해 자동 변환")
     ts.add_argument("--pe", nargs=3, type=float, required=True,
-                    help="세 가지 시나리오 목표PE, 좋다 25 20 15")
+                    help="낙관/중립/비관 목표 PER (예: 10 9 12)")
     ts.add_argument("--years", type=int, default=3)
     ts.add_argument("--currency", default="")
 

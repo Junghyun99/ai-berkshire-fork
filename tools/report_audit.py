@@ -105,8 +105,8 @@ _KV_TABLE_RE = re.compile(
 
 # 태그됨 KV 행: 라벨: 값 단위
 _KV_LABEL_RE = re.compile(
-    r'(?P<label>[\u4e00-\u9fa5A-Za-z][^\|\n：:*]{1,30})[：:]\s*[~~에 대한]?\$?'
-    r'(?P<num>[\d,，\.]+)\s*(?P<unit>1억[홍콩 위안메이]?원?|수조|[xX타임스]|%|[BMT])?'
+    r'(?P<label>[가-힣\u4e00-\u9fa5A-Za-z][^\|\n：:*]{1,30})[：:]\s*[~≈약]?\$?'
+    r'(?P<num>[\d,，\.]+)\s*(?P<unit>조원|억원|만원|원|조|억|%|배|[xX]|[BMT]|1억[홍콩 위안메이]?원?|수조)?'
 )
 
 
@@ -138,7 +138,8 @@ def _parse_md_tables(lines: list) -> list:
                         col_header = headers_raw[col_idx] if col_idx < len(headers_raw) else f'목록{col_idx}'
                         # 발췌 cell 숫자+단위
                         m = re.search(
-                            r'[~~에 대한]?\$?([\d,，\.]+)\s*(1억[홍콩 위안메이]?원?|수조|[xX타임스]|%|[BMT])?',
+                            r'[~≈약]?\$?([\d,，\.]+)\s*'
+                            r'(조원|억원|만원|원|조|억|%|배|[xX]|[BMT]|1억[홍콩 위안메이]?원?|수조)?',
                             cell
                         )
                         if m:
@@ -172,9 +173,17 @@ def extract_data_points(md_text: str) -> list:
             return
         if val is None or val == 0 or val > 1e15:
             return
-        # 순수한 연도 필터링/4분의 1
+        # 순수 연도/분기 라벨 필터링
         if re.fullmatch(r'(20\d{2}|Q[1-4]|\d{4}\s*Q[1-4])', label.strip()):
             return
+        # 단위 없는 연도형 수치 필터링 (예: "2025년"의 2025, "2026 Q1"의 2026)
+        if not unit and val == int(val) and 1900 <= val <= 2100:
+            return
+        # 단위 없는 서수/기간 표현 필터링 (예: "1년간"의 1, "3년치"의 3)
+        if not unit and raw:
+            numstr = ('%g' % val)
+            if re.search(re.escape(numstr) + r'\s*(년|개년|년간|년치|개월|분기|일|위|차|호|단계|가지|개사?|명|건|곳|회)', raw):
+                return
         key = f"{label}|{round(val,4)}|{unit}"
         if key in seen:
             return
@@ -231,7 +240,13 @@ def sample_points(points: list, ratio: float = 0.15, seed: int = None) -> list:
     n = max(3, min(30, math.ceil(len(points) * ratio)))
     n = min(n, len(points))
     rng = Random(seed)
-    sampled = rng.sample(points, n)
+    # 단위가 있는 수치(조원/억원/%/배 등)를 우선 표본으로 뽑고, 부족분만 단위 없는 수치에서 보충
+    unit_pts = [p for p in points if p.get('unit')]
+    bare_pts = [p for p in points if not p.get('unit')]
+    take_unit = min(n, len(unit_pts))
+    sampled = rng.sample(unit_pts, take_unit)
+    if take_unit < n:
+        sampled += rng.sample(bare_pts, min(n - take_unit, len(bare_pts)))
     # 수동 비교를 용이하게 하기 위해 줄 번호별로 정렬
     return sorted(sampled, key=lambda p: p['line_number'])
 
@@ -275,7 +290,7 @@ def render_verdict(results: list, report_name: str = "") -> dict:
     RESET = '\033[0m'
 
     print('=' * 70)
-    print(f'{BOLD}보고서 데이터 샘플링 — 정확한/평결을 반환{RESET}')
+    print(f'{BOLD}보고서 데이터 표본 검사 — 판정{RESET}')
     if report_name:
         print(f'보고서：{report_name}')
     print('=' * 70)
@@ -296,7 +311,7 @@ def render_verdict(results: list, report_name: str = "") -> dict:
         # --- 기본 소스 비교 ---
         if fetched is None:
             # 제공된 확인 값이 없습니다. → 건너뛰기(합격에 포함되지 않음)/실패하다）
-            print(f'  ⬜ [{item["id"]:>2}] {label[:35]:35s} {reported:>12.2f} {unit}  →  [확인 값이 제공되지 않았습니다. 건너뛰세요.]')
+            print(f'  ⬜ [{item["id"]:>2}] {label[:35]:35s} {reported:>12.2f} {unit}  →  [검증값 미제공 — 건너뜀]')
             continue
 
         fetched = float(fetched)
@@ -313,12 +328,12 @@ def render_verdict(results: list, report_name: str = "") -> dict:
         pass2 = (diff2 is None) or (diff2 <= _TOLERANCE)
 
         if pass1 and pass2:
-            status = f'{GREEN}✅ 통과하다{RESET}'
+            status = f'{GREEN}✅ 통과{RESET}'
             detail = f'{source}: {fetched:.2f} (편차 {diff1*100:.2f}%)'
             if diff2 is not None:
                 detail += f'  |  {source2}: {fetched2:.2f} (편차 {diff2*100:.2f}%)'
         elif not pass1 and not pass2:
-            status = f'{RED}❌ 실패한{RESET}'
+            status = f'{RED}❌ 실패{RESET}'
             detail = f'{source}: {fetched:.2f} (편차 {diff1*100:.2f}%)'
             if diff2 is not None:
                 detail += f'  |  {source2}: {fetched2:.2f} (편차 {diff2*100:.2f}%)'
@@ -338,7 +353,7 @@ def render_verdict(results: list, report_name: str = "") -> dict:
             })
         else:
             # 한 소스는 통과하고 다른 소스는 통과하지 못함 → 경고하다, 실패로 간주하지 않음
-            status = f'{YELLOW}⚠️  경고하다{RESET}'
+            status = f'{YELLOW}⚠️  경고{RESET}'
             detail = f'{source}: {fetched:.2f} (편차 {diff1*100:.2f}%)'
             if diff2 is not None:
                 detail += f'  |  {source2}: {fetched2:.2f} (편차 {diff2*100:.2f}%)'
@@ -360,28 +375,28 @@ def render_verdict(results: list, report_name: str = "") -> dict:
     warn_count = len(warn_items)
     pass_count = total - fail_count - warn_count
 
-    print(f'  총 무작위 검사 횟수: {total}  |  통과하다: {GREEN}{pass_count}{RESET}  |  경고하다: {YELLOW}{warn_count}{RESET}  |  실패한: {RED}{fail_count}{RESET}')
+    print(f'  총 표본 검사: {total}  |  통과: {GREEN}{pass_count}{RESET}  |  경고: {YELLOW}{warn_count}{RESET}  |  실패: {RED}{fail_count}{RESET}')
     print()
 
     if fail_count == 0:
-        print(f'{BOLD}{GREEN}【가결] 무작위 검사자료 전량 통과 및 보고서 공개 가능。{RESET}')
+        print(f'{BOLD}{GREEN}[출고] 표본 검사 전량 통과 — 보고서 발행 가능.{RESET}')
         verdict = 'PASS'
     else:
-        print(f'{BOLD}{RED}【반격하다】{fail_count} 데이터 포인트가 검증을 통과하지 못한 경우 보고서를 수정하고 재검토해야 합니다.。{RESET}')
+        print(f'{BOLD}{RED}[반려] {fail_count}개 데이터 포인트 검증 실패 — 해당 수치 수정 후 재검사 필요.{RESET}')
         print()
-        print(f'{BOLD}다시 전화한 이유：{RESET}')
+        print(f'{BOLD}반려 사유:{RESET}')
         for fi in fail_items:
-            print(f'  ❌ 아니요. {fi["line_number"]} 좋아요 | {fi["label"]}')
-            print(f'     보고서 값：{fi["reported"]} {fi["unit"]}')
+            print(f'  ❌ 라인 {fi["line_number"]} | {fi["label"]}')
+            print(f'     보고서 값: {fi["reported"]} {fi["unit"]}')
             print(f'     {fi["source"]}：{fi["fetched"]}  （편차 {fi["diff1_pct"]}%）')
             if fi.get('fetched2') is not None:
                 print(f'     {fi["source2"]}：{fi["fetched2"]}  （편차 {fi["diff2_pct"]}%）')
-            print(f'     원래의：{fi["raw_text"][:80]}')
+            print(f'     원문: {fi["raw_text"][:80]}')
             print()
         verdict = 'FAIL'
 
     if warn_count > 0:
-        print(f'{YELLOW}알아채다：{warn_count} 두 소스 간에 데이터 포인트가 일치하지 않습니다(1%），어쩌면 구경의 차이일 수도 있겠네요（GAAP/Non-GAAP또는 환율), 수동으로 검토하시기 바랍니다。{RESET}')
+        print(f'{YELLOW}주의: {warn_count}개 데이터 포인트가 두 출처 간 불일치(>1%) — 기준 차이(GAAP/Non-GAAP·환율·희석) 가능성, 수동 검토 요망.{RESET}')
         for wi in warn_items:
             print(f'  ⚠️  {wi["label"]}  보고서:{wi["reported"]} {wi["unit"]}  편차: {wi["diff1_pct"]}% / {wi["diff2_pct"]}%')
 
@@ -473,9 +488,10 @@ def main():
             print(f'{p["id"]:>3}  {p["line_number"]:>5}  {p["label"][:35]:<35}  {p["reported_value"]:>12.2f}  {p["unit"]}')
         print()
         print('↑ 위의 각 데이터 포인트에 대해 다음 소스에서 번호를 가져와 입력하세요. fetched_value：')
-        print('  미국 주식：macrotrends.net（주인）+ stockanalysis.com（바이스）')
-        print('  홍콩 주식：aastocks.com（주인）+ macrotrends ADR（바이스）')
-        print('  A공유하다： eastmoney.com（주인）+ cninfo.com.cn（바이스）')
+        print('  한국 주식：dart.fss.or.kr（주）+ 네이버 금융（부） — tools/global_stock_data.py 활용 가능')
+        print('  미국 주식：macrotrends.net（주）+ stockanalysis.com（부）')
+        print('  홍콩 주식：aastocks.com（주）+ macrotrends ADR（부）')
+        print('  중국 A주：eastmoney.com（주）+ cninfo.com.cn（부）')
         print()
 
         if not args.dry_run:

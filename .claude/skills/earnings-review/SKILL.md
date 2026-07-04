@@ -193,7 +193,7 @@ python3 tools/financial_rigor.py verify-valuation \
 
 ### 7단계: 보고서 저장
 
-보고서를 `reports/{회사명}-earnings-{기간}.md`에 저장한다. 예: `reports/텐센트-earnings-2025Q4.md`
+보고서를 `reports/{회사명}/{회사명}-earnings-{기간}.md`에 저장한다. 예: `reports/텐센트/텐센트-earnings-2025Q4.md` (CLAUDE.md 명명 규칙)
 
 ### 8단계: 데이터 표본 검사 (출고 프로세스)
 
@@ -201,13 +201,13 @@ python3 tools/financial_rigor.py verify-valuation \
 
 ```bash
 # Step 1 — 표본 검사 목록 추출
-python3 ~/ai-berkshire/tools/report_audit.py extract \
-  --report reports/{회사명}-earnings-{기간}.md
+python3 tools/report_audit.py extract \
+  --report reports/{회사명}/{회사명}-earnings-{기간}.md
 
 # Step 2 — 목록의 각 항목을 신뢰할 수 있는 출처에서 재확인 (.claude/skills/financial-data/SKILL.md 참조)
 
 # Step 3 — 출고/반려 판정 출력
-python3 ~/ai-berkshire/tools/report_audit.py verdict \
+python3 tools/report_audit.py verdict \
   --results '<채워진 JSON>' \
   --report {보고서 파일명}
 ```
