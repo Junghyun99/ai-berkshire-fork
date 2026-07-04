@@ -87,7 +87,7 @@ def _resolve(code: str):
     for symbol in _candidates(code):
         try:
             meta = _fetch_meta(symbol)
-        except (ConnectionError, json.JSONDecodeError):
+        except Exception:
             meta = None
         if not meta or meta.get("regularMarketPrice") is None:
             continue
@@ -114,8 +114,10 @@ def _timeseries(symbol: str, types):
         t = r.get("meta", {}).get("type", [None])[0]
         if not t or t not in r:
             continue
-        rows = [(v["asOfDate"], v["reportedValue"]["raw"])
-                for v in r[t] if v and v.get("reportedValue")]
+        rows = [(v["asOfDate"], v["reportedValue"].get("raw"))
+                for v in r[t]
+                if v and v.get("asOfDate") and v.get("reportedValue")
+                and v["reportedValue"].get("raw") is not None]
         out[t] = sorted(rows)
     return out
 
@@ -202,7 +204,7 @@ def cmd_quote(code: str):
         print(f"  시가총액:    {_fmt_big(_latest(ts, 'trailingMarketCap'), cur)}")
         print(f"  PER(TTM):    {_fmt_num(_latest(ts, 'trailingPeRatio'))}")
         print(f"  PBR:         {_fmt_num(_latest(ts, 'trailingPbRatio'))}")
-    except (ConnectionError, json.JSONDecodeError):
+    except Exception:
         print("  ⚠️ 시총/PER/PBR 조회 실패 — valuation 명령 또는 WebSearch로 보완 필요")
 
 
@@ -215,11 +217,15 @@ def cmd_valuation(code: str):
 
     cur = m.get("currency", "")
     price = m.get("regularMarketPrice")
-    ts = _timeseries(symbol, [
-        "trailingMarketCap", "trailingPeRatio", "trailingPbRatio",
-        "quarterlyMarketCap", "quarterlyPeRatio", "quarterlyPbRatio",
-        "quarterlyShareIssued",
-    ])
+    try:
+        ts = _timeseries(symbol, [
+            "trailingMarketCap", "trailingPeRatio", "trailingPbRatio",
+            "quarterlyMarketCap", "quarterlyPeRatio", "quarterlyPbRatio",
+            "quarterlyShareIssued",
+        ])
+    except Exception as e:
+        print(f"  ⚠️ 밸류에이션 데이터 조회 실패: {e}")
+        return
     market_cap = _latest(ts, "trailingMarketCap") or _latest(ts, "quarterlyMarketCap")
     shares = _latest(ts, "quarterlyShareIssued")
 
@@ -253,10 +259,14 @@ def cmd_financials(code: str):
         return
 
     cur = m.get("currency", "")
-    ts = _timeseries(symbol, [
-        "annualTotalRevenue", "annualNetIncomeCommonStockholders",
-        "annualDilutedEPS", "annualBasicEPS", "annualStockholdersEquity",
-    ])
+    try:
+        ts = _timeseries(symbol, [
+            "annualTotalRevenue", "annualNetIncomeCommonStockholders",
+            "annualDilutedEPS", "annualBasicEPS", "annualStockholdersEquity",
+        ])
+    except Exception as e:
+        print(f"  ⚠️ 재무 데이터 조회 실패: {e}")
+        return
     revenue = dict(ts.get("annualTotalRevenue", []))
     profit = dict(ts.get("annualNetIncomeCommonStockholders", []))
     eps = dict(ts.get("annualDilutedEPS", []) or ts.get("annualBasicEPS", []))
@@ -283,7 +293,7 @@ def cmd_financials(code: str):
             print(f"  순이익 성장률:   {_fmt_pct((ni / profit[prev_d] - 1) * 100)}")
         if eps.get(d) is not None:
             print(f"  희석 EPS:        {_fmt_num(eps[d])}")
-        if ni and eq:
+        if ni is not None and eq:
             print(f"  ROE(기말자본):   {ni / eq * 100:.1f}% (단순 계산: 순이익/기말 자기자본)")
 
     print("\n  주의: Yahoo Finance 집계 기준. 핵심 수치는 공시 원본(DART/HKEX/SEC)과 교차 검증할 것.")
