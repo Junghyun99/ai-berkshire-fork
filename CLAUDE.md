@@ -9,7 +9,7 @@ Claude Code 기반의 가치투자 리서치 Skill 모음집. 4대 거장 프레
 
 ```
 .claude/skills/  — 투자 리서치 Skill 정의({이름}/SKILL.md), 프로젝트 스킬로 자동 로드
-tools/           — 보조 도구 (financial_rigor.py 정밀 계산)
+tools/           — 보조 도구 (financial_rigor.py 정밀 계산, global_stock_data.py 한국·미국·홍콩 시세/재무 수집, ashare_data.py 중국 A주 전용)
 reports/         — 투자 리서치 보고서 출력
 assets/          — 이미지 등 정적 리소스
 ```
