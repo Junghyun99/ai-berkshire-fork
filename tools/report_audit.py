@@ -182,7 +182,7 @@ def extract_data_points(md_text: str) -> list:
         # 단위 없는 서수/기간 표현 필터링 (예: "1년간"의 1, "3년치"의 3)
         if not unit and raw:
             numstr = ('%g' % val)
-            if re.search(re.escape(numstr) + r'\s*(년|개년|년간|년치|개월|분기|일|위|차|호|단계|가지|개사?|명|건|곳|회)', raw):
+            if re.search(r'(?<![\d.,])' + re.escape(numstr) + r'\s*(년|개년|년간|년치|개월|분기|일|위|차|호|단계|가지|개사?|명|건|곳|회)', raw):
                 return
         key = f"{label}|{round(val,4)}|{unit}"
         if key in seen:
@@ -323,16 +323,21 @@ def render_verdict(results: list, report_name: str = "") -> dict:
             fetched2 = float(fetched2)
             diff2 = _pct_diff(reported, fetched2)
 
-        # 판사
+        # 판정: 보조 출처가 없으면 기본 출처 결과만으로 통과/실패를 가른다
         pass1 = diff1 <= _TOLERANCE
         pass2 = (diff2 is None) or (diff2 <= _TOLERANCE)
+        if diff2 is None:
+            is_pass, is_fail = pass1, not pass1
+        else:
+            is_pass = pass1 and pass2
+            is_fail = (not pass1) and (not pass2)
 
-        if pass1 and pass2:
+        if is_pass:
             status = f'{GREEN}✅ 통과{RESET}'
             detail = f'{source}: {fetched:.2f} (편차 {diff1*100:.2f}%)'
             if diff2 is not None:
                 detail += f'  |  {source2}: {fetched2:.2f} (편차 {diff2*100:.2f}%)'
-        elif not pass1 and not pass2:
+        elif is_fail:
             status = f'{RED}❌ 실패{RESET}'
             detail = f'{source}: {fetched:.2f} (편차 {diff1*100:.2f}%)'
             if diff2 is not None:

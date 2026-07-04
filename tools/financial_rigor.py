@@ -345,11 +345,11 @@ def three_scenario_valuation(current_price, current_eps, shares_billion,
 
     pct_notice = False
     for name, growth, pe in scenarios:
-        # |growth| > 1 이면 % 입력으로 간주해 자동 변환 (예: 15 → 0.15)
-        if abs(growth) > 1:
-            growth = growth / 100.0
-            pct_notice = True
         g = exact(growth)
+        # |growth| > 1 이면 % 입력으로 간주해 자동 변환 (예: 15 → 0.15) — Decimal 나눗셈으로 정밀도 유지
+        if abs(g) > 1:
+            g = _CTX.divide(g, Decimal("100"))
+            pct_notice = True
         target_pe = exact(pe)
         # Future EPS = current EPS × (1 + growth)^years
         future_eps = eps
