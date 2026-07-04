@@ -13,9 +13,9 @@
 
 사용법(Skills에서 자동 호출 기준):
     python3 tools/global_stock_data.py quote 005930         # 실시간 시세
-    python3 tools/global_stock_data.py financials 005930    # 핵심 재무(최근 5년)
+    python3 tools/global_stock_data.py financials 005930    # 핵심 재무(최근 5년, 한국 종목은 네이버증권 교차 검증 포함)
     python3 tools/global_stock_data.py valuation 005930     # 밸류에이션 지표 + 시총 검산
-    python3 tools/global_stock_data.py search "samsung"     # 종목 코드 검색(영문명/티커만, 한글 미지원)
+    python3 tools/global_stock_data.py search 삼성전자       # 종목 검색(한글=네이버증권, 영문/티커=Yahoo)
 
 필요 Python >= 3.8, 외부 종속성 없음.
 """
@@ -30,6 +30,8 @@ from urllib.parse import urlencode
 
 _TIMEOUT = 15
 _BASE = "https://query1.finance.yahoo.com"
+_NAVER_API = "https://m.stock.naver.com/api"
+_NAVER_AC = "https://ac.stock.naver.com/ac"
 
 
 def _curl(url):
@@ -47,6 +49,12 @@ def _curl(url):
 
 def _get_json(path, params=None):
     url = f"{_BASE}{path}"
+    if params:
+        url = f"{url}?{urlencode(params)}"
+    return json.loads(_curl(url))
+
+
+def _naver_json(url, params=None):
     if params:
         url = f"{url}?{urlencode(params)}"
     return json.loads(_curl(url))
@@ -298,12 +306,61 @@ def cmd_financials(code: str):
 
     print("\n  주의: Yahoo Finance 집계 기준. 핵심 수치는 공시 원본(DART/HKEX/SEC)과 교차 검증할 것.")
 
+    # 한국 종목은 네이버증권 데이터를 함께 출력해 2개 출처 교차 검증을 지원한다
+    if symbol.endswith((".KS", ".KQ")):
+        _naver_financials_section(symbol.split(".")[0])
+
+
+def _naver_financials_section(code6: str):
+    """네이버증권 연간 재무를 교차 검증용으로 출력(한국 종목 전용). 실패 시 조용히 생략."""
+    try:
+        data = _naver_json(f"{_NAVER_API}/stock/{code6}/finance/annual")
+        fi = data["financeInfo"]
+        periods = fi["trTitleList"]           # [{key, title, isConsensus}]
+        rows = {r["title"]: r["columns"] for r in fi["rowList"]}
+    except Exception:
+        print("\n  ⚠️ 네이버증권 교차 검증 데이터 조회 실패(생략)")
+        return
+
+    print("\n" + "-" * 60)
+    print("  [교차 검증] 네이버증권 연간 재무 (단위: 억원, (E)=컨센서스 추정)")
+    print("-" * 60)
+    header = "  {:<14}".format("항목") + "".join(
+        f"{p['title'] + ('(E)' if p['isConsensus'] == 'Y' else ''):>14}" for p in periods)
+    print(header)
+    for title in ["매출액", "영업이익", "지배주주순이익", "ROE", "부채비율",
+                  "EPS", "PER", "PBR", "주당배당금"]:
+        cols = rows.get(title)
+        if not cols:
+            continue
+        vals = "".join(
+            f"{(cols.get(p['key']) or {}).get('value', '-') or '-':>14}" for p in periods)
+        print(f"  {title:<14}{vals}")
+
+
+def _search_naver(keyword: str):
+    """네이버증권 자동완성 검색 — 한글 종목명 지원(국내 주식)."""
+    data = _naver_json(_NAVER_AC, {"q": keyword, "target": "stock"})
+    items = data.get("items", [])
+    if not items:
+        print(f"❌ '{keyword}' 와 일치하는 종목이 없습니다.")
+        return
+    print("=" * 60)
+    print(f"검색 결과(네이버증권): '{keyword}'")
+    print("=" * 60)
+    for it in items[:10]:
+        print(f"  {it.get('code', ''):<12} {it.get('name', '-')}  "
+              f"[{it.get('typeName', '')}/{it.get('nationName', '')}]")
+
 
 def cmd_search(keyword: str):
-    """종목 코드 검색. 한글 종목명은 Yahoo가 지원하지 않음 — 영문명/티커로 검색."""
+    """종목 코드 검색. 한글 키워드는 네이버증권, 영문/티커는 Yahoo Finance."""
     if re.search(r"[가-힣]", keyword):
-        print("⚠️ Yahoo Finance는 한글 종목명 검색을 지원하지 않습니다.")
-        print("   영문 회사명(예: 'samsung electronics') 또는 6자리 종목코드로 시도하세요.")
+        try:
+            _search_naver(keyword)
+        except Exception as e:
+            print(f"⚠️ 네이버증권 검색 실패: {e}")
+            print("   영문 회사명(예: 'samsung electronics') 또는 6자리 종목코드로 시도하세요.")
         return
 
     data = _get_json("/v1/finance/search",
