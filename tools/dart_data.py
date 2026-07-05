@@ -258,21 +258,28 @@ def _extract_accounts(items, fs_div):
     result = {}
     for label, sj_set, id_cands, name_cands in _KEY_ACCOUNTS:
         norm_cands = {_norm(n) for n in name_cands}
-        for it in items:
-            if it.get("sj_div") not in sj_set:
-                continue
-            if id_cands:
-                # account_id 지정 계정은 ID로만 매칭(계정명 중복·표기차 무시)
-                if it.get("account_id") not in id_cands:
-                    continue
-            elif _norm(it.get("account_nm", "")) not in norm_cands:
-                continue
+        match = None
+        # 1순위: XBRL account_id (지정된 경우). 표기 차이·계정명 중복에 가장 강하다.
+        if id_cands:
+            for it in items:
+                if it.get("sj_div") in sj_set and it.get("account_id") in id_cands:
+                    match = it
+                    break
+        # 2순위: 계정명 폴백. id 매칭이 실패했고 계정명 후보가 있을 때만 시도한다.
+        #   → 구형·비표준 공시(account_id 누락)도 계정명으로 잡을 수 있다.
+        #   지배주주순이익은 name_cands를 비워둬 폴백을 막는다(CIS 계정명 중복 오매칭 방지).
+        if match is None and norm_cands:
+            for it in items:
+                if (it.get("sj_div") in sj_set
+                        and _norm(it.get("account_nm", "")) in norm_cands):
+                    match = it
+                    break
+        if match is not None:
             result[label] = {
-                "thstrm": _parse_amount(it.get("thstrm_amount")),
-                "frmtrm": _parse_amount(it.get("frmtrm_amount")),
-                "bfefrmtrm": _parse_amount(it.get("bfefrmtrm_amount")),
+                "thstrm": _parse_amount(match.get("thstrm_amount")),
+                "frmtrm": _parse_amount(match.get("frmtrm_amount")),
+                "bfefrmtrm": _parse_amount(match.get("bfefrmtrm_amount")),
             }
-            break  # 첫 매칭만 사용(표준 계정이 먼저 옴)
     return result
 
 
