@@ -9,6 +9,13 @@ scripts. See the upstream repo if you need Codex support.)
 
 - `.claude/skills/<name>/SKILL.md`: Claude Code project skills (canonical
   workflows), loaded automatically when Claude Code runs in this repository.
+- `.claude/agents/<role>.md`: subagent definitions for the team skills
+  (`investment-team`, `earnings-team`, `news-pulse`,
+  `private-company-research`). Loaded automatically and used as the `Agent`
+  tool's `subagent_type`. team-lead is the main session; it launches these
+  subagents in parallel (one message, N `Agent` calls) and each returns its
+  report as the tool result. There is no TeamCreate/SendMessage peer messaging
+  in this harness. See `.claude/agents/README.md`.
 - `tools/*.py`: shared financial validation and data tools.
 - `reports/`: research outputs. Do not rewrite unrelated reports while changing
   tooling or skills.

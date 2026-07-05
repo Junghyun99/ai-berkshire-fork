@@ -9,6 +9,7 @@ Claude Code 기반의 가치투자 리서치 Skill 모음집. 4대 거장 프레
 
 ```
 .claude/skills/  — 투자 리서치 Skill 정의({이름}/SKILL.md), 프로젝트 스킬로 자동 로드
+.claude/agents/  — 팀 스킬용 서브에이전트 정의({역할}.md). investment-team·earnings-team·news-pulse·private-company-research가 `Agent` 툴의 subagent_type으로 사용. 구동 모델은 .claude/agents/README.md
 tools/           — 보조 도구 (financial_rigor.py 정밀 계산, global_stock_data.py 한국·미국·홍콩 시세/재무 수집, dart_data.py 한국 DART 공시 원본 재무(주 출처, DART_API_KEY 필요), ashare_data.py 중국 A주 전용)
 reports/         — 투자 리서치 보고서 출력
 assets/          — 이미지 등 정적 리소스

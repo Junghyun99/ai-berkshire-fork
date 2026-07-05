@@ -57,15 +57,22 @@ $ARGUMENTS 에 대해 팀 기반 심층 리서치 분석을 수행한다. 앤트
 | **tech-ip-analyst** | 기술 스택/특허/R&D 역량/기술 해자 | "기술 장벽이 진짜인가 가짜인가, 얼마나 버티나" |
 | **signal-miner** | 대체 데이터 발굴: 채용/특허/소송/앱 데이터/공급망 | "일반 정보 밖에 어떤 단서가 더 있나" |
 
-### 2단계: 팀 생성
+### 2단계: 역할과 서브에이전트 매핑
 
-TeamCreate로 팀을 만든다:
-- team_name: `{회사명}-private-research` (영문 소문자, 예: `ant-group-private-research`)
-- agent_type: `team-lead`
+별도의 팀 생성 절차는 없다. 메인 세션이 team-lead다. 위 6개 역할을 아래 서브에이전트로 실행한다 (`.claude/agents/`에 정의됨):
 
-### 3단계: 6개 태스크 생성
+| 역할 | subagent_type |
+|------|--------------|
+| business-decoder | `business-decoder` |
+| financial-detective | `financial-detective` |
+| competitive-mapper | `competitive-mapper` |
+| risk-governance-analyst | `risk-governance-analyst` |
+| tech-ip-analyst | `tech-ip-analyst` |
+| signal-miner | `signal-miner` |
 
-TaskCreate로 아래 6개 태스크를 만든다 (각각 subject, description, activeForm 포함):
+### 3단계: 6개 과제 정의
+
+아래 6개 과제의 상세 요구사항을 준비한다. 이 내용은 4단계에서 각 서브에이전트의 `prompt`에 삽입된다 (각각 subject, description):
 
 ---
 
@@ -789,27 +796,21 @@ domain/subdomain 정보를 검색한다:
 
 ### 4단계: 6개 Agent 병렬 실행
 
-Agent 도구로 6개 Agent를 동시에 실행한다 (**반드시 같은 메시지에서 병렬 호출**):
+`Agent` 도구로 6개 서브에이전트를 동시에 실행한다 (**반드시 같은 메시지에서 6번 병렬 호출**):
 
-각 Agent의 설정:
-- `subagent_type`: `general-purpose`
+각 `Agent` 호출 설정:
+- `subagent_type`: 해당 역할 (`business-decoder` / `financial-detective` / `competitive-mapper` / `risk-governance-analyst` / `tech-ip-analyst` / `signal-miner`)
 - `run_in_background`: `true`
+- `description`: 짧은 과제명 (예: `앤트그룹 재무 짜맞추기`)
+- `prompt`: 아래 템플릿
 
-각 Agent의 prompt 템플릿:
+각 서브에이전트는 비상장 기업 연구의 분석 프레임·데이터 규율(신뢰도 표기, 사실/추론 구분)을 `.claude/agents/{역할}.md`에 이미 갖고 있으므로, `prompt`에는 구체적 과제만 담는다:
 
 ```
-당신은 {회사명} 비상장 기업 연구팀의 "{역할명}"이다.
-
-당신은 **비상장 기업**을 연구하고 있다. 이는 다음을 의미한다:
-- 표준화된 공개 재무제표가 없어 여러 출처에서 정보를 짜맞춰야 한다
-- 데이터가 불완전하거나 서로 모순될 수 있어 신뢰도를 표기해야 한다
-- 더 많은 추론과 합리적 추산이 필요하지만, 추산 과정을 투명하게 보여야 한다
-- 정보가 검색되지 않음 ≠ 정보가 존재하지 않음, 검색된 정보에는 편향이 있을 수 있음
-
-다음 리서치 태스크를 완료하라: {태스크 subject}
+{회사명}(비상장 기업)에 대해 다음 리서치 과제를 완료하라: {해당 과제 subject}
 
 구체적 요구사항:
-{태스크 description의 내용}
+{해당 과제 description의 내용}
 
 **리서치 방법**:
 1. WebSearch로 최신 공개 정보를 검색, 차원마다 최소 3-5회, 다른 키워드 조합 사용
@@ -1052,15 +1053,11 @@ Top 3 핵심 리스크와 대응 전략
 
 완성된 최종 보고서를 `reports/{회사명}/{회사명}-private-{YYYYMMDD}.md`에 저장한다.
 
-### 9단계: 팀 정리
-
-TeamDelete로 팀 리소스를 정리한다.
-
 ---
 
 ## 중요 주의사항
 
-1. **6개 Agent는 반드시 병렬 실행** — 같은 메시지에서 Agent 도구를 6번 호출
+1. **6개 Agent는 반드시 병렬 실행** — 같은 메시지에서 `Agent` 도구를 6번 호출한다. 서브에이전트의 최종 메시지가 team-lead에게 툴 결과로 반환되며, `SendMessage`/`TeamCreate`/`TeamDelete`는 이 하네스에 없으므로 쓰지 않는다
 2. **데이터 신뢰도 표기** — 비상장 기업의 데이터 출처는 들쭉날쭉하므로 모든 핵심 데이터에 출처와 신뢰도를 표기해야 한다
 3. **추산은 투명하게** — 모든 추산 과정은 계산 논리를 보여야 하며, 허공에서 숫자를 주면 안 된다
 4. **교차 검증** — 핵심 데이터는 최소 2개 출처로 교차 검증, 출처가 충돌하면 전부 나열
