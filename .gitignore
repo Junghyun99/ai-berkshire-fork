@@ -9,3 +9,6 @@ reports/.DS_Store
 # Python 캐시
 __pycache__/
 *.pyc
+
+# DART corp_code 매핑 캐시(로컬 생성물, 푸시 제외)
+tools/.cache/

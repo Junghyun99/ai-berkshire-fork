@@ -43,7 +43,7 @@ $ARGUMENTS 에 대해 체계적인 투자 리서치 분석을 수행한다.
 > - 미국 주식: macrotrends (주) + stockanalysis (부)
 > - 홍콩 주식: aastocks (주) + macrotrends ADR (부)
 > - 중국 A주: East Money (주) + cninfo (부)
-> - 한국 주식: DART (주) + 네이버 금융 (부)
+> - 한국 주식: DART (주, `python3 tools/dart_data.py financials {종목코드}`) + 네이버 금융 (부, `python3 tools/global_stock_data.py financials {종목코드}`)
 
 Task 도구로 백그라운드 Agent를 띄워 웹에서 아래 데이터를 수집한다:
 
