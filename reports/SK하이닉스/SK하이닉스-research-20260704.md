@@ -46,6 +46,8 @@
 | 2025 | 97.15 | 47.21 | 42.92 | 58,955~60,378 ⚠️ | 44.15% | Yahoo·네이버 ✅ (EPS 두 출처 2.4% 차이 — 희석 기준, 표기) |
 | 2026E | 355.2 | 274.5 | 약 223 (역산) | 312,671 | **97.44%** | 네이버 컨센서스 (추정) |
 
+> **DART 원본 교차검증 (2026-07-05, `tools/dart_data.py`)**: 위 2021~2025년 매출·영업이익·지배주주순이익을 DART 연결 사업보고서 원본(주 출처)과 대조한 결과 **전부 일치**(편차 <1%). SK하이닉스는 단일 포괄손익계산서(CIS)만 제출하므로 지배주주순이익을 XBRL account_id `ifrs-full_ProfitLossAttributableToOwnersOfParent`로 분리 추출(계정명 `지배기업의 소유주지분`이 순이익·포괄손익 양쪽에 중복). 재현: `python3 tools/dart_data.py financials 000660` (2021~2022는 `--year 2022`). 상세 수치는 말미 부록 참조.
+
 삼성전자보다 훨씬 큰 진폭이 즉시 보인다: 2023년 **영업적자 -7.7조원**(삼성은 흑자 유지)에서 2026E 영업이익 274.5조원까지, 3년 만의 스윙이다. 컨센서스 ROE 97.44%는 자본을 1년에 두 배로 만드는 수익성 — 자본주의 역사상 커머디티 제조업에서 지속된 적 없는 숫자다.
 
 **삼성전자와의 대조**: 2025년 SK하이닉스 영업이익(47.2조)이 삼성전자 전사(43.6조)를 사상 처음 추월했다. 매출은 삼성(333.6조)의 29%에 불과한데 — HBM 집중의 위력이자, 집중의 리스크다.
@@ -59,6 +61,8 @@
 | 순이익 | 40.35조원 (순이익률 77%) | 순이익 > 영업이익 — 대규모 비영업이익 포함 (금융·평가이익 추정, 원문 확인 필요) |
 
 출처: 실적 발표 인용 — StorageNewsletter·CNBC·NineScrolls 교차 확인 ✅
+
+> **DART 원본 확인 (2026-07-05)**: 2026년 1분기보고서(DART, 연결) 원본과 대조 — 매출 52.58조, 영업이익 37.61조, 지배주주순이익 40.33조(당기순이익 40.35조). 발표 인용치(52.58/37.61/40.35조)와 **전부 일치**. Q1 순이익 > 영업이익 현상도 원본에서 확인(대규모 비영업이익 포함). 재현: `python3 tools/dart_data.py financials 000660 --year 2026 --report 11013`. (참고: Q1말 자산총계 222.83조·자본총계 164.38조)
 
 핵심 발언 (Q1 콜): **"고객의 HBM 주문 요청이 향후 3년치 계획 생산능력을 초과한다"** — 이번 사이클에서 가장 강력한 수요 발언. HBM4E는 2026 하반기 샘플, 2027년 양산 목표. M15X 팹 중심으로 HBM 캐펙스 가속.
 
@@ -250,11 +254,24 @@
 [2025 지배주주순이익] Yahoo 42.92 vs 네이버 42.9193조원 → 편차 0.0% ✅
 [2025 EPS] Yahoo(희석) 60,378 vs 네이버 58,955원 → 편차 2.4% ⚠️ 희석 기준 차이 병기
 [밸류에이션] PER(TTM) 23.43 / PBR 10.20 / 배당수익률 0.12% — 정밀 십진수 ✅
+
+[DART 원본 교차검증 — 2026-07-05, tools/dart_data.py financials 000660]
+  주 출처(DART 연결 사업보고서) vs 부 출처(네이버), 전 항목 편차 <1% ✅
+  연도별(매출 / 영업이익 / 지배주주순이익, 단위 조원):
+    2021  43.00 / 12.41 /  9.60      2022  44.62 /  6.81 /  2.23
+    2023  32.77 / -7.73 / -9.11      2024  66.19 / 23.47 / 19.79
+    2025  97.15 / 47.21 / 42.92
+  지배주주순이익 XBRL account_id: ifrs-full_ProfitLossAttributableToOwnersOfParent
+  (SK하이닉스는 단일 포괄손익계산서(CIS) 제출 — 계정명 중복을 account_id로 분리)
+  2025 당기순이익(연결 전체): DART 42.95조 (지배주주 42.92조 + 비지배 0.03조)
+  자산/부채/자본 총계 2025: 176.11 / 55.44 / 120.67조 (부채비율 45.9%, 네이버와 일치)
 [3-시나리오 A] EPS 312,671: Bull 4,755,335(+96.1%) / Base 2,144,610(-11.6%) / Bear 1,072,462(-55.8%)
 [3-시나리오 B] EPS 125,000(정상화 추정): Bull 2,329,250(-3.9%) / Base 1,502,500(-38.0%) / Bear 614,125(-74.7%)
 ```
 
 ### 주요 출처
+- **재무(주 출처)**: DART 전자공시 연결 사업보고서 원본 — `tools/dart_data.py financials 000660` (2026-07-05 검증)
+
 [StorageNewsletter Q1 실적](https://www.storagenewsletter.com/2026/04/29/sk-hynix-fiscal-1q26-financial-results/) · [CNBC](https://www.cnbc.com/2026/04/23/sk-hynix-earnings-ai-memory-shortage-hbm-demand.html) · [NineScrolls: 72% 마진·M15X](https://ninescrolls.com/news/sk-hynix-q1-2026-record-52-6-trillion-won-revenue-72-operating-margin-m15x-fab) · [SK하이닉스 뉴스룸 2026 전망](https://news.skhynix.com/2026-market-outlook-focus-on-the-hbm-led-memory-supercycle/) · [Counterpoint 점유율](https://counterpointresearch.com/en/insights/global-dram-and-hbm-market-share) · 산업 공통 출처는 `reports/삼성전자/삼성전자-research-20260704.md` 승계
 
 *본 보고서는 투자 권유가 아니다.*

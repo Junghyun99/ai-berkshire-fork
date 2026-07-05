@@ -52,23 +52,31 @@ _REPORT_NAMES = {
     "11014": "3분기보고서",
 }
 
-# 핵심 계정 추출용 후보 이름(공시마다 표기가 조금씩 달라 정규화 후 매칭)
-# key: 표시 라벨, value: (재무제표구분 sj_div 집합, 계정명 후보 집합)
+# 핵심 계정 추출 규칙.
+# value: (재무제표구분 sj_div 집합, XBRL account_id 후보 집합, 계정명 후보 집합)
+# 매칭 우선순위: account_id 집합이 비어있지 않으면 account_id로만 매칭(계정명 무시),
+# 비어있으면 정규화한 계정명으로 매칭. IFRS 표준 account_id는 표기 차이·중복에 강하다.
+#
+# 지배주주순이익이 특히 중요: 한국 기업 다수가 별도 손익계산서(IS) 없이 단일
+# 포괄손익계산서(CIS)만 제출하는데, 이때 CIS 안에 '지배기업의 소유주지분'이
+# 순이익 귀속분과 포괄손익 귀속분 두 번 나온다. 계정명은 같지만 account_id는
+# 순이익=ifrs-full_ProfitLossAttributableToOwnersOfParent,
+# 포괄손익=ifrs-full_ComprehensiveIncomeAttributableToOwnersOfParent 로 구분되므로
+# account_id로만 매칭해 포괄손익 오매칭을 원천 차단한다.
 _KEY_ACCOUNTS = [
-    ("매출액",       {"IS", "CIS"}, {"매출액", "수익(매출액)", "영업수익", "매출", "수익"}),
-    ("영업이익",     {"IS", "CIS"}, {"영업이익", "영업이익(손실)", "영업손익"}),
-    ("당기순이익",   {"IS", "CIS"}, {"당기순이익", "당기순이익(손실)", "분기순이익",
-                                    "반기순이익", "연결당기순이익"}),
-    # 지배주주순이익: '지배기업 소유주지분'은 포괄손익(CIS)에도 다른 값으로 존재하므로
-    # 손익계산서(IS)로만 한정한다. 단일 포괄손익만 제출한 기업은 매칭 안 돼 '-'로 표기.
-    ("지배주주순이익", {"IS"},      {"지배기업소유주지분", "지배기업의소유주에게귀속되는당기순이익",
-                                    "지배기업의소유주에게귀속되는당기순이익손실",
-                                    "지배기업소유주에게귀속되는당기순이익"}),
-    ("자산총계",     {"BS"},        {"자산총계"}),
-    ("부채총계",     {"BS"},        {"부채총계"}),
-    ("자본총계",     {"BS"},        {"자본총계", "자본과부채총계"}),
-    ("영업활동현금흐름", {"CF"},    {"영업활동현금흐름", "영업활동으로인한현금흐름",
-                                    "영업활동순현금흐름"}),
+    ("매출액",       {"IS", "CIS"}, set(),
+        {"매출액", "수익(매출액)", "영업수익", "매출", "수익"}),
+    ("영업이익",     {"IS", "CIS"}, set(),
+        {"영업이익", "영업이익(손실)", "영업손익"}),
+    ("당기순이익",   {"IS", "CIS"}, {"ifrs-full_ProfitLoss"},
+        {"당기순이익", "당기순이익(손실)", "분기순이익", "반기순이익", "연결당기순이익"}),
+    ("지배주주순이익", {"IS", "CIS"}, {"ifrs-full_ProfitLossAttributableToOwnersOfParent"},
+        set()),
+    ("자산총계",     {"BS"},        set(), {"자산총계"}),
+    ("부채총계",     {"BS"},        set(), {"부채총계"}),
+    ("자본총계",     {"BS"},        set(), {"자본총계", "자본과부채총계"}),
+    ("영업활동현금흐름", {"CF"},    set(),
+        {"영업활동현금흐름", "영업활동으로인한현금흐름", "영업활동순현금흐름"}),
 ]
 
 
@@ -248,19 +256,30 @@ def _extract_accounts(items, fs_div):
     반환: {라벨: {"thstrm": v, "frmtrm": v, "bfefrmtrm": v}}
     """
     result = {}
-    for label, sj_set, name_cands in _KEY_ACCOUNTS:
+    for label, sj_set, id_cands, name_cands in _KEY_ACCOUNTS:
         norm_cands = {_norm(n) for n in name_cands}
-        for it in items:
-            if it.get("sj_div") not in sj_set:
-                continue
-            if _norm(it.get("account_nm", "")) not in norm_cands:
-                continue
+        match = None
+        # 1순위: XBRL account_id (지정된 경우). 표기 차이·계정명 중복에 가장 강하다.
+        if id_cands:
+            for it in items:
+                if it.get("sj_div") in sj_set and it.get("account_id") in id_cands:
+                    match = it
+                    break
+        # 2순위: 계정명 폴백. id 매칭이 실패했고 계정명 후보가 있을 때만 시도한다.
+        #   → 구형·비표준 공시(account_id 누락)도 계정명으로 잡을 수 있다.
+        #   지배주주순이익은 name_cands를 비워둬 폴백을 막는다(CIS 계정명 중복 오매칭 방지).
+        if match is None and norm_cands:
+            for it in items:
+                if (it.get("sj_div") in sj_set
+                        and _norm(it.get("account_nm", "")) in norm_cands):
+                    match = it
+                    break
+        if match is not None:
             result[label] = {
-                "thstrm": _parse_amount(it.get("thstrm_amount")),
-                "frmtrm": _parse_amount(it.get("frmtrm_amount")),
-                "bfefrmtrm": _parse_amount(it.get("bfefrmtrm_amount")),
+                "thstrm": _parse_amount(match.get("thstrm_amount")),
+                "frmtrm": _parse_amount(match.get("frmtrm_amount")),
+                "bfefrmtrm": _parse_amount(match.get("bfefrmtrm_amount")),
             }
-            break  # 첫 매칭만 사용(표준 계정이 먼저 옴)
     return result
 
 
