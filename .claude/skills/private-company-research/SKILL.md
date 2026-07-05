@@ -45,17 +45,17 @@ $ARGUMENTS 에 대해 팀 기반 심층 리서치 분석을 수행한다. 앤트
 
 ### 1단계: 팀 프레임워크 제시
 
-사용자에게 아래 팀 구조를 보여주고, 확인 후 시작한다:
+사용자에게 아래 팀 구조를 보여주고, 확인 후 시작한다. 각 역할의 지침·모델은 **`.claude/agents/*.md` 정의 파일**에 분리 배치되어 있고, 4개 역할은 **여러 스킬이 공유하는 4대 거장 페르소나(`master-*`)를 재사용**한다(비상장·정보희소 복원 프레임은 3단계 태스크로 전달). 아래 `subagent_type`으로 스폰한다:
 
-| 역할 | 책임 | 핵심 관점 |
-|------|------|----------|
-| **team-lead** (본인) | 총괄 조율, 정보 퍼즐, 교차 검증, 최종 보고서 출력 | 투자 의사결정 통합 |
-| **business-decoder** | 비즈니스 모델 분해 & 제품·사용자 분석 | "이 사업의 본질은 무엇인가" |
-| **financial-detective** | 재무 데이터 짜맞추기 & 밸류에이션 추론 | "정보가 없는 조건에서 진짜 재무 모습을 최대한 복원" |
-| **competitive-mapper** | 산업 구도 & 경쟁 상황 & 대체 위협 | "누가 경쟁하고, 누가 뒤집을 수 있나" |
-| **risk-governance-analyst** | 리스크 전경 & 경영진/지배구조/투자자 평가 | "무엇이 잘못될 수 있고, 누가 키를 잡고 있나" |
-| **tech-ip-analyst** | 기술 스택/특허/R&D 역량/기술 해자 | "기술 장벽이 진짜인가 가짜인가, 얼마나 버티나" |
-| **signal-miner** | 대체 데이터 발굴: 채용/특허/소송/앱 데이터/공급망 | "일반 정보 밖에 어떤 단서가 더 있나" |
+| 역할 | subagent_type | 모델 | 책임 | 핵심 관점 |
+|------|--------------|------|------|----------|
+| **team-lead** (본인) | — (오케스트레이터) | 세션 모델 | 총괄 조율, 정보 퍼즐, 교차 검증, 최종 보고서 | 투자 의사결정 통합 |
+| **business-decoder** | `master-duan` | opus | 비즈니스 모델 분해 & 제품·사용자 분석 | "이 사업의 본질은 무엇인가" |
+| **financial-detective** | `master-buffett` | opus | 재무 데이터 짜맞추기 & 밸류에이션 추론 | "정보가 없는 조건에서 진짜 재무 모습을 최대한 복원" |
+| **competitive-mapper** | `master-munger` | opus | 산업 구도 & 경쟁 상황 & 대체 위협 | "누가 경쟁하고, 누가 뒤집을 수 있나" |
+| **risk-governance-analyst** | `master-lilu` | opus | 리스크 전경 & 경영진/지배구조/투자자 평가 | "무엇이 잘못될 수 있고, 누가 키를 잡고 있나" |
+| **tech-ip-analyst** | `pc-tech-ip-analyst` | opus | 기술 스택/특허/R&D 역량/기술 해자 | "기술 장벽이 진짜인가 가짜인가, 얼마나 버티나" |
+| **signal-miner** | `pc-signal-miner` | opus | 대체 데이터 발굴: 채용/특허/소송/앱 데이터/공급망 | "일반 정보 밖에 어떤 단서가 더 있나" |
 
 ### 2단계: 팀 생성
 
@@ -792,8 +792,9 @@ domain/subdomain 정보를 검색한다:
 Agent 도구로 6개 Agent를 동시에 실행한다 (**반드시 같은 메시지에서 병렬 호출**):
 
 각 Agent의 설정:
-- `subagent_type`: `general-purpose`
+- `subagent_type`: 위 1단계 표의 매핑 사용 — business-decoder→`master-duan`, financial-detective→`master-buffett`, competitive-mapper→`master-munger`, risk-governance-analyst→`master-lilu`, tech-ip-analyst→`pc-tech-ip-analyst`, signal-miner→`pc-signal-miner` (지침·모델은 정의 파일이 담당, 프롬프트엔 아래 비상장 복원 프레임과 태스크만 전달)
 - `run_in_background`: `true`
+- **폴백**: 정의가 로드되지 않은 환경이면 `subagent_type: general-purpose`로 스폰하되 아래 prompt 템플릿(거장 관점 포함)을 전달한다.
 
 각 Agent의 prompt 템플릿:
 

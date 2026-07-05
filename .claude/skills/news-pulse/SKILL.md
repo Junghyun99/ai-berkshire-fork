@@ -106,11 +106,14 @@ TaskCreate로 아래 4개 태스크를 만든다:
 
 ### 5단계: 4개 Agent 병렬 실행
 
-**반드시 같은 메시지에서 Task 도구를 4번 병렬 호출한다**. 팀 도구가 없는 환경이거나 병렬 Agent 실행이 실패(세션 한도 등)하면 team-lead가 4개 정찰 축을 **순차 수행**한다 — 이 skill은 속도가 생명이므로 폴백 시에는 축당 검색 1~2회로 압축한다. 각 Agent 설정:
-- `subagent_type`: `general-purpose`
+**반드시 같은 메시지에서 Task 도구를 4번 병렬 호출한다**. 팀 도구가 없는 환경이거나 병렬 Agent 실행이 실패(세션 한도 등)하면 team-lead가 4개 정찰 축을 **순차 수행**한다 — 이 skill은 속도가 생명이므로 폴백 시에는 축당 검색 1~2회로 압축한다.
+
+각 정찰병의 지침·모델은 **`.claude/agents/pulse-*.md` 정의 파일**에 분리 배치되어 있다(속도 우선이라 모두 **sonnet**). 아래 `subagent_type`으로 스폰하면 지침이 적용되며, 프롬프트에는 과제별 맥락(회사·종목코드·기간 N일·자료 등급·출력 경로)만 전달한다. 각 Agent 설정:
+- `subagent_type`: company-event-scout→`pulse-event-scout`, regulatory-watcher→`pulse-regulatory-watcher`, industry-peer-analyst→`pulse-peer-analyst`, sentiment-tracker→`pulse-sentiment-tracker`
 - `run_in_background`: `true`
 - `team_name`: `{회사명}-newspulse`
 - `name`: 해당 역할명 (company-event-scout / regulatory-watcher / industry-peer-analyst / sentiment-tracker)
+- **폴백**: 정의가 로드되지 않은 환경이면 `subagent_type: general-purpose`로 스폰하되 위 4단계 태스크 description을 프롬프트에 실어 전달한다.
 
 각 Agent의 prompt 템플릿:
 
