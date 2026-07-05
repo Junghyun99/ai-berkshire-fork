@@ -29,7 +29,6 @@ Yahoo/네이버(부 출처)만 다뤘다. 이 도구가 1차 자료(주 출처) 
 """
 
 import argparse
-import io
 import json
 import os
 import subprocess
@@ -40,6 +39,7 @@ from urllib.parse import urlencode
 from xml.etree import ElementTree
 
 _TIMEOUT = 30
+_TIMEOUT_BULK = 300  # corpCode.xml(약 3.5MB ZIP)은 다운로드가 오래 걸려 별도 타임아웃
 _BASE = "https://opendart.fss.or.kr/api"
 _CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".cache")
 _CORPCODE_CACHE = os.path.join(_CACHE_DIR, "dart_corpcode.json")
@@ -59,6 +59,11 @@ _KEY_ACCOUNTS = [
     ("영업이익",     {"IS", "CIS"}, {"영업이익", "영업이익(손실)", "영업손익"}),
     ("당기순이익",   {"IS", "CIS"}, {"당기순이익", "당기순이익(손실)", "분기순이익",
                                     "반기순이익", "연결당기순이익"}),
+    # 지배주주순이익: '지배기업 소유주지분'은 포괄손익(CIS)에도 다른 값으로 존재하므로
+    # 손익계산서(IS)로만 한정한다. 단일 포괄손익만 제출한 기업은 매칭 안 돼 '-'로 표기.
+    ("지배주주순이익", {"IS"},      {"지배기업소유주지분", "지배기업의소유주에게귀속되는당기순이익",
+                                    "지배기업의소유주에게귀속되는당기순이익손실",
+                                    "지배기업소유주에게귀속되는당기순이익"}),
     ("자산총계",     {"BS"},        {"자산총계"}),
     ("부채총계",     {"BS"},        {"부채총계"}),
     ("자본총계",     {"BS"},        {"자본총계", "자본과부채총계"}),
@@ -85,14 +90,17 @@ def _api_key() -> str:
     return key
 
 
-def _curl(url: str, binary: bool = False):
+def _curl(url: str, binary: bool = False, timeout: int = _TIMEOUT):
     """curl로 직접 요청(시스템 프록시 설정을 그대로 따른다). 다른 tools/ 스크립트와 동일 패턴."""
-    result = subprocess.run(
-        ["curl", "-s",
-         "-H", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
-         url],
-        capture_output=True, timeout=_TIMEOUT,
-    )
+    try:
+        result = subprocess.run(
+            ["curl", "-sS", "-L", "--retry", "2",
+             "-H", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+             url],
+            capture_output=True, timeout=timeout,
+        )
+    except subprocess.TimeoutExpired:
+        raise ConnectionError(f"요청 시간 초과({timeout}s): {url.split('?')[0]}")
     if result.returncode != 0 or not result.stdout.strip():
         raise ConnectionError(f"요청 실패: {url.split('?')[0]}")
     return result.stdout if binary else result.stdout.decode("utf-8")
@@ -124,16 +132,33 @@ def _load_corpcode_map() -> dict:
         except (ValueError, OSError):
             pass  # 캐시 손상 시 재다운로드
 
+    # corpCode.xml(ZIP)은 약 3.5MB로, subprocess stdout 파이프로 받으면 매우 느리다.
+    # curl -o 로 파일에 직접 저장하는 편이 빠르고 안정적이다.
+    os.makedirs(_CACHE_DIR, exist_ok=True)
+    zip_path = os.path.join(_CACHE_DIR, "dart_corpcode.zip")
     url = f"{_BASE}/corpCode.xml?{urlencode({'crtfc_key': _api_key()})}"
-    raw = _curl(url, binary=True)
     try:
-        zf = zipfile.ZipFile(io.BytesIO(raw))
-        xml_bytes = zf.read(zf.namelist()[0])
+        result = subprocess.run(
+            ["curl", "-sS", "-L", "--retry", "2", "-o", zip_path,
+             "-H", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+             url],
+            capture_output=True, timeout=_TIMEOUT_BULK,
+        )
+    except subprocess.TimeoutExpired:
+        raise ConnectionError(f"corpCode 다운로드 시간 초과({_TIMEOUT_BULK}s)")
+    if result.returncode != 0 or not os.path.exists(zip_path):
+        raise ConnectionError("corpCode 다운로드 실패 — 네트워크/프록시를 확인하세요.")
+
+    try:
+        with zipfile.ZipFile(zip_path) as zf:
+            xml_bytes = zf.read(zf.namelist()[0])
     except (zipfile.BadZipFile, IndexError):
         # ZIP이 아니면 오류 응답(대개 API 키 문제)이 XML/JSON으로 옴
+        with open(zip_path, "rb") as f:
+            head = f.read(200)
         raise RuntimeError(
             "corpCode 다운로드 실패 — API 키가 유효한지 확인하세요. "
-            f"응답 앞부분: {raw[:200]!r}")
+            f"응답 앞부분: {head!r}")
 
     root = ElementTree.fromstring(xml_bytes)
     mapping = {}
@@ -296,7 +321,7 @@ def cmd_financials(code: str, year=None, reprt_code="11011", fs_div="CFS"):
     print(f"  {'계정':<18}{y2:>14}{y1:>14}{y0:>14}")
     print("  " + "-" * 58)
 
-    order = ["매출액", "영업이익", "당기순이익",
+    order = ["매출액", "영업이익", "당기순이익", "지배주주순이익",
              "자산총계", "부채총계", "자본총계", "영업활동현금흐름"]
     for label in order:
         a = accounts.get(label)
