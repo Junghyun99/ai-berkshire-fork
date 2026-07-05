@@ -35,7 +35,7 @@ import os
 import subprocess
 import sys
 import zipfile
-from datetime import date
+from datetime import date, timedelta
 from urllib.parse import urlencode
 from xml.etree import ElementTree
 
@@ -198,8 +198,12 @@ def _fmt_pct(value) -> str:
 
 
 def _norm(name: str) -> str:
-    """계정명 정규화: 공백·괄호 제거로 표기 차이 흡수."""
-    return (name or "").replace(" ", "").replace("(", "").replace(")", "")
+    """계정명 정규화: 공백·괄호 제거로 표기 차이 흡수.
+
+    str.split()는 일반 공백뿐 아니라 non-breaking space(\\xa0) 등
+    DART 공시 렌더링 과정에서 섞이는 모든 공백 문자를 제거한다.
+    """
+    return "".join((name or "").split()).replace("(", "").replace(")", "")
 
 
 # ---------------------------------------------------------------------------
@@ -252,8 +256,11 @@ def cmd_financials(code: str, year=None, reprt_code="11011", fs_div="CFS"):
     if not corp_code:
         _die(f"❌ 종목코드 {code} 에 해당하는 상장사를 DART에서 찾을 수 없습니다.")
 
-    # 연도 미지정 시: 직전 회계연도부터 시도, 없으면 한 해 더 과거로
-    try_years = [year] if year else [date.today().year - 1, date.today().year - 2]
+    # 연도 미지정 시: 당해연도 → 직전연도 → 전전연도 순으로 시도.
+    # 당해연도 분기·반기 보고서(11013/11012/11014)를 우선 잡고,
+    # 아직 미공시인 당해연도 연간보고서(11011)는 013(데이터 없음)이 와서 자연 폴백된다.
+    try_years = ([year] if year
+                 else [date.today().year, date.today().year - 1, date.today().year - 2])
 
     items = None
     used_year = None
@@ -356,8 +363,12 @@ def cmd_disclosures(code: str, count=15):
     corp_code, corp_name = _resolve(code)
     if not corp_code:
         _die(f"❌ 종목코드 {code} 에 해당하는 상장사를 DART에서 찾을 수 없습니다.")
+    # bgn_de(시작일) 미지정 시 DART는 '당일 접수 공시'만 반환하므로,
+    # 최근 1년치를 조회하도록 시작일을 1년 전으로 지정한다.
+    bgn_de = (date.today() - timedelta(days=365)).strftime("%Y%m%d")
     data = _api_json("list.json", {
         "corp_code": corp_code,
+        "bgn_de": bgn_de,
         "page_count": str(count),
         "last_reprt_at": "Y",  # 최종보고서 기준
     })
