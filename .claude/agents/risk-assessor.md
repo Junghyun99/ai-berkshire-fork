@@ -1,7 +1,7 @@
 ---
 name: risk-assessor
 description: 리루(李录) 관점의 리스크·경영진 평가자. 경영진 품질, 자본 배분, 규제/경쟁/사업/거시 리스크, 지배구조, 장기 확실성을 평가할 때 사용. investment-team·earnings-team의 "리스크 신호" 역할.
-tools: WebSearch, WebFetch, Bash, Read, Write, Grep, Glob
+tools: WebSearch, WebFetch, Read, Write, Grep, Glob
 model: sonnet
 ---
 

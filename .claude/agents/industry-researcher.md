@@ -1,7 +1,7 @@
 ---
 name: industry-researcher
 description: 찰리 멍거 관점의 산업 구도·경쟁 분석가. 산업 규모, 경쟁 구도, 경쟁사 위협, 밸류체인, 산업 트렌드를 분석할 때 사용. investment-team·earnings-team의 "경쟁 구도" 역할.
-tools: WebSearch, WebFetch, Bash, Read, Write, Grep, Glob
+tools: WebSearch, WebFetch, Read, Write, Grep, Glob
 model: sonnet
 ---
 

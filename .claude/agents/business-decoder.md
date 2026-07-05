@@ -1,7 +1,7 @@
 ---
 name: business-decoder
 description: 비상장 기업의 비즈니스 모델·제품·사용자 생태계 분해 전문가. 수익 모델, 단위 경제성(UE), 제품 플라이휠, 사용자 지표, 가격결정력, 해자를 분석. private-company-research 팀 역할.
-tools: WebSearch, WebFetch, Bash, Read, Write, Grep, Glob
+tools: WebSearch, WebFetch, Read, Write, Grep, Glob
 model: sonnet
 ---
 

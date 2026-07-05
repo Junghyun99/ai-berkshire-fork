@@ -1,7 +1,7 @@
 ---
 name: company-event-scout
 description: 기업 자체 이벤트 정찰병. 주가 이상 변동 시 공식 공시·실적·경영진 움직임·사업 이벤트·자본 운용·소송을 빠르게 정찰. news-pulse 팀의 "기업 이벤트" 역할.
-tools: WebSearch, WebFetch, Bash, Read, Write
+tools: WebSearch, WebFetch, Read, Write
 model: sonnet
 ---
 
