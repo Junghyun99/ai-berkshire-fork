@@ -47,12 +47,36 @@ reports/
 | /investment-checklist | `{회사명}-checklist-{YYYYMMDD}.md` | `reports/텐센트/텐센트-checklist-20260408.md` |
 | /industry-research | `{산업명}-industry-{YYYYMMDD}.md` (루트) | `reports/원전-industry-20260409.md` |
 | /industry-funnel | `{산업명}-funnel-{YYYYMMDD}.md` (루트) | `reports/AI컴퓨팅-funnel-20260509.md` |
+| /quality-screen | `{대상}-스크리닝-{YYYYMMDD}.md` (`스크리닝/` 디렉토리) | `스크리닝/A주-후보풀/去劣筛选结果-20260517.md` |
 | /private-company-research | `{회사명}-private-{YYYYMMDD}.md` | `reports/바이트댄스/바이트댄스-private-20260408.md` |
 | /earnings-review | `{회사명}-earnings-{기간}.md` | `reports/텐센트/텐센트-earnings-2025Q4.md` |
 | /earnings-team | `{회사명}/` 디렉토리에 4개 거장 관점 + 연구 초안 + 발행 아티클 + 독자 심사 | `reports/텐센트/텐센트-earnings-2025Q4.md` (발행 확정본) |
 | /thesis-tracker | `{회사명}-thesis.md` (장기 유지관리) | `reports/텐센트/텐센트-thesis.md` |
 | /portfolio-review | `portfolio-latest.md` (루트, 지속 갱신) | `reports/portfolio-latest.md` |
 | /management-deep-dive | `{회사명}-management-{YYYYMMDD}.md` | `reports/텐센트/텐센트-management-20260409.md` |
+
+## /quality-screen (부실기업 걸러내기) 산출물
+
+`quality-screen` 스킬은 **7가지 정량 배제 지표 + 3가지 면제 규칙**으로 일류 기업 기준에 미달하는 종목을 빠르게 배제한다. 개별 종목/산업/지수/테마 일괄 스크리닝을 지원한다.
+
+- **7지표**: ①10년 평균 ROE(<8% 배제) ②5년 누적 FCF(마이너스 배제) ③이자보상배율(<2배 배제) ④매출총이익률(<15% 배제) ⑤영업현금흐름/순이익(<0.7 배제) ⑥순이익률(<5% 배제) ⑦5년 주식수 증가율(>20% 배제)
+- **3면제**: A 전략적 투자기(메이투안형) · B 의도적 저마진(아마존형) · C 고회전 박리다매(코스트코형)
+- **한계**: "확실히 나쁜" 기업 배제용일 뿐, 통과가 곧 "확실히 좋다"는 뜻은 아니다. 후속으로 investment-research/investment-team 심층 연구 필요
+
+산출물은 `스크리닝/` 디렉토리에 모은다 (reports/ 아래가 아님):
+
+```
+스크리닝/
+├── {테마/그룹}-스크리닝-{YYYYMMDD}.md   — 단일 스크리닝 결과
+├── {대상}-후보풀/                        — 산업/시장 일괄 스크리닝 후보풀
+│   ├── README.md                         — 대상 명단 + 스크리닝 흐름
+│   ├── {섹터}.md                          — 섹터별 후보 리스트
+│   └── {대상}-去劣筛选결과-{YYYYMMDD}.md  — 1차 去劣(부실 배제) 결과
+```
+
+파이프라인: **①부실 배제(quality-screen)** → ②통과 기업 심층연구(investment-research/investment-team) → ③밸류에이션 판단. 후보풀 안의 개별 종목 연구 파일(예: `{종목}-{코드}-研究.md`)은 investment-research 계열 산출물이다.
+
+참고: `스크리닝/` 안의 기존 중국어 파일명(`去劣筛选`, `护城河低估值筛选` 등)은 업스트림 산출물이며, 새 스크리닝은 위 한국어 규칙을 따른다. `晨星护城河低估值筛选` 파일은 quality-screen이 아니라 Morningstar 데이터(`tools/morningstar_fair_value.py`) 기반 별도 스크리닝이다.
 
 ## /investment-team 파일 구조
 
