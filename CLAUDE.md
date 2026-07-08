@@ -74,7 +74,7 @@ reports/
 │   └── {대상}-去劣筛选결과-{YYYYMMDD}.md  — 1차 去劣(부실 배제) 결과
 ```
 
-파이프라인: **①去劣筛선(quality-screen)** → ②통과 기업 심층연구(investment-research/investment-team) → ③밸류에이션 판단. 후보풀 안의 개별 종목 연구 파일(예: `{종목}-{코드}-研究.md`)은 investment-research 계열 산출물이다.
+파이프라인: **①부실 배제(quality-screen)** → ②통과 기업 심층연구(investment-research/investment-team) → ③밸류에이션 판단. 후보풀 안의 개별 종목 연구 파일(예: `{종목}-{코드}-研究.md`)은 investment-research 계열 산출물이다.
 
 참고: `스크리닝/` 안의 기존 중국어 파일명(`去劣筛选`, `护城河低估值筛选` 등)은 업스트림 산출물이며, 새 스크리닝은 위 한국어 규칙을 따른다. `晨星护城河低估值筛选` 파일은 quality-screen이 아니라 Morningstar 데이터(`tools/morningstar_fair_value.py`) 기반 별도 스크리닝이다.
 
