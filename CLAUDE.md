@@ -11,6 +11,7 @@ Claude Code 기반의 가치투자 리서치 Skill 모음집. 4대 거장 프레
 .claude/skills/  — 투자 리서치 Skill 정의({이름}/SKILL.md), 프로젝트 스킬로 자동 로드
 tools/           — 보조 도구 (financial_rigor.py 정밀 계산, global_stock_data.py 한국·미국·홍콩 시세/재무 수집, dart_data.py 한국 DART 공시 원본 재무(주 출처, DART_API_KEY 필요), ashare_data.py 중국 A주 전용)
 reports/         — 투자 리서치 보고서 출력
+research/        — 외부 프레임워크 연구 자료 (예: tradingagents/ 페르소나·프롬프트·출력 정제 정리). 자동 로드되지 않음
 assets/          — 이미지 등 정적 리소스
 ```
 
