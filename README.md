@@ -1,6 +1,6 @@
 한국어 | [English](README_EN.md)
 
-> 이 저장소는 [xbtlin/ai-berkshire](https://github.com/xbtlin/ai-berkshire)의 포크로, 프레임워크 전체(skills/설정/문서)를 한국어로 번역·현지화한 버전입니다. `reports/` 등 원저자의 기존 리서치 산출물은 중국어 원문 그대로 보존되어 있습니다.
+> 이 저장소는 [xbtlin/ai-berkshire](https://github.com/xbtlin/ai-berkshire)의 포크로, 프레임워크 전체(skills/설정/문서)를 한국어로 번역·현지화한 버전입니다. 원저자의 중국어 리서치 보고서는 이 포크에서 삭제했으며, 아래 예시 링크는 원저자 저장소로 연결됩니다. `reports/`에는 이 포크에서 작성한 한국어 보고서만 둡니다.
 
 # AI Berkshire - AI 시대의 가치투자 리서치 프레임워크
 
@@ -461,7 +461,7 @@ Claude Code에서 바로 호출:
 
 **핵심 발견**: AI 응용층 최대 승자는 AI 네이티브 기업이 아니라 채널+데이터+워크플로 침투도를 가진 성숙한 거인들이다 — 이는 1995-2000 인터넷 버블의 "삽 파는 자" 역사 법칙과 호응한다 (아마존과 애플이 이기고 Pets.com이 졌다).
 
-전체 보고서(중국어 원문): [AI 컴퓨팅](reports/AI算力-funnel-20260509.md) · [AI 모델](reports/AI模型-funnel-20260509.md) · [AI 응용](reports/AI应用-funnel-20260509.md) · [AI 인프라 전력](reports/AI基建电力-funnel-20260509.md)
+전체 보고서(중국어 원문): [AI 컴퓨팅](https://github.com/xbtlin/ai-berkshire/blob/main/reports/AI算力-funnel-20260509.md) · [AI 모델](https://github.com/xbtlin/ai-berkshire/blob/main/reports/AI模型-funnel-20260509.md) · [AI 응용](https://github.com/xbtlin/ai-berkshire/blob/main/reports/AI应用-funnel-20260509.md) · [AI 인프라 전력](https://github.com/xbtlin/ai-berkshire/blob/main/reports/AI基建电力-funnel-20260509.md)
 
 ---
 
@@ -550,14 +550,14 @@ Claude Code에서 바로 호출:
 
 ## 실전 리서치 보고서
 
-> 아래는 이 프레임워크로 생성된 실제 투자 리서치 보고서다 (원저자의 중국어 원문). AI 투자 리서치의 실제 출력 수준을 보여준다.
+> 아래는 이 프레임워크로 생성된 실제 투자 리서치 보고서다 (원저자 저장소의 중국어 원문으로 연결). AI 투자 리서치의 실제 출력 수준을 보여준다.
 
 | 회사 | 사용 Skill | 핵심 결론 | 보고서 링크 |
 |------|-----------|---------|---------|
-| 핀둬둬 (PDD) | `/investment-team` | 종합 3.4/5, 극도로 싸지만 10년 확실성 부족, 중간 비중에 적합 | [보고서 보기](reports/拼多多/) |
-| 텐센트 (0700.HK) | `/investment-research` | 소셜 독점 + 자본 배분 탁월, 14x 선행 PER은 적정~저평가 | [보고서 보기](reports/腾讯/) |
-| 7개 기업 비교 | `/investment-checklist` | 마오타이·텐센트 통과; 엔비디아·메이투안·콰이쇼우 조건부 통과; 핀둬둬·팝마트 회색 | [보고서 보기](reports/多公司对比-checklist-20260408.md) |
-| 거장 보유 추적 | 커스텀 리서치 | 버핏/리루/돤융핑 최신 13F 보유 + PDD 매입 단가 분석 | [보고서 보기](reports/大师持仓追踪-research-20260408.md) |
+| 핀둬둬 (PDD) | `/investment-team` | 종합 3.4/5, 극도로 싸지만 10년 확실성 부족, 중간 비중에 적합 | [보고서 보기](https://github.com/xbtlin/ai-berkshire/tree/main/reports/拼多多/) |
+| 텐센트 (0700.HK) | `/investment-research` | 소셜 독점 + 자본 배분 탁월, 14x 선행 PER은 적정~저평가 | [보고서 보기](https://github.com/xbtlin/ai-berkshire/tree/main/reports/腾讯/) |
+| 7개 기업 비교 | `/investment-checklist` | 마오타이·텐센트 통과; 엔비디아·메이투안·콰이쇼우 조건부 통과; 핀둬둬·팝마트 회색 | [보고서 보기](https://github.com/xbtlin/ai-berkshire/blob/main/reports/多公司对比-checklist-20260408.md) |
+| 거장 보유 추적 | 커스텀 리서치 | 버핏/리루/돤융핑 최신 13F 보유 + PDD 매입 단가 분석 | [보고서 보기](https://github.com/xbtlin/ai-berkshire/blob/main/reports/大师持仓追踪-research-20260408.md) |
 
 > *새 보고서는 계속 추가됩니다. 이 프레임워크로 생성한 리서치 보고서의 PR을 환영합니다.*
 
