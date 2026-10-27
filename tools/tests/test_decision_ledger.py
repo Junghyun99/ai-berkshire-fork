@@ -43,7 +43,9 @@ def run_cli(argv):
     return code, out.getvalue()
 
 
-class LedgerTest(unittest.TestCase):
+class _LedgerBase(unittest.TestCase):
+    """임시 원장 + 가짜 종목 확인. 테스트 클래스들이 공유한다."""
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
@@ -60,12 +62,15 @@ class LedgerTest(unittest.TestCase):
         return run_cli(["add", "--ticker", ticker, "--name", "삼성전자", "--skill", "investment-team",
                         "--verdict", verdict, "--conviction", "4", "--date", date_, *extra])
 
+
+class LedgerTest(_LedgerBase):
     def test_add_records_market_benchmark_and_rejects_duplicate(self):
-        code, out = self.add("--iv-low", "70000", "--iv-high", "90000")
+        # 오늘 작성한 리포트면 참고용 기록시점가(현재가)를 남긴다.
+        code, out = self.add("--iv-low", "70000", "--iv-high", "90000", date_=date.today().isoformat())
         self.assertEqual(code, 0, out)
         row = dl._read(dl.LEDGER)[0]
         self.assertEqual((row["시장"], row["벤치마크"], row["기록시점가"]), ("KOSPI", "069500.KS", "55000"))
-        code, out = self.add()
+        code, out = self.add(date_=date.today().isoformat())
         self.assertNotEqual(code, 0)
         self.assertIn("이미 기록된 판단", out)
         self.assertEqual(len(dl._read(dl.LEDGER)), 1)
@@ -154,6 +159,106 @@ class LedgerTest(unittest.TestCase):
         self.assertEqual(dl.iv_position(80000, "70000", "90000"), "범위 안")
         self.assertEqual(dl.iv_position(95000, "70000", "90000"), "상단 초과")
         self.assertEqual(dl.iv_position(95000, "", ""), "-")
+
+
+
+REPORT = """# 삼성전자 최종보고서
+
+## 1. 한 문장 결론
+**판단**: 관망 | **확신도**: ★★★★ | **내재가치**: 180,000~220,000원 | **반증 조건**: HBM 점유율 40% 미만
+
+본문: 지금 매수는 아니다. 매수 판단은 가격이 내려오면 다시 본다.
+
+예시(코드 블록 안은 무시):
+```
+**판단**: 매수 | **확신도**: ★★★★★ | **내재가치**: - | **반증 조건**: -
+```
+
+## 실행 정보
+- 작성일: 2025-01-02
+- 스킬: investment-team
+- 실행 라벨: lab-a
+- 데이터 출처·도구: DART(dart_data.py), 네이버 금융
+"""
+
+
+class ReportParseTest(unittest.TestCase):
+    def test_label_line_parsed_and_code_block_and_prose_ignored(self):
+        got = dl.parse_label(REPORT)
+        self.assertEqual(got, {"판단": "관망", "확신도": 4, "내재가치하단": "180000",
+                               "내재가치상단": "220000", "반증조건": "HBM 점유율 40% 미만"})
+
+    def test_conflicting_or_missing_or_variant_verdict_is_refused(self):
+        two = REPORT + "\n**판단**: 매수 | **확신도**: ★★★\n"
+        with self.assertRaises(dl.ReportParseError):
+            dl.parse_label(two)
+        with self.assertRaises(dl.ReportParseError):
+            dl.parse_label("# 결론\n지금은 매수다.\n")
+        with self.assertRaises(dl.ReportParseError):
+            dl.parse_label("**판단**: 조건부 매수 | **확신도**: ★★★\n")
+
+    def test_fullwidth_colon_and_multi_company_filter(self):
+        multi = ("**종목**: 텐센트 | **판단**：매수 | **확신도**: ★★★★ | **내재가치**: -\n"
+                 "**종목**: 마오타이 | **판단**: 회피 | **확신도**: 2 | **내재가치**: 1500\n")
+        self.assertEqual(dl.parse_label(multi, "텐센트")["판단"], "매수")
+        got = dl.parse_label(multi, "마오타이")
+        self.assertEqual((got["판단"], got["확신도"], got["내재가치하단"], got["내재가치상단"]),
+                         ("회피", 2, "1500", "1500"))
+        with self.assertRaises(dl.ReportParseError):
+            dl.parse_label(multi, "엔비디아")
+
+    def test_ambiguous_intrinsic_value_refused(self):
+        with self.assertRaises(dl.ReportParseError):
+            dl.parse_iv("10~20 또는 30")
+
+    def test_run_info(self):
+        self.assertEqual(dl.parse_run_info(REPORT)["실행 라벨"], "lab-a")
+        self.assertEqual(dl.parse_run_info(REPORT)["스킬"], "investment-team")
+
+
+class FromReportAddTest(_LedgerBase):
+    def write_report(self, text=REPORT):
+        path = os.path.join(self.tmp.name, "report.md")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(text)
+        return path
+
+    def test_add_from_report_fills_fields(self):
+        code, out = run_cli(["add", "--ticker", "005930", "--name", "삼성전자", "--from-report", self.write_report()])
+        self.assertEqual(code, 0, out)
+        row = dl._read(dl.LEDGER)[0]
+        self.assertEqual((row["판단"], row["확신도"], row["스킬"], row["기록일"], row["실행라벨"],
+                          row["내재가치하단"], row["반증조건"]),
+                         ("관망", "4", "investment-team", "2025-01-02", "lab-a", "180000", "HBM 점유율 40% 미만"))
+        self.assertEqual(row["기록시점가"], "")  # 과거 작성일이면 오늘 가격을 기록하지 않음
+
+    def test_cli_value_contradicting_report_is_refused(self):
+        code, out = run_cli(["add", "--ticker", "005930", "--name", "삼성전자",
+                             "--from-report", self.write_report(), "--verdict", "매수"])
+        self.assertNotEqual(code, 0)
+        self.assertIn("다릅니다", out)
+        self.assertEqual(dl._read(dl.LEDGER), [])
+
+    def test_unreadable_report_is_no_data(self):
+        code, out = run_cli(["add", "--ticker", "005930", "--name", "삼성전자",
+                             "--from-report", self.write_report("# 결론 없음\n")])
+        self.assertEqual(code, _us_common.EXIT_NO_DATA)
+        self.assertEqual(dl._read(dl.LEDGER), [])
+
+    def test_run_label_from_env_and_summary_breakdown(self):
+        with mock.patch.dict(os.environ, {"AI_BERKSHIRE_RUN_LABEL": "lab-b"}):
+            self.add()
+        self.add("--run-label", "lab-c", ticker="AAPL")
+        rows = dl._read(dl.LEDGER)
+        self.assertEqual([r["실행라벨"] for r in rows], ["lab-b", "lab-c"])
+        stock = series("2024-12-20", 900, 50000, 50)
+        with mock.patch.object(dl, "fetch_closes", side_effect=lambda s, a, b: [
+                r for r in (series("2024-12-20", 900, 100, 0) if s in ("069500.KS", "SPY") else stock)
+                if a <= r[0] <= b]):
+            run_cli(["settle"])
+        code, out = run_cli(["summary"])
+        self.assertIn("실행 라벨별", out)
+        self.assertIn("lab-b", out)
 
 
 if __name__ == "__main__":

@@ -225,9 +225,9 @@ python3 tools/financial_rigor.py three-scenario \
 - ❓ **회색 지대** — 핵심 쟁점이 무엇이고, 투자자가 스스로 판단해야 할 것이 무엇인지 설명
 - N/A — 비상장/매수 불가
 
-Checklist 결론과 별도로, 회사마다 **결론 라벨 줄**을 고정 형식으로 쓴다(판단 원장이 읽는 줄, `.claude/skills/decision-ledger/SKILL.md` 1-1):
+Checklist 결론과 별도로, 회사마다 **결론 라벨 줄**을 고정 형식으로 쓴다(판단 원장이 읽는 줄, `.claude/skills/decision-ledger/SKILL.md` 1-1). 복수 회사 보고서는 맨 앞에 `**종목**` 필드를 붙인다:
 ```
-**판단**: 관망 | **확신도**: ★★★ | **내재가치**: - | **반증 조건**: ...
+**종목**: 텐센트 | **판단**: 관망 | **확신도**: ★★★ | **내재가치**: - | **반증 조건**: ...
 ```
 Checklist 결과와 판단의 대응:
 - 통과 + 제5관문(안전마진) 충족 → `매수`
@@ -239,9 +239,9 @@ Checklist 결과와 판단의 대응:
 
 저장 후 회사마다(N/A 제외) 판단 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
 ```bash
-python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} --skill investment-checklist \
-  --report {보고서 경로} --verdict {매수|관망|회피} --conviction {1-5} --falsifier "{걸린 레드라인 또는 반증 조건}"
+python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} --from-report {보고서 경로}
 ```
+판독 실패(`NO_DATA`)면 값을 손으로 채우지 말고 라벨 줄을 고쳐 다시 실행한다.
 분석 전에는 회사마다 `python3 tools/decision_ledger.py show {티커}` 로 과거 판단을 확인한다.
 
 ## 출력 형식 요구사항
@@ -251,6 +251,7 @@ python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} 
 3. 모든 점수는 ★기호 사용 (★1-5), 반 별 없음
 4. 데이터에는 출처와 시점을 표기하고, 추정값에는 "추정"을 명기
 5. 글 말미에 버핏의 명언으로 맺는다: "투자의 제1원칙은 돈을 잃지 않는 것이다"
+   그 뒤 맨 끝에 `## 실행 정보` 절을 둔다(형식: `.claude/skills/decision-ledger/SKILL.md` 1-1b, 스킬 `investment-checklist`)
 6. 언어 스타일: 직접적이고 예리하게, 군말 없이. 버핏/멍거/돤융핑의 어록을 곁들여 코멘트
 
 ## 핵심 원칙

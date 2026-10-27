@@ -54,6 +54,7 @@ description: "재무 데이터 수집·교차 검증 규범: 모든 핵심 데�
 > **한국 주식 수집 절차**: 먼저 `tools/dart_data.py financials {종목코드}` 로 DART 원본(연결 재무, 3개년)을 확보한다.
 > `DART_API_KEY` 환경변수가 필요하다(opendart.fss.or.kr 무료 발급, 일 20,000건). 키가 없으면 도구가 안내 메시지를 출력한다.
 > 이어서 `tools/global_stock_data.py financials {종목코드}` 의 네이버 값을 부 출처로 두고 오차 >1% 를 표기한다.
+> **과거 시점 분석**: `tools/dart_data.py financials {종목코드} --as-of YYYY-MM-DD` 는 그날까지 **접수된** 정기보고서만 쓴다(사업연도가 끝났어도 공시 전이면 쓰지 않음). DART가 그 뒤에 접수된 정정공시 값을 돌려주면 수치를 보류(`WITHHELD`, 종료 코드 5)하고 그 시점 공시 문서 링크를 준다 — 이때 값을 추정하지 말고 원문을 확인한다. `disclosures --as-of` 는 정정 전 원공시까지 포함한 그 시점 공시 목록을 보여준다.
 
 ---
 

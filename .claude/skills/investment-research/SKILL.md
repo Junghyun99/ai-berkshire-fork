@@ -221,6 +221,7 @@ python3 tools/financial_rigor.py three-scenario \
 7. **보고서 서두**에 "정보 풍부도 등급"(A/B/C)과 "AI 리서치 한계 고지"를 포함해야 한다
 8. **보고서 말미**에 "AI 분석 신뢰도"와 "투자 확실성"을 구분해야 한다 — 전자는 자료량에 달려 있고 후자는 사업 본질에 달려 있다. 이 보고서의 어떤 결론이 충분한 데이터에 기반하고 어떤 결론이 제한된 정보의 추론에 기반하는지 독자에게 명확히 알린다
 9. C등급(정보 희소) 회사라면 보고서 말미에 "1차 검증이 필요한 질문 목록"을 나열해야 한다 — 현장 조사, 제품 체험, 공급망 인터뷰 등으로 AI의 사각지대를 보완하도록 독자에게 권한다
+10. 보고서 맨 끝에 `## 실행 정보` 절을 둔다(형식 고정: `.claude/skills/decision-ledger/SKILL.md` 1-1b, 스킬 `investment-research`). 작성일, 데이터 시점, 데이터 출처·도구, 표본 검사 결과, 그리고 환경변수 `AI_BERKSHIRE_RUN_LABEL`이 있으면 그 값을 실행 라벨로 적는다
 
 ## 데이터 표본 검사 (출고 프로세스)
 
@@ -250,12 +251,11 @@ python3 tools/report_audit.py verdict \
 
 ## 판단 원장 기록 (출고 후)
 
-출고된 보고서의 결론 라벨 줄 그대로 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
+출고된 보고서의 결론 라벨 줄을 도구가 직접 읽어 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
 
 ```bash
-python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} --skill investment-research \
-  --report reports/{회사명}/{회사명}-research-{YYYYMMDD}.md --verdict {매수|관망|회피} --conviction {1-5} \
-  --iv-low {하단} --iv-high {상단} --thesis "{핵심 논지 한 줄}" --falsifier "{반증 조건}"
+python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} \
+  --from-report reports/{회사명}/{회사명}-research-{YYYYMMDD}.md --thesis "{핵심 논지 한 줄}"
 ```
 
-기록 결과(id)를 사용자에게 알리고, `reports/decision-ledger.csv`도 보고서와 함께 커밋한다.
+판독 실패(`NO_DATA`)면 값을 손으로 채우지 말고 라벨 줄을 고쳐 다시 실행한다. 기록 결과(id)를 사용자에게 알리고, `reports/decision-ledger.csv`도 보고서와 함께 커밋한다.

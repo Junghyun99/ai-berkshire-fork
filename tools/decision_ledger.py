@@ -22,9 +22,16 @@
   reports/decision-outcomes.csv  평가 시점별 채점 + 회고
 
 사용법:
+    # 권장: 리포트의 결론 라벨 줄과 '## 실행 정보' 절을 읽어 기록(리포트와 원장이 어긋나지 않게)
+    python3 tools/decision_ledger.py add --ticker 000660 --name SK하이닉스 \\
+        --from-report reports/SK하이닉스/최종보고서.md --thesis "HBM 리더십 유지"
+    # 직접 지정(리포트에 라벨 줄이 없을 때)
     python3 tools/decision_ledger.py add --ticker 000660 --name SK하이닉스 --skill investment-team \\
         --report reports/SK하이닉스/최종보고서.md --verdict 관망 --conviction 4 \\
         --iv-low 180000 --iv-high 220000 --thesis "HBM 리더십 유지" --falsifier "HBM 점유율 40% 미만"
+
+실행 라벨(선택): 어떤 환경·설정으로 쓴 리포트인지 구분하는 자유 문자열. 환경변수 AI_BERKSHIRE_RUN_LABEL
+  또는 --run-label 로 지정하고, summary 에서 라벨별 적중을 비교한다(예: 설정을 바꾼 전후 비교).
     python3 tools/decision_ledger.py settle
     python3 tools/decision_ledger.py review --id 2026-10-27-000660-investment-team --horizon 3M \\
         --thesis-status 유지 --note "..."
@@ -41,6 +48,7 @@ import csv
 import os
 import re
 import sys
+import unicodedata
 from datetime import date, datetime, timedelta, timezone
 
 from _us_common import EXIT_UNAVAILABLE, NoDataError, UnavailableError, get_json, run
@@ -51,7 +59,7 @@ LEDGER = os.path.join(_DIR, "decision-ledger.csv")
 OUTCOMES = os.path.join(_DIR, "decision-outcomes.csv")
 
 LEDGER_FIELDS = ["id", "기록일", "종목", "티커", "심볼", "시장", "통화", "스킬", "리포트", "판단", "확신도",
-                 "기록시점가", "내재가치하단", "내재가치상단", "벤치마크", "핵심논지", "반증조건"]
+                 "기록시점가", "내재가치하단", "내재가치상단", "벤치마크", "핵심논지", "반증조건", "실행라벨"]
 OUTCOME_FIELDS = ["id", "구간", "진입일", "진입가", "평가일", "평가가", "수익률", "벤치마크수익률", "알파",
                   "방향적중", "내재가치위치", "정산일", "논지상태", "회고"]
 
@@ -216,17 +224,126 @@ def iv_position(price: float, low: str, high: str) -> str:
 # 명령
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# 리포트 판독: 결론 라벨 줄 · 실행 정보
+#   TradingAgents agents/rating.py 의 원칙을 따른다 — 라벨이 붙은 줄만 읽고, 산문 속 단어("매수는 아니다")는
+#   읽지 않으며, 판단이 서로 다르면 어느 것도 고르지 않는다(판독 불가 = 기록 거부, 관망으로 채우지 않음).
+# ---------------------------------------------------------------------------
+
+_FIELD_RE = re.compile(r"\*\*\s*([^*]+?)\s*\*\*\s*[:：]\s*([^|]*)")
+_NUM_RE = re.compile(r"\d[\d,]*(?:\.\d+)?")
+
+
+class ReportParseError(NoDataError):
+    """결론 라벨 줄을 읽을 수 없거나 모호함. 추정해서 기록하지 않는다."""
+
+
+def _label_lines(text: str) -> list:
+    """코드 블록 밖에서 `**판단**:` 이 있는 줄을 {필드: 값} 으로. 코드 블록 안은 예시이므로 건너뛴다."""
+    rows, fenced = [], False
+    for line in unicodedata.normalize("NFKC", text).splitlines():
+        if line.strip().startswith("```"):
+            fenced = not fenced
+            continue
+        if fenced or "**판단**" not in line.replace(" ", ""):
+            continue
+        fields = {k.strip(): v.strip().strip("*").strip() for k, v in _FIELD_RE.findall(line)}
+        if "판단" in fields:
+            rows.append(fields)
+    return rows
+
+
+def parse_iv(value: str):
+    """'180,000~220,000원' → ('180000','220000'), '-' → ('',''), 단일 값 → (v, v). 숫자가 3개 이상이면 모호."""
+    nums = [n.replace(",", "") for n in _NUM_RE.findall(value or "")]
+    if not nums:
+        return "", ""
+    if len(nums) > 2:
+        raise ReportParseError(f"내재가치 값이 모호합니다: '{value}' (하단~상단 두 숫자로)")
+    return nums[0], nums[-1]
+
+
+def parse_label(text: str, name: str = "") -> dict:
+    """리포트 결론 라벨 줄 → {판단, 확신도, 내재가치하단, 내재가치상단, 반증조건}."""
+    rows = _label_lines(text)
+    if name and any("종목" in r for r in rows):
+        # 다중 회사 보고서: 라벨 줄마다 **종목** 필드로 회사를 구분한다.
+        rows = [r for r in rows if r.get("종목") == name]
+    if not rows:
+        raise ReportParseError("결론 라벨 줄(**판단**: 매수|관망|회피 ...)을 찾지 못했습니다."
+                               + (f" 다중 회사 보고서라면 **종목**: {name} 필드가 필요합니다." if name else ""))
+    verdicts = {r["판단"] for r in rows}
+    if len(verdicts) > 1:
+        raise ReportParseError(f"라벨 줄의 판단이 서로 다릅니다: {sorted(verdicts)} — 어느 것이 결론인지 알 수 없습니다.")
+    row = rows[0]
+    verdict = row["판단"]
+    if verdict not in VERDICTS:
+        raise ReportParseError(f"판단 값 '{verdict}' 는 매수/관망/회피 중 하나가 아닙니다(조건은 본문에, 라벨은 셋 중 하나).")
+    stars = row.get("확신도", "")
+    conviction = stars.count("★") or (int(stars) if stars.isdigit() else 0)
+    if not 1 <= conviction <= 5:
+        raise ReportParseError(f"확신도 '{stars}' 를 읽을 수 없습니다(★1~5).")
+    low, high = parse_iv(row.get("내재가치", ""))
+    falsifier = row.get("반증 조건", row.get("반증조건", ""))
+    return {"판단": verdict, "확신도": conviction, "내재가치하단": low, "내재가치상단": high,
+            "반증조건": "" if falsifier in ("-", "") else falsifier}
+
+
+def parse_run_info(text: str) -> dict:
+    """'## 실행 정보' 절의 `- 키: 값` 줄 → {작성일, 스킬, 실행 라벨, ...}."""
+    info, inside = {}, False
+    for line in unicodedata.normalize("NFKC", text).splitlines():
+        if line.startswith("#"):
+            inside = "실행 정보" in line
+            continue
+        m = re.match(r"\s*[-*]\s*([^:：]+?)\s*[:：]\s*(.+)", line)
+        if inside and m:
+            info[m.group(1).strip()] = m.group(2).strip()
+    return info
+
+
+def _merge(cli_value, report_value, label: str):
+    """인자와 리포트가 둘 다 있으면 같아야 한다(원장과 리포트가 어긋나지 않게)."""
+    if cli_value not in (None, "") and report_value not in (None, "") and str(cli_value) != str(report_value):
+        raise SystemExit(f"❌ {label}: 인자 '{cli_value}' 와 리포트 '{report_value}' 가 다릅니다. 리포트를 고치거나 인자를 빼세요.")
+    return cli_value if cli_value not in (None, "") else report_value
+
+
 def cmd_add(a):
-    if a.verdict not in VERDICTS:
+    report_path = a.from_report or a.report
+    parsed, info = {}, {}
+    if a.from_report:
+        full = a.from_report if os.path.isabs(a.from_report) else os.path.join(_ROOT, a.from_report)
+        if not os.path.exists(full):
+            raise SystemExit(f"❌ 리포트 파일이 없습니다: {a.from_report}")
+        with open(full, encoding="utf-8") as f:
+            text = f.read()
+        parsed = parse_label(text, a.name)
+        info = parse_run_info(text)
+    elif a.report and not os.path.exists(os.path.join(_ROOT, a.report)):
+        print(f"⚠️ 리포트 파일이 아직 없습니다: {a.report} (경로 확인)")
+
+    verdict = _merge(a.verdict, parsed.get("판단"), "판단")
+    conviction = int(_merge(a.conviction, parsed.get("확신도"), "확신도") or 3)
+    iv_low = _merge(a.iv_low, parsed.get("내재가치하단"), "내재가치 하단")
+    iv_high = _merge(a.iv_high, parsed.get("내재가치상단"), "내재가치 상단")
+    falsifier = _merge(a.falsifier, parsed.get("반증조건"), "반증 조건")
+    skill = _merge(a.skill, info.get("스킬"), "스킬")
+    run_label = _merge(a.run_label or os.environ.get("AI_BERKSHIRE_RUN_LABEL", ""), info.get("실행 라벨"), "실행 라벨")
+    rec_date = _merge(a.date, info.get("작성일"), "기록일(작성일)") or date.today().strftime("%Y-%m-%d")
+
+    if not skill:
+        raise SystemExit("❌ --skill 이 필요합니다(또는 리포트 '## 실행 정보'의 '- 스킬:' 줄).")
+    if verdict not in VERDICTS:
         raise SystemExit(f"❌ --verdict 는 {'/'.join(VERDICTS)} 중 하나")
-    if not 1 <= a.conviction <= 5:
+    if not 1 <= conviction <= 5:
         raise SystemExit("❌ --conviction 은 1~5")
-    rec_date = a.date or date.today().strftime("%Y-%m-%d")
-    datetime.strptime(rec_date, "%Y-%m-%d")
+    try:
+        datetime.strptime(rec_date, "%Y-%m-%d")
+    except ValueError:
+        raise SystemExit(f"❌ 기록일 형식 오류: {rec_date}")
     if rec_date > date.today().strftime("%Y-%m-%d"):
         raise SystemExit("❌ 미래 날짜로 기록할 수 없습니다.")
-    if a.report and not os.path.exists(os.path.join(_ROOT, a.report)):
-        print(f"⚠️ 리포트 파일이 아직 없습니다: {a.report} (경로 확인)")
 
     try:
         symbol, currency, price = resolve_symbol(a.ticker)
@@ -235,21 +352,24 @@ def cmd_add(a):
         print(f"⚠️ 종목 확인 실패({e}) — 입력 티커 그대로 기록하고 정산 때 다시 확인합니다.")
         symbol, currency, price = a.ticker.upper(), "", None
     market = market_of(symbol)
-    rid = f"{rec_date}-{re.sub(r'[^0-9A-Za-z.]', '', a.ticker.upper())}-{a.skill}"
+    rid = f"{rec_date}-{re.sub(r'[^0-9A-Za-z.]', '', a.ticker.upper())}-{skill}"
     if any(r["id"] == rid for r in _read(LEDGER)):
         raise SystemExit(f"❌ 이미 기록된 판단입니다: {rid} (같은 날·종목·스킬은 한 번만 — 집계가 부풀지 않게)")
 
     row = {
         "id": rid, "기록일": rec_date, "종목": a.name, "티커": a.ticker.upper(), "심볼": symbol,
-        "시장": market, "통화": currency, "스킬": a.skill, "리포트": a.report or "", "판단": a.verdict,
-        "확신도": str(a.conviction), "기록시점가": fmt_price(price) if price else "",
-        "내재가치하단": a.iv_low or "", "내재가치상단": a.iv_high or "",
+        "시장": market, "통화": currency, "스킬": skill, "리포트": report_path or "", "판단": verdict,
+        "확신도": str(conviction),
+        # 기록시점가는 참고용(현재가). 과거 작성일로 기록하면 그날 가격이 아니므로 비운다.
+        "기록시점가": fmt_price(price) if price and rec_date == date.today().strftime("%Y-%m-%d") else "",
+        "내재가치하단": iv_low or "", "내재가치상단": iv_high or "",
         "벤치마크": a.benchmark or BENCHMARKS.get(market, "SPY"),
-        "핵심논지": a.thesis or "", "반증조건": a.falsifier or "",
+        "핵심논지": a.thesis or "", "반증조건": falsifier or "", "실행라벨": run_label or "",
     }
     _append(LEDGER, LEDGER_FIELDS, row)
-    print(f"✅ 기록: {rid}")
-    print(f"   {a.name}({symbol}, {market}) {a.verdict} {'★' * a.conviction} | 벤치마크 {row['벤치마크']}")
+    print(f"✅ 기록: {rid}" + (" (리포트 라벨 줄에서 판독)" if a.from_report else ""))
+    print(f"   {a.name}({symbol}, {market}) {verdict} {'★' * conviction} | 벤치마크 {row['벤치마크']}"
+          + (f" | 실행 라벨 {run_label}" if run_label else ""))
     print(f"   진입가는 {rec_date} 다음 거래일 종가로 정산 때 확정됩니다. 평가 시점: {', '.join(HORIZONS)}")
 
 
@@ -350,7 +470,7 @@ def summarize(ledger: list, outcomes: list) -> dict:
         rows = [(by_id[o["id"]], o) for o in outcomes if o["구간"] == h and o["id"] in by_id]
         if not rows:
             continue
-        sec = {"verdict": {}, "conviction": {}, "skill": {}, "quadrant": {}, "n": len(rows)}
+        sec = {"verdict": {}, "conviction": {}, "skill": {}, "run": {}, "quadrant": {}, "n": len(rows)}
         for v, d in VERDICTS.items():
             alphas = [float(o["알파"]) for r, o in rows if r["판단"] == v]
             if alphas:
@@ -363,6 +483,7 @@ def summarize(ledger: list, outcomes: list) -> dict:
             if d:
                 sec["conviction"].setdefault(r["확신도"], []).append(float(o["알파"]) * d)
                 sec["skill"].setdefault(r["스킬"], []).append(float(o["알파"]) * d)
+                sec["run"].setdefault(r.get("실행라벨") or "(라벨 없음)", []).append(float(o["알파"]) * d)
             if o["논지상태"] in ("유지", "훼손") and d:
                 up = float(o["알파"]) * d > 0
                 q = {("유지", True): "실력", ("유지", False): "인내 구간",
@@ -396,6 +517,10 @@ def cmd_summary(a):
             print("  스킬별(판단 방향 기준 알파):")
             for s, vals in sorted(sec["skill"].items()):
                 print(f"    {s}: n={len(vals)}, 평균 {sum(vals) / len(vals) * 100:+.1f}%")
+        if len(sec["run"]) > 1:
+            print("  실행 라벨별(판단 방향 기준 알파):")
+            for s_, vals in sorted(sec["run"].items()):
+                print(f"    {s_}: n={len(vals)}, 평균 {sum(vals) / len(vals) * 100:+.1f}%")
         if sec["quadrant"]:
             print("  운/실력 4분면(회고 완료·매수/회피만): " +
                   ", ".join(f"{k} {v}" for k, v in sec["quadrant"].items()))
@@ -420,16 +545,18 @@ def main():
     pa = sub.add_parser("add", help="리포트 판단 기록")
     pa.add_argument("--ticker", required=True, help="005930 / AAPL / 0700 등(global_stock_data 규칙)")
     pa.add_argument("--name", required=True, help="종목명(보고서 폴더명과 같게)")
-    pa.add_argument("--skill", required=True, help="investment-team / investment-research / investment-checklist 등")
+    pa.add_argument("--from-report", default="", help="리포트의 결론 라벨 줄·실행 정보를 읽어 기록(권장)")
+    pa.add_argument("--skill", default="", help="investment-team / investment-research / investment-checklist 등")
     pa.add_argument("--report", default="", help="리포트 경로(저장소 기준)")
-    pa.add_argument("--verdict", required=True, help="매수 / 관망 / 회피")
-    pa.add_argument("--conviction", type=int, default=3, help="확신도 1~5(★ 개수)")
+    pa.add_argument("--verdict", default="", help="매수 / 관망 / 회피 (--from-report 면 생략)")
+    pa.add_argument("--conviction", type=int, default=None, help="확신도 1~5(★ 개수, 기본 3)")
     pa.add_argument("--iv-low", default="", help="내재가치 하단(현지 통화)")
     pa.add_argument("--iv-high", default="", help="내재가치 상단")
     pa.add_argument("--thesis", default="", help="핵심 논지 한 줄")
     pa.add_argument("--falsifier", default="", help="반증 조건(이게 보이면 논지가 틀린 것)")
     pa.add_argument("--benchmark", default="", help="벤치마크 심볼 지정(기본: 시장별 ETF)")
-    pa.add_argument("--date", default="", help="기록일(기본 오늘). 리포트 작성일과 같아야 함")
+    pa.add_argument("--date", default="", help="기록일(기본: 리포트 작성일 또는 오늘)")
+    pa.add_argument("--run-label", default="", help="실행 라벨(기본: 환경변수 AI_BERKSHIRE_RUN_LABEL)")
 
     sub.add_parser("settle", help="평가 시점이 지난 판단 채점")
 

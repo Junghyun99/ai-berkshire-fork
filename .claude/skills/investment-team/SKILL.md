@@ -188,6 +188,9 @@ Task 도구로 4개 Agent를 동시에 실행한다 (**반드시 같은 메시�
 #### 8. 요약 단락
 100-200자의 최종 요약
 
+#### 9. 실행 정보
+보고서 맨 끝에 `## 실행 정보` 절을 둔다(형식 고정: `.claude/skills/decision-ledger/SKILL.md` 1-1b, 스킬 `investment-team`). 작성일, 데이터 시점, 데이터 출처·도구, 표본 검사 결과, 그리고 환경변수 `AI_BERKSHIRE_RUN_LABEL`이 있으면 그 값을 실행 라벨로 적는다.
+
 ---
 
 ### 8단계: 보고서 저장
@@ -216,15 +219,14 @@ python3 tools/report_audit.py verdict \
 
 ### 9.5단계: 판단 원장 기록 (출고 후)
 
-최종 보고서의 결론 라벨 줄 그대로 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
+최종 보고서의 결론 라벨 줄을 도구가 직접 읽어 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
 
 ```bash
-python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} --skill investment-team \
-  --report reports/{회사명}/최종보고서.md --verdict {매수|관망|회피} --conviction {1-5} \
-  --iv-low {하단} --iv-high {상단} --thesis "{핵심 논지 한 줄}" --falsifier "{반증 조건}"
+python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} \
+  --from-report reports/{회사명}/최종보고서.md --thesis "{핵심 논지 한 줄}"
 ```
 
-기록 결과(id)를 사용자에게 알리고, `reports/decision-ledger.csv`도 보고서와 함께 커밋한다.
+판독 실패(`NO_DATA`)면 값을 손으로 채우지 말고 라벨 줄을 고쳐 다시 실행한다. 기록 결과(id)를 사용자에게 알리고, `reports/decision-ledger.csv`도 보고서와 함께 커밋한다.
 
 ### 10단계: 팀 정리
 
