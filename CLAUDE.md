@@ -9,7 +9,7 @@ Claude Code 기반의 가치투자 리서치 Skill 모음집. 4대 거장 프레
 
 ```
 .claude/skills/  — 투자 리서치 Skill 정의({이름}/SKILL.md), 프로젝트 스킬로 자동 로드
-tools/           — 보조 도구 (financial_rigor.py 정밀 계산, global_stock_data.py 한국·미국·홍콩 시세/재무 수집, dart_data.py 한국 DART 공시 원본 재무(주 출처, DART_API_KEY 필요, --as-of 접수일 기준 시점 통제), ashare_data.py 중국 A주 전용, sec_edgar_data.py 미국 SEC 공시 원본 재무, fred_data.py 미국 거시(FRED_API_KEY), alphavantage_data.py 미국 개요·뉴스 감성·내부자(ALPHA_VANTAGE_API_KEY), polymarket_data.py 예측시장 확률, decision_ledger.py 판단 원장(기록·정산·회고). 미국 도구는 --as-of 시점 통제 지원, 테스트: python3 -m unittest discover -s tools/tests)
+tools/           — 보조 도구 (financial_rigor.py 정밀 계산, global_stock_data.py 한국·미국·홍콩 시세/재무 수집, dart_data.py 한국 DART 공시 원본 재무(주 출처, DART_API_KEY 필요, --as-of 접수일 기준 시점 통제), ashare_data.py 중국 A주 전용, sec_edgar_data.py 미국 SEC 공시 원본 재무, fred_data.py 미국 거시(FRED_API_KEY), alphavantage_data.py 미국 개요·뉴스 감성·내부자(ALPHA_VANTAGE_API_KEY), polymarket_data.py 예측시장 확률, decision_ledger.py 판단 원장(기록·정산·회고), fact_sheet.py 팩트시트(리서치 기준 수치표·1차 출처 교차 검증). 미국 도구는 --as-of 시점 통제 지원, 테스트: python3 -m unittest discover -s tools/tests)
 reports/         — 투자 리서치 보고서 출력
 research/        — 외부 프레임워크 연구 자료 (예: tradingagents/ 페르소나·프롬프트·출력 정제 정리). 자동 로드되지 않음
 assets/          — 이미지 등 정적 리소스
@@ -97,7 +97,8 @@ reports/{회사명}/
 ├── 02-재무밸류에이션분석-버핏관점.md
 ├── 03-산업경쟁분석-멍거관점.md
 ├── 04-리스크경영진평가-리루관점.md
-└── 최종보고서.md                      — Team Lead 종합 보고서
+├── 05-교차반론.md                     — 4개 관점의 교차 반론 1라운드(반박·인정·최종 관점 판단)
+└── 최종보고서.md                      — Team Lead 종합 보고서(판정 근거 + 부록 팩트시트 포함)
 ```
 
 ## 투자 분석 핵심 원칙 (최고 우선순위)
