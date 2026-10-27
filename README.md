@@ -209,6 +209,7 @@ AI Berkshire는 보장한다: **같은 입력 → 구조가 일치하고 깊이�
 |-------|------|---------|
 | [`/portfolio-review`](.claude/skills/portfolio-review/SKILL.md) | 포트폴리오 관리와 최적화 | "기업 리서치"에서 "포트폴리오 운용"으로 — 비중, 집중도, 리밸런싱 |
 | [`/thesis-tracker`](.claude/skills/thesis-tracker/SKILL.md) | 투자 논지 추적 | 매수 후의 규율 시스템: 논지가 반증되는지 지속 추적 |
+| [`/decision-ledger`](.claude/skills/decision-ledger/SKILL.md) | 투자 판단 원장 | 리포트 판단을 기록하고 3·6·12·36개월 뒤 알파로 채점, 회고로 운과 실력을 구분 |
 | [`/news-pulse`](.claude/skills/news-pulse/SKILL.md) | 주가 이상 변동 빠른 원인 규명 | 급등/급락 시 10분 안에 "무슨 일이 있었는지" 파악 |
 
 ### 🧠 사고 도구

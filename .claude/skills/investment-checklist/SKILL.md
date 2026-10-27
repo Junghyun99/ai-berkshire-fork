@@ -225,7 +225,24 @@ python3 tools/financial_rigor.py three-scenario \
 - ❓ **회색 지대** — 핵심 쟁점이 무엇이고, 투자자가 스스로 판단해야 할 것이 무엇인지 설명
 - N/A — 비상장/매수 불가
 
-완전한 보고서를 `~/버핏Checklist-[회사명 또는 "다중회사비교"].md`에 저장한다.
+Checklist 결론과 별도로, 회사마다 **결론 라벨 줄**을 고정 형식으로 쓴다(판단 원장이 읽는 줄, `.claude/skills/decision-ledger/SKILL.md` 1-1):
+```
+**판단**: 관망 | **확신도**: ★★★ | **내재가치**: - | **반증 조건**: ...
+```
+Checklist 결과와 판단의 대응:
+- 통과 + 제5관문(안전마진) 충족 → `매수`
+- 통과지만 가격이 비쌈, 또는 회색 지대 → `관망`
+- 미통과(레드라인) → `회피`
+- N/A → 라벨과 원장 기록 생략
+
+완전한 보고서를 CLAUDE.md 명명 규칙에 따라 저장한다: 단일 회사 `reports/{회사명}/{회사명}-checklist-{YYYYMMDD}.md`, 복수 회사 `reports/다중회사비교-checklist-{YYYYMMDD}.md`.
+
+저장 후 회사마다(N/A 제외) 판단 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
+```bash
+python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} --skill investment-checklist \
+  --report {보고서 경로} --verdict {매수|관망|회피} --conviction {1-5} --falsifier "{걸린 레드라인 또는 반증 조건}"
+```
+분석 전에는 회사마다 `python3 tools/decision_ledger.py show {티커}` 로 과거 판단을 확인한다.
 
 ## 출력 형식 요구사항
 

@@ -11,6 +11,8 @@ $ARGUMENTS 에 대해 팀 기반 투자 리서치 분석을 수행한다. Team �
 
 ### 1단계: 팀 프레임워크 제시
 
+먼저 `python3 tools/decision_ledger.py show {티커}` 로 이 종목의 과거 판단·결과·회고를 확인한다. 기록이 있으면 4개 Agent의 스폰 프롬프트에 요약을 넣고(지난 반증 조건이 발생했는지 각 관점에서 점검하도록), 최종 보고서에 비교를 쓴다. 규칙: `.claude/skills/decision-ledger/SKILL.md` 1-3.
+
 사용자에게 아래 팀 구조를 보여주고, 확인 후 시작한다. 4대 거장은 **여러 스킬이 공유하는 재사용 페르소나 정의(`.claude/agents/master-*.md`)**이며, 아래 `subagent_type`으로 스폰하면 지침·모델이 그대로 적용된다. 이 스킬 고유의 분석 프레임(3단계 태스크 내용)은 스폰 프롬프트로 전달한다.
 
 | 역할 | subagent_type | 모델 | 책임 | 분석 프레임워크 |
@@ -150,7 +152,13 @@ Task 도구로 4개 Agent를 동시에 실행한다 (**반드시 같은 메시�
 ---
 
 #### 1. 한 문장 결론
+첫 줄에 **결론 라벨 줄**을 고정 형식으로 쓴다(판단 원장이 읽는 줄, `.claude/skills/decision-ledger/SKILL.md` 1-1):
+```
+**판단**: 매수 | **확신도**: ★★★★ | **내재가치**: 180,000~220,000원 | **반증 조건**: HBM 점유율 40% 미만
+```
 > 투자할 가치가 있는지와 핵심 논리를 한 단락(50-100자)으로 요약
+
+과거 판단 기록이 있으면(아래 1단계 참고) "과거 판단과의 비교" 한 단락을 덧붙인다.
 
 #### 2. 4차원 점수 총괄표
 | 차원 | 프레임워크 | 점수(별 1-5) | 핵심 판단 |
@@ -205,6 +213,18 @@ python3 tools/report_audit.py verdict \
 ```
 
 **[출고]** 전부 통과 → 보고서 발행 가능; **[반려]** 미통과 항목 존재 → 수정 후 재심사.
+
+### 9.5단계: 판단 원장 기록 (출고 후)
+
+최종 보고서의 결론 라벨 줄 그대로 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
+
+```bash
+python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} --skill investment-team \
+  --report reports/{회사명}/최종보고서.md --verdict {매수|관망|회피} --conviction {1-5} \
+  --iv-low {하단} --iv-high {상단} --thesis "{핵심 논지 한 줄}" --falsifier "{반증 조건}"
+```
+
+기록 결과(id)를 사용자에게 알리고, `reports/decision-ledger.csv`도 보고서와 함께 커밋한다.
 
 ### 10단계: 팀 정리
 

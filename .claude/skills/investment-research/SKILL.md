@@ -39,6 +39,8 @@ $ARGUMENTS 에 대해 체계적인 투자 리서치 분석을 수행한다.
 
 ### 1단계: 데이터 수집
 
+> **과거 판단 확인**: 먼저 `python3 tools/decision_ledger.py show {티커}` 로 이 종목의 과거 판단·결과·회고를 확인한다. 기록이 있으면 8단계 메모에 "과거 판단과의 비교"(무엇이 바뀌었나, 지난 교훈을 어떻게 적용했나)를 넣는다. 규칙: `.claude/skills/decision-ledger/SKILL.md` 1-3.
+
 > **데이터 소스 규범**: `.claude/skills/financial-data/SKILL.md` 참조. 모든 재무 데이터는 두 개의 독립 출처에서 가져와야 하며, 오차 >1%는 표기.
 > - 미국 주식: macrotrends (주) + stockanalysis (부)
 > - 홍콩 주식: aastocks (주) + macrotrends ADR (부)
@@ -180,6 +182,12 @@ python3 tools/financial_rigor.py three-scenario \
 
 ### 8단계: 종합 의사결정 메모
 
+메모 맨 앞에 **결론 라벨 줄**을 고정 형식으로 쓴다(판단 원장이 읽는 줄, `.claude/skills/decision-ledger/SKILL.md` 1-1):
+
+```
+**판단**: 매수 | **확신도**: ★★★★ | **내재가치**: 180,000~220,000원 | **반증 조건**: HBM 점유율 40% 미만
+```
+
 종합 표:
 
 | 차원 | 결론 | 신뢰도 |
@@ -239,3 +247,15 @@ python3 tools/report_audit.py verdict \
 
 - **[출고]**: 모든 표본 검사 포인트의 편차 ≤ 1% → 보고서 발행 가능
 - **[반려]**: 어느 포인트든 편차 > 1% → 해당 데이터를 수정한 후 재검사, 출고될 때까지 반복
+
+## 판단 원장 기록 (출고 후)
+
+출고된 보고서의 결론 라벨 줄 그대로 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
+
+```bash
+python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} --skill investment-research \
+  --report reports/{회사명}/{회사명}-research-{YYYYMMDD}.md --verdict {매수|관망|회피} --conviction {1-5} \
+  --iv-low {하단} --iv-high {상단} --thesis "{핵심 논지 한 줄}" --falsifier "{반증 조건}"
+```
+
+기록 결과(id)를 사용자에게 알리고, `reports/decision-ledger.csv`도 보고서와 함께 커밋한다.
