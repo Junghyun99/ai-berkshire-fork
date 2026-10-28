@@ -112,9 +112,14 @@ def collect(code: str, years: int = 3) -> dict:
         "snapshot": {}, "annual": [], "checks": [], "warnings": [],
     }
     snap = sheet["snapshot"]
-    snap["현재가"] = _fact(meta.get("regularMarketPrice"), "Yahoo chart", price_date, price_cur)
-    snap["52주 최고"] = _fact(meta.get("fiftyTwoWeekHigh"), "Yahoo chart", price_date, price_cur)
-    snap["52주 최저"] = _fact(meta.get("fiftyTwoWeekLow"), "Yahoo chart", price_date, price_cur)
+
+    def positive(v):
+        # Yahoo가 결측을 0으로 주는 경우가 있다(예: 52주 최저 0원). 0 이하 가격은 데이터 없음으로 본다.
+        return v if isinstance(v, (int, float)) and v > 0 else None
+
+    snap["현재가"] = _fact(positive(meta.get("regularMarketPrice")), "Yahoo chart", price_date, price_cur)
+    snap["52주 최고"] = _fact(positive(meta.get("fiftyTwoWeekHigh")), "Yahoo chart", price_date, price_cur)
+    snap["52주 최저"] = _fact(positive(meta.get("fiftyTwoWeekLow")), "Yahoo chart", price_date, price_cur)
     for label, t, unit in (("발행주식수", "quarterlyShareIssued", "주"), ("시가총액", "trailingMarketCap", price_cur),
                            ("PER(TTM)", "trailingPeRatio", "배"), ("PBR", "trailingPbRatio", "배")):
         row = last[t]

@@ -112,6 +112,17 @@ class FactSheetTest(unittest.TestCase):
         self.assertIsNone(sheet["annual"][-1]["영업이익률"])
         self.assertIn("데이터 없음", fs.render(sheet))
 
+    def test_zero_price_is_no_data(self):
+        m = meta()
+        m["fiftyTwoWeekLow"] = 0.0
+        self.patch(global_stock_data, "_resolve", return_value=("005930.KS", m))
+        self.patch(fs, "yahoo_series", return_value=series())
+        self.patch(global_stock_data, "_naver_market_cap", return_value=None)
+        with mock.patch.dict(os.environ, {"DART_API_KEY": ""}):
+            sheet = fs.collect("005930")
+        self.assertIsNone(sheet["snapshot"]["52주 최저"]["value"])
+        self.assertIn("| 52주 최저 | 데이터 없음 |", fs.render(sheet))
+
     def test_grade_thresholds(self):
         self.assertEqual(fs.grade(100, 100.9)[1], "✅")
         self.assertEqual(fs.grade(100, 104)[1], "⚠️")
