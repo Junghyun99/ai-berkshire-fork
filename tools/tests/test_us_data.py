@@ -346,6 +346,28 @@ class AlphaVantageTest(unittest.TestCase):
         self.assertIn("2025-06-30", out)
         self.assertNotIn("2025-07-02", out)
 
+    def test_news_after_as_of_is_cut_even_if_api_returns_it(self):
+        payload = {"feed": [
+            {"time_published": "20250701T090000", "title": "FUTURE", "source": "x"},
+            {"time_published": "20250630T235900", "title": "SAME-DAY", "source": "x"},
+            {"time_published": "", "title": "NODATE", "source": "x"},
+            {"time_published": "20250629T120000", "title": "PAST", "source": "x"}]}
+        with mock.patch.object(alphavantage_data, "http_get", return_value=(200, json.dumps(payload))):
+            code, out = run_cli(alphavantage_data, ["news", "NVDA", "--days", "3", "--as-of", "2025-06-30"])
+        self.assertEqual(code, 0, out)
+        self.assertIn("SAME-DAY", out)
+        self.assertIn("PAST", out)
+        self.assertNotIn("FUTURE", out)
+        self.assertNotIn("NODATE", out)
+        self.assertIn("2건", out)
+
+    def test_premium_endpoint_notice_is_unavailable(self):
+        notice = {"Information": "Thank you for using Alpha Vantage! This is a premium endpoint. You may "
+                                 "subscribe to any of the premium plans at https://www.alphavantage.co/premium/"}
+        with mock.patch.object(alphavantage_data, "http_get", return_value=(200, json.dumps(notice))):
+            code, out = run_cli(alphavantage_data, ["overview", "NVDA"])
+        self.assertEqual(code, _us_common.EXIT_UNAVAILABLE, out)
+
     def test_statement_formats_current(self):
         payload = {"annualReports": [
             {"fiscalDateEnding": "2025-01-26", "reportedCurrency": "USD", "totalRevenue": "130497000000",

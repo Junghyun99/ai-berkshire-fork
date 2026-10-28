@@ -237,7 +237,10 @@ def cmd_news(ticker: str, macro: bool, days: int, as_of: str, limit: int):
     else:
         params["tickers"] = ticker
     data = _request("NEWS_SENTIMENT", params)
-    feed = (data or {}).get("feed") or []
+    # time_to만 믿지 않고 기준일 이후 기사를 직접 잘라낸다(일봉의 filter_csv와 같은 이유: 미래 정보 유출 방지).
+    # time_published 형식은 YYYYMMDDTHHMMSS라 문자열 비교로 충분하다. 날짜를 알 수 없는 기사도 버린다.
+    feed = [item for item in (data or {}).get("feed") or []
+            if params["time_from"] <= item.get("time_published", "")[:13] <= params["time_to"]]
     if not feed:
         raise NoDataError(f"{'거시' if macro else ticker.upper()} 뉴스가 해당 기간에 없습니다.")
     print("=" * 72)
