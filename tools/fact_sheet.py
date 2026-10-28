@@ -13,7 +13,11 @@ Agent에 같은 표를 주고, "정확한 수치는 이 표가 기준, 다른 �
   - 시세·밸류에이션: 현재가, 52주 범위, 발행주식수, 시가총액(+ 주가×주식수 검산), PER/PBR(TTM)
   - 연간 재무(최근 N년): 매출, 영업이익, 지배순이익, 희석EPS, 자본, 영업CF, CapEx, FCF와
     같은 통화끼리만 계산한 영업이익률·순이익률·ROE·영업CF/순이익
-  - 1차 출처 교차 검증: 한국 DART(DART_API_KEY 있을 때)·네이버 시총, 미국 SEC EDGAR
+  - 한국 우선주 처리(DART_API_KEY 있을 때): DART 주식 총수로 보통주·우선주·자기주식을 나누고,
+    보통+우선 유통주식 기준 시총·EPS·BPS·PER·PBR을 다시 계산한다(분자는 TTM 순이익·최근 분기 자본, 없으면
+    직전 회계연도). Yahoo 발행주식수는 우선주·자기주식 처리가 일정하지 않아 참고로만 쓴다.
+    우선주가 여러 종류면(현대차 우·2우B·3우B 등) DART가 합산값만 줘서 우선주 시총은 계산하지 않는다.
+  - 1차 출처 교차 검증: 한국 DART(DART_API_KEY 있을 때)·네이버 시총·BPS, 미국 SEC EDGAR
     편차 ≤1% ✅ / 1~5% ⚠️ / >5% ❌ (financial-data 규범)
   - 통화: 주가 통화와 재무 통화를 따로 표시. 다르면(텐센트 HKD/CNY, PDD USD/CNY 등) 경고하고
     두 통화를 섞는 계산(주가÷EPS 등)은 하지 않는다. PER/PBR은 Yahoo가 환산한 값을 출처와 함께 쓴다.
@@ -33,6 +37,7 @@ Agent에 같은 표를 주고, "정확한 수치는 이 표가 기준, 다른 �
 import argparse
 import json
 import os
+import re
 import time
 from datetime import date, datetime, timezone
 
@@ -48,7 +53,8 @@ _ANNUAL = {
     "CapEx": "annualCapitalExpenditure",
     "FCF": "annualFreeCashFlow",
 }
-_SNAPSHOT = ["trailingMarketCap", "trailingPeRatio", "trailingPbRatio", "quarterlyShareIssued"]
+_SNAPSHOT = ["trailingMarketCap", "trailingPeRatio", "trailingPbRatio", "quarterlyShareIssued",
+             "trailingNetIncomeCommonStockholders", "quarterlyStockholdersEquity"]
 
 
 def grade(a, b):
@@ -110,6 +116,9 @@ def collect(code: str, years: int = 3) -> dict:
         "price_currency": price_cur, "financial_currency": fin_cur,
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "snapshot": {}, "annual": [], "checks": [], "warnings": [],
+        # 주당 지표 재계산용 최근값: (날짜, 값, 통화) 또는 None
+        "basis": {"TTM 지배순이익": last["trailingNetIncomeCommonStockholders"],
+                  "최근 분기 자본": last["quarterlyStockholdersEquity"]},
     }
     snap = sheet["snapshot"]
 
@@ -173,18 +182,26 @@ def _check_korea(sheet: dict, symbol: str, latest: dict, price_date: str):
         sheet["checks"].append({"항목": "시가총액", "기간": price_date, "기준": naver, "기준출처": "네이버(보통주)",
                                 "비교": mcap, "비교출처": "Yahoo", "편차": diff, "판정": mark, "통화": "KRW"})
         if mark != "✅":
-            sheet["warnings"].append("Yahoo 시총·주식수가 우선주·자기주식을 포함할 수 있다. 한국 종목의 시총·주당 지표는 "
-                                     "네이버(보통주) 기준을 쓸 것.")
-    if not latest:
-        return
+            sheet["warnings"].append("Yahoo 시총·주식수는 우선주·자기주식 처리 기준이 불분명하다. 한국 종목의 시총·주당 "
+                                     "지표는 네이버(보통주)와 DART 주식수 기준 값을 쓸 것.")
     if not os.environ.get("DART_API_KEY"):
-        sheet["warnings"].append("DART_API_KEY 가 없어 DART(1차 출처) 교차 검증을 하지 못했다. "
+        sheet["warnings"].append("DART_API_KEY 가 없어 DART(1차 출처) 교차 검증과 우선주 포함 주식수 계산을 하지 못했다. "
                                  "python3 tools/dart_data.py financials " + code6 + " 로 확인할 것.")
         return
     import dart_data
     try:
         corp_code, _ = dart_data._resolve(code6)
-        items = dart_data._fetch_financials(corp_code, int(latest["기간"][:4]), "11011", "CFS") if corp_code else None
+    except (RuntimeError, ConnectionError, SystemExit) as e:
+        sheet["warnings"].append(f"DART 조회 실패({e}) — 교차 검증 생략.")
+        return
+    if not corp_code:
+        sheet["warnings"].append(f"DART에서 {code6} 의 기업코드를 찾지 못했다 — 교차 검증 생략.")
+        return
+    _korea_shares(sheet, code6, corp_code, latest, price_date, naver)
+    if not latest:
+        return
+    try:
+        items = dart_data._fetch_financials(corp_code, int(latest["기간"][:4]), "11011", "CFS")
     except (RuntimeError, ConnectionError, SystemExit) as e:
         sheet["warnings"].append(f"DART 조회 실패({e}) — 교차 검증 생략.")
         return
@@ -199,6 +216,124 @@ def _check_korea(sheet: dict, symbol: str, latest: dict, price_date: str):
         sheet["checks"].append({"항목": label, "기간": latest["기간"], "기준": primary, "기준출처": "DART(연결)",
                                 "비교": latest.get(label), "비교출처": "Yahoo", "편차": diff, "판정": mark,
                                 "통화": "KRW"})
+
+
+def _preferred_price(code6: str):
+    """첫 우선주(종목코드 끝자리 5·7·9 관례) 시세 → (심볼, 가격, 메시지). 한 종류일 때만 가격을 준다.
+
+    DART는 우선주를 종류와 무관하게 합산하므로, 종류가 둘 이상이면 종류별 주식수를 알 수 없어 시총을 계산하지 않는다.
+    """
+    from global_stock_data import _resolve
+    if not code6.endswith("0"):
+        return None, None, f"보통주 코드({code6})가 0으로 끝나지 않아 우선주 종목코드를 추정하지 않았다."
+    found = []
+    for suffix in "579":
+        try:
+            sym, m = _resolve(code6[:5] + suffix)
+        except Exception:  # noqa: BLE001 — 후보 하나의 조회 실패는 '없음'으로 본다
+            continue
+        price = (m or {}).get("regularMarketPrice")
+        if sym and isinstance(price, (int, float)) and price > 0:
+            found.append((sym, float(price)))
+    if len(found) == 1:
+        return found[0][0], found[0][1], ""
+    if not found:
+        return None, None, "우선주 시세를 찾지 못했다(종목코드 끝자리 5·7·9 확인)."
+    return None, None, (f"우선주가 {len(found)}종류({', '.join(s for s, _ in found)})인데 DART 주식수는 합산값뿐이라 "
+                        "우선주 시총을 계산하지 않았다. 종류별 주식수는 사업보고서 '주식의 총수'로 확인할 것.")
+
+
+def _korea_shares(sheet: dict, code6: str, corp_code: str, latest: dict, price_date: str, naver):
+    """DART 주식 총수로 보통주·우선주를 나눠 시총과 주당 지표를 다시 계산한다.
+
+    Yahoo 발행주식수는 우선주·자기주식 처리가 일정하지 않다(삼성전자: 보통주와도 보통+우선과도 다름).
+    주당 지표의 분모는 보통+우선 유통주식수(자기주식 제외)로 한다.
+    """
+    import dart_data
+    try:
+        sc = dart_data.share_counts(corp_code)
+    except (RuntimeError, ConnectionError, SystemExit) as e:
+        sheet["warnings"].append(f"DART 주식 총수 조회 실패({e}) — 우선주 포함 계산 생략.")
+        return
+    if not sc:
+        sheet["warnings"].append("DART에서 최근 정기보고서의 주식 총수를 얻지 못했다 — 우선주 포함 계산 생략.")
+        return
+    snap, pc = sheet["snapshot"], sheet["price_currency"]
+    src, as_of = f"DART {sc['보고서']}", sc["기준일"]
+    common, pref = sc["보통주"], sc["우선주"]
+    total_out = common["유통"] + pref["유통"]
+    snap["보통주 발행주식수"] = _fact(common["발행"], src, as_of, "주")
+    snap["우선주 발행주식수"] = _fact(pref["발행"], src, as_of, "주")
+    snap["자기주식(보통+우선)"] = _fact(common["자기주식"] + pref["자기주식"], src, as_of, "주")
+    snap["유통주식수(보통+우선)"] = _fact(total_out, src, as_of, "주")
+
+    yahoo_shares = snap["발행주식수"]["value"]
+    if yahoo_shares:
+        bases = (common["발행"], common["유통"], common["발행"] + pref["발행"], total_out)
+        if all((grade(b, yahoo_shares)[0] or 0) > 0.1 for b in bases if b):
+            sheet["warnings"].append(
+                f"Yahoo 발행주식수({yahoo_shares:,.0f}주)가 DART 보통주({common['발행']:,.0f}주)·"
+                f"보통+우선({common['발행'] + pref['발행']:,.0f}주) 어느 쪽과도 맞지 않는다. 주당 지표는 DART 기준 값을 쓸 것.")
+
+    price = snap["현재가"]["value"]
+    if price and naver:
+        diff, mark = grade(naver, price * common["발행"])
+        sheet["checks"].append({"항목": "시가총액(보통주) 검산", "기간": price_date, "기준": naver,
+                                "기준출처": "네이버(보통주)", "비교": price * common["발행"],
+                                "비교출처": "주가×DART 보통주 발행주식수", "편차": diff, "판정": mark, "통화": "KRW"})
+
+    equity_value = None
+    if price and pref["유통"] > 0:
+        pref_sym, pref_price, msg = _preferred_price(code6)
+        if pref_price:
+            snap["우선주 현재가"] = _fact(pref_price, f"Yahoo chart {pref_sym}", price_date, pc)
+            equity_value = price * common["유통"] + pref_price * pref["유통"]
+        else:
+            sheet["warnings"].append(msg)
+    elif price:
+        equity_value = price * common["유통"]
+    if equity_value:
+        snap["시가총액(보통+우선, 유통주식)"] = _fact(equity_value, "주가×DART 유통주식수", price_date, pc)
+
+    if sheet["financial_currency"] != pc or not total_out:
+        return
+    # 분자는 최근값(TTM 순이익, 최근 분기 자본)을 우선 쓰고, 없으면 직전 회계연도 값을 쓴다.
+    fy = latest["기간"][:4] if latest else ""
+    ni_row = sheet["basis"].get("TTM 지배순이익") or (latest and (latest["기간"], latest.get("지배순이익"), pc))
+    eq_row = sheet["basis"].get("최근 분기 자본") or (latest and (latest["기간"], latest.get("자본"), pc))
+    ni_tag = ("TTM" if sheet["basis"].get("TTM 지배순이익") else f"FY{fy}") if ni_row else ""
+    eq_tag = ("최근 분기" if sheet["basis"].get("최근 분기 자본") else f"FY{fy}") if eq_row else ""
+    ni = ni_row[1] if ni_row else None
+    eq = eq_row[1] if eq_row else None
+    snap["EPS(보통+우선 유통주식)"] = _fact(ni / total_out if ni else None,
+                                         f"{ni_tag} 지배순이익({ni_row[0] if ni_row else '-'}) ÷ DART 유통주식수", as_of, pc)
+    bps = eq / total_out if eq else None
+    snap["BPS(보통+우선 유통주식)"] = _fact(bps, f"{eq_tag} 지배주주 자본({eq_row[0] if eq_row else '-'}) ÷ DART 유통주식수",
+                                         as_of, pc)
+    if equity_value:
+        snap["PER(우선주 포함)"] = _fact(equity_value / ni if ni and ni > 0 else None,
+                                       f"보통+우선 시총 ÷ {ni_tag} 지배순이익", price_date, "배")
+        snap["PBR(우선주 포함)"] = _fact(equity_value / eq if eq and eq > 0 else None,
+                                       f"보통+우선 시총 ÷ {eq_tag} 지배주주 자본", price_date, "배")
+    naver_bps = _naver_number(code6, "BPS")
+    if bps and naver_bps:
+        diff, mark = grade(naver_bps, bps)
+        sheet["checks"].append({"항목": "BPS(보통+우선)", "기간": eq_row[0], "기준": naver_bps, "기준출처": "네이버",
+                                "비교": bps, "비교출처": "자본÷DART 유통주식수", "편차": diff, "판정": mark,
+                                "통화": "KRW"})
+
+
+def _naver_number(code6: str, key: str):
+    """네이버 모바일 integration API의 숫자 항목(예: BPS '86,052원'). 실패 시 None."""
+    from global_stock_data import _NAVER_API, _naver_json
+    try:
+        for item in _naver_json(f"{_NAVER_API}/stock/{code6}/integration").get("totalInfos", []):
+            if item.get("key") == key:
+                digits = re.sub(r"[^0-9.\-]", "", item.get("value", ""))
+                return float(digits) if digits else None
+    except Exception:  # noqa: BLE001 — 부 출처 실패는 비교 생략
+        pass
+    return None
 
 
 def _check_us(sheet: dict, symbol: str, latest: dict):
@@ -254,11 +389,11 @@ def render(sheet: dict) -> str:
     ]
     for label, f in s.items():
         v = f["value"]
-        if label == "시가총액":
+        if label.startswith("시가총액"):
             shown = _big(v, pc)
-        elif label == "발행주식수":
+        elif f["unit"] == "주":
             shown = _num(v, 0, "주")
-        elif label in ("PER(TTM)", "PBR"):
+        elif f["unit"] == "배":
             shown = _num(v, 2, "배")
         else:
             shown = _num(v, 2, f" {pc}")

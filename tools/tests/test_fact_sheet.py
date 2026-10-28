@@ -78,6 +78,7 @@ class FactSheetTest(unittest.TestCase):
         self.patch(global_stock_data, "_naver_market_cap", return_value=None)
         import dart_data
         self.patch(dart_data, "_resolve", return_value=("00126380", "삼성전자"))
+        self.patch(dart_data, "share_counts", return_value=None)
         self.patch(dart_data, "_fetch_financials", return_value=[{}])
         self.patch(dart_data, "_extract_accounts", return_value={
             "매출액": {"thstrm": 1200.0}, "영업이익": {"thstrm": 125.0},
@@ -122,6 +123,74 @@ class FactSheetTest(unittest.TestCase):
             sheet = fs.collect("005930")
         self.assertIsNone(sheet["snapshot"]["52주 최저"]["value"])
         self.assertIn("| 52주 최저 | 데이터 없음 |", fs.render(sheet))
+
+    def _korea_with_shares(self, pref_found, yahoo_shares=1_000.0, basis=True):
+        """보통주 1,000주(자기주식 100), 우선주 200주, 보통주 100원, Yahoo 주식수는 인자로."""
+        self.patch(global_stock_data, "_resolve", side_effect=lambda c: (
+            ("005930.KS", meta()) if c == "005930" else
+            ((f"{c}.KS", meta(price=50.0)) if c in pref_found else (None, None))))
+        data = series(shares=yahoo_shares)
+        if basis:
+            data["trailingNetIncomeCommonStockholders"] = [("2026-06-30", 110.0, "KRW")]
+            data["quarterlyStockholdersEquity"] = [("2026-06-30", 1_100.0, "KRW")]
+        self.patch(fs, "yahoo_series", return_value=data)
+        self.patch(global_stock_data, "_naver_market_cap", return_value=100_000.0)
+        self.patch(fs, "_naver_number", return_value=1.0)
+        import dart_data
+        self.patch(dart_data, "_resolve", return_value=("00126380", "삼성전자"))
+        self.patch(dart_data, "_fetch_financials", return_value=None)
+        self.patch(dart_data, "share_counts", return_value={
+            "기준일": "2026-06-30", "보고서": "반기보고서 (2026.06)", "접수번호": "1",
+            "보통주": {"발행": 1_000.0, "자기주식": 100.0, "유통": 900.0},
+            "우선주": {"발행": 200.0, "자기주식": 0.0, "유통": 200.0}})
+        with mock.patch.dict(os.environ, {"DART_API_KEY": "x"}):
+            return fs.collect("005930")
+
+    def test_preferred_shares_in_per_share_metrics(self):
+        sheet = self._korea_with_shares({"005935"})
+        snap = {k: v["value"] for k, v in sheet["snapshot"].items()}
+        self.assertEqual(snap["유통주식수(보통+우선)"], 1_100.0)
+        self.assertEqual(snap["우선주 현재가"], 50.0)
+        self.assertAlmostEqual(snap["시가총액(보통+우선, 유통주식)"], 100 * 900 + 50 * 200)   # 100,000
+        self.assertAlmostEqual(snap["EPS(보통+우선 유통주식)"], 110.0 / 1_100)              # TTM 순이익
+        self.assertAlmostEqual(snap["BPS(보통+우선 유통주식)"], 1.0)                        # 최근 분기 자본
+        self.assertAlmostEqual(snap["PER(우선주 포함)"], 100_000 / 110.0)
+        self.assertAlmostEqual(snap["PBR(우선주 포함)"], 100_000 / 1_100.0)
+        checks = {c["항목"]: c["판정"] for c in sheet["checks"]}
+        self.assertEqual(checks["시가총액(보통주) 검산"], "✅")   # 100원 × 보통주 1,000주 = 네이버 100,000
+        self.assertEqual(checks["BPS(보통+우선)"], "✅")
+        self.assertFalse(any("어느 쪽과도" in w for w in sheet["warnings"]))  # Yahoo 1,000주 = 보통주 발행
+        self.assertIn("| 유통주식수(보통+우선) | 1,100주 |", fs.render(sheet))
+
+    def test_fiscal_year_fallback_when_no_ttm(self):
+        sheet = self._korea_with_shares({"005935"}, basis=False)
+        snap = sheet["snapshot"]
+        self.assertAlmostEqual(snap["EPS(보통+우선 유통주식)"]["value"], 96.0 / 1_100)
+        self.assertIn("FY2025", snap["EPS(보통+우선 유통주식)"]["source"])
+
+    def test_multiple_preferred_classes_withhold_market_cap(self):
+        sheet = self._korea_with_shares({"005935", "005937"}, yahoo_shares=950.0)
+        self.assertNotIn("PER(우선주 포함)", sheet["snapshot"])
+        self.assertNotIn("시가총액(보통+우선, 유통주식)", sheet["snapshot"])
+        self.assertIsNotNone(sheet["snapshot"]["BPS(보통+우선 유통주식)"]["value"])  # 시세 없이 계산 가능
+        self.assertTrue(any("2종류" in w for w in sheet["warnings"]))
+        self.assertTrue(any("어느 쪽과도" in w for w in sheet["warnings"]))  # Yahoo 950주
+
+    def test_share_counts_parses_dart_rows(self):
+        import dart_data
+        row = lambda se, issued, tes, distb, no="R2": {"rcept_no": no, "se": se, "istc_totqy": issued,
+                                                         "tesstk_co": tes, "distb_stock_co": distb,
+                                                         "stlm_dt": "2026-06-30"}
+        self.patch(dart_data, "_acc_month", return_value=12)
+        self.patch(dart_data, "periodic_reports_as_of", return_value=[
+            ("20260814", "R2", "반기보고서 (2026.06)", "11012", 2026)])
+        self.patch(dart_data, "_api_json", return_value={"list": [
+            row("보통주", "1,000", "100", "900"), row("우선주", "200", "-", "200"),
+            row("보통주", "9,999", "-", "9,999", no="OLD")]})
+        sc = dart_data.share_counts("00126380", "2026-10-28")
+        self.assertEqual(sc["보통주"], {"발행": 1000.0, "자기주식": 100.0, "유통": 900.0})
+        self.assertEqual(sc["우선주"], {"발행": 200.0, "자기주식": 0.0, "유통": 200.0})
+        self.assertEqual((sc["기준일"], sc["접수번호"]), ("2026-06-30", "R2"))
 
     def test_grade_thresholds(self):
         self.assertEqual(fs.grade(100, 100.9)[1], "✅")

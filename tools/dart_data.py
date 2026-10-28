@@ -375,6 +375,34 @@ def _acc_month(corp_code: str) -> int:
         return 12
 
 
+def share_counts(corp_code: str, as_of: str = None):
+    """as_of 까지 접수된 가장 최근 정기보고서의 주식 총수(보통주·우선주 구분). 없으면 None.
+
+    반환: {"보통주"/"우선주": {"발행": n, "자기주식": n, "유통": n}, "기준일", "보고서", "접수번호"}
+    DART는 우선주를 종류(우, 2우B 등)와 무관하게 한 줄로 합산해 준다.
+    """
+    as_of = as_of or date.today().strftime("%Y-%m-%d")
+    acc_mt = _acc_month(corp_code)
+    for rcept_dt, rcept_no, report_nm, reprt_code, period_year in \
+            periodic_reports_as_of(corp_code, as_of, acc_mt, years_back=2):
+        # 12월 결산 외에는 사업연도 표기가 회사마다 달라 두 해를 시도하고 접수번호로 맞는 쪽을 확인한다.
+        for y in ([period_year] if acc_mt == 12 else [period_year, period_year - 1]):
+            data = _api_json("stockTotqySttus.json",
+                             {"corp_code": corp_code, "bsns_year": str(y), "reprt_code": reprt_code})
+            rows = {r.get("se"): r for r in data.get("list") or [] if r.get("rcept_no") == rcept_no}
+            if "보통주" not in rows:
+                continue
+            out = {"기준일": rows["보통주"].get("stlm_dt", ""), "보고서": report_nm, "접수번호": rcept_no}
+            for se in ("보통주", "우선주"):
+                r = rows.get(se) or {}
+                issued = _parse_amount(r.get("istc_totqy")) or 0.0
+                treasury = _parse_amount(r.get("tesstk_co")) or 0.0
+                out[se] = {"발행": issued, "자기주식": treasury,
+                           "유통": _parse_amount(r.get("distb_stock_co")) or issued - treasury}
+            return out
+    return None
+
+
 def _financials_as_of(corp_code, corp_name, code, as_of, year, reprt_code, fs_div):
     """as_of 시점 기준 재무 → (항목, 사업연도, 재무구분, 기준 보고서 튜플)."""
     acc_mt = _acc_month(corp_code)
