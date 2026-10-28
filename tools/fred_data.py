@@ -105,6 +105,9 @@ def _request(path: str, params: dict) -> dict:
     if status == 400:
         # 없는 시리즈 ID·잘못된 파라미터: {"error_message": ...}
         message = str(data.get("error_message", "")).replace(key, "***")
+        # 무효 키도 400으로 온다("The value for variable api_key is not registered."). 데이터 없음이 아니다.
+        if "api_key is not" in message.lower():
+            raise NotConfiguredError(f"FRED_API_KEY 가 무효합니다: {message}")
         raise NoDataError(f"FRED 요청 거부: {message}")
     if not 200 <= status < 300:
         raise UnavailableError(f"FRED HTTP {status}")

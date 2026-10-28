@@ -172,6 +172,17 @@ class SecEdgarTest(unittest.TestCase):
         self.assertIn("FCF:            9,015", out)  # 10,159 - 1,144
         self.assertIn("이 회사가 태깅하지 않은 계정", out)
 
+    def test_no_filings_before_as_of_is_not_reported_as_untagged(self):
+        # 태그는 있는데 as_of 이전 공시가 없는 것과, 회사가 태그를 쓰지 않는 것은 다르다.
+        code, out = run_cli(sec_edgar_data, ["financials", "AAPL", "--statement", "balance",
+                                             "--as-of", "2000-01-01"])
+        self.assertEqual(code, _us_common.EXIT_NO_DATA, out)
+        untagged_line = next(ln for ln in out.splitlines() if "태깅하지 않은" in ln)
+        self.assertIn("유동자산", untagged_line)  # 픽스처에 태그 자체가 없음
+        for label in ("자산총계", "부채총계", "자본총계"):
+            self.assertNotIn(label, untagged_line)
+        self.assertIn("공시된 연간 데이터 없음", out)
+
     def test_cli_unknown_ticker_is_no_data(self):
         code, out = run_cli(sec_edgar_data, ["financials", "ZZZZ"])
         self.assertEqual(code, _us_common.EXIT_NO_DATA)
@@ -238,6 +249,17 @@ class FredTest(unittest.TestCase):
         with mock.patch.object(fred_data, "http_get", bad):
             code, out = run_cli(fred_data, ["series", "NOTASERIES"])
         self.assertEqual(code, _us_common.EXIT_NO_DATA)
+        self.assertNotIn("SECRETKEY", out)
+
+    def test_invalid_key_is_not_configured_not_no_data(self):
+        # 실제 FRED 응답(2026-10 확인): 무효 키도 HTTP 400 + error_message
+        bad = mock.Mock(return_value=(400, json.dumps({"error_code": 400, "error_message":
+            "Bad Request.  The value for variable api_key is not registered.  "
+            "Read https://fred.stlouisfed.org/docs/api/api_key.html for more information."})))
+        with mock.patch.object(fred_data, "http_get", bad):
+            code, out = run_cli(fred_data, ["series", "cpi"])
+        self.assertEqual(code, _us_common.EXIT_NOT_CONFIGURED, out)
+        self.assertTrue(out.startswith("NOT_CONFIGURED:"))
         self.assertNotIn("SECRETKEY", out)
 
     def test_phrase_is_rejected_before_request(self):

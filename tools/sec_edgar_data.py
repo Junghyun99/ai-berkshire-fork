@@ -170,7 +170,8 @@ def statement_table(us_gaap: dict, kind: str, freq: str, as_of: str) -> tuple:
     periods = sorted({(end, idx) for per in chosen.values() for end, idx in per.items()})
 
     tagged = {label: line for label, line in lines.items() if line[0]}
-    untagged = [label for label in lines if label not in tagged]
+    # 태그가 아예 없는 계정만 '미태깅'. 태그는 있는데 as_of까지 공시가 없으면 미태깅이 아니다.
+    untagged = [label for label, tags in _STATEMENTS[kind] if not any(t in us_gaap for t in tags)]
     rows = []
     for end, index in periods:
         row = {}
