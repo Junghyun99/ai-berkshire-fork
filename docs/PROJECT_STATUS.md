@@ -25,11 +25,11 @@
 | Phase 1-2 | IPS 템플릿, 품질 루브릭/G01~G12 | #28 | main 병합 완료 확인 |
 | Phase 1-3 | 정책 상태전이·승인/개정 | #30 | main 병합 완료 확인 |
 | Phase 1-4 | `.claude/skills/investment-policy/SKILL.md` | #31 | main 병합 완료 확인, 실제 Claude 사용 테스트는 미실시 |
-| Phase 1-5 | `tools/policy_validator.py`, `tools/policy_registry.py`, 테스트 | #32 | main 병합 완료 확인, **CI/오프라인 테스트 미확인** |
+| Phase 1-5 | `tools/policy_validator.py`, `tools/policy_registry.py`, 테스트 | #32 | main 병합 완료 확인, **Work 오프라인 테스트 통과; CI 미확인** |
 | IPS v0.1~v0.4 | 실제 사용자 입력·계좌범위·원화/달러 정책 초안 | #33, #35, #36 | **main 병합**, 가장 최근 v0.4도 **DRAFT/NOT_READY** |
-| Phase 2-1 | SAA 방법론 비교 | PR #37 | **이전 대화 기준 미병합**, 최신 상태 확인 |
-| Phase 2-2 | 월간 시장데이터 계약·검증/공분산 MVP | PR #38 (stacked #37) | 실제 데이터 수집 미완, 테스트 실행 미확인 |
-| Phase 2-3 | 5가지 SAA 근사 전략 워크포워드 엔진 | PR #39 (stacked #38) | 실데이터 백테스트 **미실시**, 테스트 실행 미확인 |
+| Phase 2-1 | SAA 방법론 비교 | PR #37 | main 병합 완료 (2026-10-29) |
+| Phase 2-2 | 월간 시장데이터 계약·검증/공분산 MVP | PR #38 (stacked #37) | main 병합 완료, 오프라인 테스트 통과; 실제 데이터 수집 미완 |
+| Phase 2-3 | 5가지 SAA 근사 전략 워크포워드 엔진 | PR #39 (stacked #38) | main 병합 완료, 오프라인 테스트 통과; 실데이터 백테스트 **미실시** |
 | Phase 2-4~2-5 | 레버리지·계좌 제약·인출 모델 → SAA/IPS v1.0 후보 | 미착수 | 정책 v1.0은 사용자 명시 승인 필요 |
 
 ### 레포지토리 핵심 경로
@@ -55,7 +55,7 @@
 
 ## 현재 주요 리스크와 미완료
 
-- 과거 GitHub PR 병합 성공은 별도로 확인했지만 **테스트 실행 및 Work 런타임 검증 결과는 없음**.
+- PR #37 → #38 → #39의 main 병합 및 Work에서 기존 자동 테스트 137개 통과 확인. CI 및 실데이터 통합 검증은 별도 미완료.
 - `policy_registry.py`는 개발용 로컬 파일 MVP: 신원 인증·동시 접근·감사로그 변조방지 미구현. 실거래 승인 인프라가 아니다.
 - `policy_validator.py`는 일부 하드 게이트만 구현한 MVP. IPS 설계의 G01–G12 전체를 완전하게 보증하지 않는다.
 - 데이터 파이프라인은 `verified` 태그만으로 원천의 진위를 증명하지 못함. 총수익/배당·공식 지수 정합 및 데이터 빈티지/공표 시점 확인 필요.
@@ -65,3 +65,15 @@
 ## 인계 원칙
 
 **ChatGPT Work의 실제 실행·수집·검증 결과만 '완료'로 표시한다.** 마무리 시 변경된 파일, 테스트 명령과 결과, 사용한 시장데이터 시점/출처, PR 링크, 미해결 장애를 요약하고 `PROJECT_STATUS.md`를 갱신한다.
+
+## Work 자동 테스트 실행 기록 (2026-10-29 KST)
+
+- 대상: `main` 커밋 `6950d3da7fa6643387000c694c396466f5f31e49` (#37~39 병합 후).
+- 환경: Python 3.12.14, Work Linux 런타임.
+- 명령: `python3 -m unittest discover -s tools/tests -v`.
+- 최초 결과: **137 tests / OK / exit 0**, 0.364초. CSV 파일 미종료 `ResourceWarning` 발견.
+- 수정: `tools/saa_data_quality.py`의 CSV 읽기에 context manager를 적용해 파일 종료 보장. 데이터 계약·계산식·공개 인터페이스 변경 없음.
+- 범위: 기존 자동 테스트 실행이며 전체 설계 게이트, 실제 API 인증·시장 데이터 수집, 실데이터 백테스트, 투자성과를 검증한 것은 아님. 미래 데이터 관련 테스트 통과도 `available_at` 기반 전체 시뮬레이션 구현을 의미하지 않음.
+- IPS v0.4 DRAFT 유지. 정책 활성화·주문 없음.
+- 경고를 명시적으로 활성화한 재실행에서 기존 `test_decision_ledger.py`에도 파일 미종료가 확인되어 context manager로 함께 수정.
+- 최종 재실행: `python3 -W always::ResourceWarning -m unittest discover -s tools/tests -v` → **137 tests / OK / exit 0**, 0.318초, 경고 0건.
