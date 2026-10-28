@@ -67,12 +67,20 @@
       "sha": "2d9f363054d474cf"
     },
     "plan": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-28 13:55:23",
+      "error": "",
+      "note": "",
+      "sha": "efb01ad2155c7946"
     },
     "readme": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-28 13:55:52",
+      "error": "",
+      "note": "",
+      "sha": "6d7b7c21bc1cc9bf"
     },
     "check": {
       "status": "대기",
@@ -110,6 +118,8 @@
     "2026-10-28 13:45:26 done view-buffett",
     "2026-10-28 13:48:19 done rebuttal",
     "2026-10-28 13:50:49 done final",
-    "2026-10-28 13:50:59 put plan-baseline"
+    "2026-10-28 13:50:59 put plan-baseline",
+    "2026-10-28 13:55:23 done plan",
+    "2026-10-28 13:55:52 done readme"
   ]
 }
