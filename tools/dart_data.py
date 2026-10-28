@@ -787,7 +787,7 @@ def main():
     pi.add_argument("--top", type=int, default=10, help="표시 인원·건수(기본 10)")
     pi.add_argument("--as-of", default="", help="이 날짜까지 접수된 보고(YYYY-MM-DD)")
 
-    pm = sub.add_parser("major-holders", help="5% 이상 대량보유 보고")
+    pm = sub.add_parser("major-holders", help="5%% 이상 대량보유 보고")
     pm.add_argument("code")
     pm.add_argument("--days", type=int, default=365, help="변동 보고 조회 기간(일, 기본 365)")
     pm.add_argument("--as-of", default="", help="이 날짜까지 접수된 보고(YYYY-MM-DD)")

@@ -127,7 +127,7 @@ def build_plan(verdict: str, conviction: int, iv_low: float, iv_high: float, pri
             plan["현재상태"] = "대기(관망 — 가격대 도달 시 판단 재검토 후 실행)"
     if price and price >= stop:
         plan["현재상태"] += " · 현재가가 신규 매수 금지 구간"
-        warn.append(f"현재가 {fmt_price(price, currency)}가 신규 매수 금지선 {fmt_price(stop, currency)} 이상이다.")
+        warn.append(f"현재가({fmt_price(price, currency)})는 신규 매수 금지선 {fmt_price(stop, currency)} 이상이다.")
     if not current_weight:
         warn.append("보유 비중이 없거나 미제공이라 축소 규칙은 지금 실행할 것이 없다(보유 시에만 적용). "
                     "지금 작동하는 규칙은 신규 매수 금지선이다.")

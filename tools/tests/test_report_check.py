@@ -93,6 +93,13 @@ class ReportCheckTest(unittest.TestCase):
         self.assertIn("빠진 줄: 데이터 시점", msgs)
         self.assertIn("표본 검사 결과가 아직 없습니다", msgs)
 
+    def test_free_form_audit_placeholder_fails(self):
+        # 정해진 자리표시 문구가 아니어도 판정어·숫자가 없으면 결과가 아니다
+        run = RUN_INFO.format(skill="investment-team").replace(
+            "report_audit 13건 — 통과 13", "(9단계 결과로 채운다)")
+        c = rc.check(self.write("최종보고서.md", final_report(run_info=run)))
+        self.assertIn("표본 검사 결과가 아직 없습니다", " ".join(m for _, m in c.items))
+
     def test_run_info_must_be_last_and_code_block_label_ignored(self):
         text = final_report(skill="investment-research", label="```\n" + LABEL + "\n```") + "\n## 덧붙임\n내용\n"
         c = rc.check(self.write("r.md", text))

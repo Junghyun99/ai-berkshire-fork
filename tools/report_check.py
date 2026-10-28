@@ -118,7 +118,9 @@ def check_run_info(c: Checker, text: str, skill_arg: str) -> str:
     if info.get("작성일") and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", info["작성일"]):
         c.fail(f"실행 정보 작성일 '{info['작성일']}' 은 YYYY-MM-DD 형식이 아닙니다.")
     audit = info.get("표본 검사", "")
-    if audit and any(p in audit for p in _AUDIT_PENDING):
+    # 결과가 적혔다는 최소 증거: 판정어(통과·출고·반려)와 숫자. 자리표시 문구가 바뀌어도 걸리게 한다.
+    has_result = re.search(r"\d", audit) and any(k in audit for k in ("통과", "출고", "반려"))
+    if audit and (any(p in audit for p in _AUDIT_PENDING) or not has_result):
         c.fail(f"표본 검사 결과가 아직 없습니다('{audit}') — report_audit.py verdict 결과를 적을 것.")
     skill = info.get("스킬", "")
     if skill_arg and skill and skill != skill_arg:
