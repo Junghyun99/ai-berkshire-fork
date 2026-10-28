@@ -31,8 +31,12 @@
       "attempts": 0
     },
     "view-lilu": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-28 13:40:52",
+      "error": "",
+      "note": "",
+      "sha": "5c61ab9a25b0fda9"
     },
     "rebuttal": {
       "status": "대기",
@@ -75,6 +79,7 @@
     "2026-10-28 13:28:30 put lessons",
     "2026-10-28 13:28:30 done context",
     "2026-10-28 13:28:30 put factsheet",
-    "2026-10-28 13:28:30 done factsheet"
+    "2026-10-28 13:28:30 done factsheet",
+    "2026-10-28 13:40:52 done view-lilu"
   ]
 }
