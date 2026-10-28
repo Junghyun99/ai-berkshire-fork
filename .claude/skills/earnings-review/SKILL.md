@@ -43,7 +43,7 @@ Task 도구로 여러 백그라운드 Agent를 **병렬** 실행해 아래 원�
 3. **경영진의 주주 서한** (연차보고서가 있는 경우): 전문 읽기
 4. **인베스터 데이/애널리스트 데이 자료** (최근에 있었다면)
 
-완전한 원문을 확보할 수 없으면 `.claude/skills/financial-data/SKILL.md` 규범에 따라 표준 데이터 소스로 보완하되 (미국: macrotrends+stockanalysis; 홍콩: aastocks+macrotrends; 중국 A주: East Money+cninfo), 반드시 "원본 재무제표 아님, 제3자 요약 기반"을 표기하고 핵심 데이터의 두 출처 간 오차 >1%를 표기한다.
+완전한 원문을 확보할 수 없으면 `.claude/skills/financial-data/SKILL.md` 규범에 따라 표준 데이터 소스로 보완하되 (미국: SEC EDGAR+stockanalysis(curl 기본 User-Agent); 홍콩: aastocks+macrotrends; 중국 A주: East Money+cninfo), 반드시 "원본 재무제표 아님, 제3자 요약 기반"을 표기하고 핵심 데이터의 두 출처 간 오차 >1%를 표기한다.
 
 ### 2단계: 핵심 재무 데이터 추출 및 검증
 

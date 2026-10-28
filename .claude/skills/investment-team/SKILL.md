@@ -185,7 +185,7 @@ Task 도구로 4개 Agent를 동시에 실행한다 (**반드시 같은 메시�
 
 **리서치 방법**:
 - WebSearch로 최신 공개 정보(실적, 산업 보고서, 뉴스)를 검색
-- **재무 데이터는 반드시 두 개의 독립 출처에서** 가져올 것. `.claude/skills/financial-data/SKILL.md` 규범에 따라 실행 (미국 주식: macrotrends+stockanalysis; 홍콩 주식: aastocks+macrotrends; 중국 A주: East Money+cninfo; 한국 주식: DART+네이버 금융). 두 출처 간 오차 >1%는 표기
+- **재무 데이터는 반드시 두 개의 독립 출처에서** 가져올 것. `.claude/skills/financial-data/SKILL.md` 규범에 따라 실행 (미국 주식: SEC EDGAR(sec_edgar_data.py)+stockanalysis(curl 기본 User-Agent); 홍콩 주식: aastocks+macrotrends; 중국 A주: East Money+cninfo; 한국 주식: DART+네이버 금융). 두 출처 간 오차 >1%는 표기
 - 데이터 정확성 확보, 핵심 데이터에 출처 표기
 - 분석은 깊이 있게, 겉핥기 금지
 
