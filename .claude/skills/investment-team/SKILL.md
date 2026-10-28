@@ -9,6 +9,33 @@ $ARGUMENTS 에 대해 팀 기반 투자 리서치 분석을 수행한다. Team �
 
 ## 실행 절차
 
+### 0단계: 실행 상태 (중단 후 이어서 실행)
+
+이 스킬은 길다. Agent 하나가 끊기거나 세션이 끊겨도 끝난 단계는 다시 하지 않도록, 단계마다 `tools/run_state.py` 에 기록한다(TradingAgents 체크포인트의 파일판).
+
+```bash
+python3 tools/run_state.py status --company {회사명}      # 먼저 확인: 진행 중인 실행이 있는가
+```
+- **상태가 없으면**(종료 코드 3) 새로 시작한다: `python3 tools/run_state.py start --company {회사명} --ticker {종목코드}`
+- **진행 중이면** 처음부터 다시 하지 않는다. `status` 의 "다음 단계"부터 이어서 하고, 팩트시트·교훈 같은 입력은 다시 뽑지 말고 `get --key factsheet` 등으로 **저장된 같은 값**을 Agent 프롬프트에 넣는다. 처음부터 다시 하려면 사용자에게 확인한 뒤 `start --force`.
+
+| 단계 | 끝나면 실행 |
+|---|---|
+| 1단계 과거 판단·교훈 | `show`·`lessons` 출력을 파일로 저장 → `put --key lessons --file ...` → `done --step context` |
+| 1.6단계 팩트시트 | `put --key factsheet --file ...` → `done --step factsheet` |
+| 4단계 관점 보고서 | 보고서 파일이 저장될 때마다 `done --step view-duan` / `view-buffett` / `view-munger` / `view-lilu` |
+| 5.5단계 교차 반론 | `done --step rebuttal` |
+| 7단계 최종보고서 | `done --step final` |
+| 7.5단계 리스크 토론 | 기준선은 `put --key plan-baseline`, 끝나면 `done --step plan` |
+| 8단계 README | `done --step readme` |
+| 9단계 검사 | 형식 검사 PASS·표본 검사 기록 후 `done --step check` |
+| 9.5단계 원장 | `done --step ledger` → 마지막에 `finish` |
+
+- `done` 은 산출물을 검사해 통과해야만 기록된다. 예: 관점 보고서에 `**관점 판단**` 줄이 없으면(저장 도중 끊긴 파일이면) 거부된다 — 그 Agent만 다시 실행한다.
+- Agent가 실패하면 `fail --step {id} --error "{원인}"`. **같은 단계가 2번 실패하면** 주의사항 2의 폴백으로 Team Lead가 대리 작성하고, 산출물에 대리 작성임을 밝힌 뒤 `done --step {id} --note "Team Lead 대리 작성"`.
+- 앞 단계를 다시 끝내면(예: 관점 보고서 수정) 그 뒤 단계(교차 반론·최종보고서 등)는 자동으로 '대기'로 돌아간다. `status` 를 보고 다시 한다.
+- 세션을 넘겨 이어서 해야 하면 `reports/{회사명}/.run-state-investment-team.json` 을 산출물과 함께 작업 브랜치에 커밋한다. `finish` 가 상태 파일을 지우므로 최종 커밋에는 남지 않는다.
+
 ### 1단계: 팀 프레임워크 제시
 
 먼저 `python3 tools/decision_ledger.py show {티커}` 로 이 종목의 과거 판단·결과·회고를 확인한다. 기록이 있으면 4개 Agent의 스폰 프롬프트에 요약을 넣고(지난 반증 조건이 발생했는지 각 관점에서 점검하도록), 최종 보고서에 비교를 쓴다. 규칙: `.claude/skills/decision-ledger/SKILL.md` 1-3.
@@ -372,6 +399,7 @@ TeamDelete로 팀 리소스를 정리한다.
 1. **4개 Agent는 반드시 병렬 실행** — 같은 메시지에서 Task 도구를 4번 호출
 2. **Agent는 SendMessage로 보고** — 파일 협업이 아니라 메시지 통신이다
    - **폴백**: 팀 도구(TeamCreate/SendMessage)가 없는 환경이거나 병렬 Agent 실행이 실패(세션 한도 등)하면, team-lead가 4개 역할을 **순차 수행**하고 각 관점 보고서를 해당 파일에 직접 작성한다. 산출물 구조는 동일하게 유지한다
+   - **한 Agent만 실패하면** 전체를 다시 돌리지 않는다. `run_state.py fail` 로 기록하고 그 Agent만 같은 입력(`get`)으로 재실행한다. 2번 실패하면 team-lead가 그 관점만 대리 작성하고 산출물·교차 반론에 대리 작성임을 밝힌다(0단계)
 3. **데이터 정확성** — Agent가 WebSearch로 최신 데이터를 검색하고 핵심 데이터를 교차 검증하도록 요구
 4. **결론은 명확하게** — 매수/관망/회피 제안과 구체적인 가격 구간 제시를 회피하지 않는다
 5. **모든 분석에 데이터 근거** — 데이터 출처 첨부
