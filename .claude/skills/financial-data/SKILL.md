@@ -15,9 +15,14 @@ description: "재무 데이터 수집·교차 검증 규범: 모든 핵심 데�
 
 | 우선순위 | 출처 | URL | 접근 방법 |
 |--------|------|-----|---------|
-| 1 (주) | **macrotrends** | macrotrends.net/stocks/charts/{ticker} | 직접 접속, 가입 불필요 |
-| 2 (부) | **stockanalysis** | stockanalysis.com/stocks/{ticker}/financials | 직접 접속, 가입 불필요 |
-| 원본 1차 자료 | SEC EDGAR | sec.gov/cgi-bin/browse-edgar | `python3 tools/sec_edgar_data.py financials {티커}` (XBRL 공시 원본, 키 불필요) / 10-K·10-Q 원문 |
+| 1 (주) | **SEC EDGAR** (원본 1차 자료) | sec.gov/cgi-bin/browse-edgar | `python3 tools/sec_edgar_data.py financials {티커}` (XBRL 공시 원본, 키 불필요) / 10-K·10-Q 원문 |
+| 2 (부) | **stockanalysis** | stockanalysis.com/stocks/{ticker}/financials | 직접 접속, 가입 불필요. **curl 기본 User-Agent로 받는다** (아래 주의) |
+| 3 (참고) | macrotrends | macrotrends.net/stocks/charts/{ticker} | Cloudflare 봇 검사로 자주 403. 열리면 3번째 출처로만 |
+
+> **stockanalysis 접속 주의 (2026-10-28 확인)**: `curl -A "Mozilla/5.0"` 처럼 **브라우저 User-Agent로 위장하면 Cloudflare 검사 페이지("Just a moment...", `cf-mitigated: challenge`)로 403**이 난다. 자바스크립트를 실행하지 못하는 요청이 브라우저라고 주장하면 봇으로 의심받기 때문이다. curl 기본 User-Agent(인자 없이 `curl -s URL`)는 200으로 정상 응답한다. 403을 받으면 "사이트가 막혔다"고 기록하기 전에 User-Agent 인자를 빼고 다시 시도한다. User-Agent 위장으로 차단을 우회하지 않는다.
+> - 재무 수치는 페이지에 들어 있는 `data:{datekey:[...], revenue:[...], opinc:[...], netinccmn:[...], ncfo:[...], capex:[...], fcf:[...]}` 배열(원 단위)에서 읽는다. 재무상태표 페이지의 `equity:[...]` 배열은 첫 값이 최근 분기, 그다음부터 회계연도다.
+> - 발행주식수는 `/stocks/{ticker}/statistics/` 의 Shares Outstanding(hover 값이 정확한 주식 수).
+> - macrotrends는 User-Agent와 무관하게 Cloudflare 검사로 403이 날 수 있다(같은 날 확인). 이때는 SEC EDGAR + stockanalysis 두 출처로 교차 검증하고, 실행 정보에 macrotrends를 쓰지 못한 사실을 적는다.
 
 > **미국 주식 보조 도구** (stdlib만, `tools/`):
 > - `sec_edgar_data.py financials|filings {티커}` — 공시 원본 재무·공시 목록. `SEC_EDGAR_USER_AGENT="이름 이메일"` 설정 권장(SEC가 연락처 없는 요청 거부).

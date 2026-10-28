@@ -237,7 +237,7 @@ def cmd_financials(ticker: str, statement: str, freq: str, as_of: str, limit: in
             _print_derived(with_revenue[-1], by_period[with_revenue[-1]])
 
     print("\n  출처: SEC EDGAR XBRL companyfacts(data.sec.gov) — 1차 공시 원본.")
-    print("  교차 검증: macrotrends / stockanalysis 또는 "
+    print("  교차 검증: stockanalysis(curl 기본 User-Agent) 또는 "
           f"python3 tools/global_stock_data.py financials {ticker.upper()} (Yahoo, 부 출처). 오차 >1% 시 표기.")
 
 

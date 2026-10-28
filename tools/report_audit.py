@@ -494,7 +494,7 @@ def main():
         print()
         print('↑ 위의 각 데이터 포인트에 대해 다음 소스에서 번호를 가져와 입력하세요. fetched_value：')
         print('  한국 주식：dart.fss.or.kr（주）+ 네이버 금융（부） — tools/global_stock_data.py 활용 가능')
-        print('  미국 주식：macrotrends.net（주）+ stockanalysis.com（부）')
+        print('  미국 주식：SEC EDGAR（주, tools/sec_edgar_data.py）+ stockanalysis.com（부, curl 기본 User-Agent — 브라우저 위장 시 Cloudflare 403）')
         print('  홍콩 주식：aastocks.com（주）+ macrotrends ADR（부）')
         print('  중국 A주：eastmoney.com（주）+ cninfo.com.cn（부）')
         print()

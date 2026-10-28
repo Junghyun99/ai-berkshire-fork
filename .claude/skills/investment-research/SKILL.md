@@ -47,7 +47,7 @@ $ARGUMENTS 에 대해 체계적인 투자 리서치 분석을 수행한다.
 > 이어서 `python3 tools/decision_ledger.py lessons --ticker {티커} --tag {산업} --tag {테마} --market {시장}` 으로 종목을 넘어선 과거 교훈을 확인한다(같은 문서 1-4). 교훈은 점검 항목이다 — 8단계 판정 근거에 교훈마다 해당 여부와 반영 내용을 한 줄씩 쓴다(없으면 "해당 교훈 없음").
 
 > **데이터 소스 규범**: `.claude/skills/financial-data/SKILL.md` 참조. 모든 재무 데이터는 두 개의 독립 출처에서 가져와야 하며, 오차 >1%는 표기.
-> - 미국 주식: macrotrends (주) + stockanalysis (부)
+> - 미국 주식: SEC EDGAR (주, `python3 tools/sec_edgar_data.py financials {티커}`) + stockanalysis (부, curl 기본 User-Agent로 — 브라우저 User-Agent 위장은 Cloudflare 403)
 > - 홍콩 주식: aastocks (주) + macrotrends ADR (부)
 > - 중국 A주: East Money (주) + cninfo (부)
 > - 한국 주식: DART (주, `python3 tools/dart_data.py financials {종목코드}`) + 네이버 금융 (부, `python3 tools/global_stock_data.py financials {종목코드}`)
@@ -250,7 +250,7 @@ JSON 템플릿을 출력하며, 각 항목에 `fetched_value`(채울 값)가 있
 
 **Step 2 — 데이터 재확인:**
 목록의 각 데이터 포인트를 `.claude/skills/financial-data/SKILL.md` 규범에 따라 신뢰할 수 있는 출처에서 가져온다
-(미국: macrotrends+stockanalysis; 홍콩: aastocks+macrotrends; 중국 A주: East Money+cninfo; 한국: DART+네이버 금융).
+(미국: SEC EDGAR+stockanalysis; 홍콩: aastocks+macrotrends; 중국 A주: East Money+cninfo; 한국: DART+네이버 금융).
 `fetched_value` / `fetched_source` / `fetched_value2` / `fetched_source2`를 채운다.
 
 **Step 3 — 판정 출력:**
