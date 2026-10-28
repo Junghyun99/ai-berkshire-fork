@@ -214,7 +214,7 @@ def check_plan(c: Checker, report_path: str, folder: str):
     elif d_lines[-1] != lines[0]:
         c.fail("최종보고서와 06-리스크토론-비중.md(마지막 줄)의 실행 계획이 다릅니다.")
     else:
-        buys = ", ".join(f"{p:,.0f}@{w:g}%" for p, w in plan["분할매수"]) or "-"
+        buys = ", ".join(f"{t['가격']:,.0f}@{t['비중']:g}%" for t in plan["분할매수"]) or "-"
         c.ok(f"실행 계획: 비중 상한 {plan['비중상한']:g}% · 분할 매수 {buys} (06 과 일치)")
 
 
