@@ -17,7 +17,8 @@ FIELDS = {"month", "asset_id", "total_return_local", "fx_to_krw_return",
 
 
 def load_panel(path, minimum_months=2):
-    rows = list(csv.DictReader(Path(path).open(encoding="utf-8-sig", newline="")))
+    with Path(path).open(encoding="utf-8-sig", newline="") as source:
+        rows = list(csv.DictReader(source))
     if not rows:
         raise ValueError("D01: empty data")
     if not FIELDS.issubset(rows[0]):
