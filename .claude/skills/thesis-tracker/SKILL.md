@@ -202,6 +202,14 @@ WebSearch로 수집한다:
 |---------|:------:|---------|---------|
 | 2026-04-09 | 7/10 | 매출 성장률 12%로 둔화, 그러나 이익률 개선 | 보유 |
 
+### B8: 판단 원장 정산·회고 연동
+
+이 종목의 리서치 판단이 판단 원장에 있으면(`python3 tools/decision_ledger.py show {티커}`), 이번 레드라인 점검 결과로 회고를 채운다:
+1. `python3 tools/decision_ledger.py settle` 로 평가 시점이 지난 구간을 채점한다.
+2. 새로 채점됐거나 회고가 비어 있는 구간마다, B4 레드라인 점검 결과를 논지 상태로 기록한다(레드라인 발동 = `훼손`, 미발동 = `유지`, 판단 불가 = `불명`):
+   `python3 tools/decision_ledger.py review --id {id} --horizon {구간} --thesis-status {유지|훼손|불명} --note "{2~4문장}"`
+3. 회고 문장 규칙은 `.claude/skills/decision-ledger/SKILL.md` 3절을 따른다. 주가 결과가 좋아도 레드라인이 발동했으면 `훼손`(운)이다.
+
 ---
 
 ## 핵심 원칙

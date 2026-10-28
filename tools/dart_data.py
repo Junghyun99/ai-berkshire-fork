@@ -20,10 +20,19 @@ Yahoo/네이버(부 출처)만 다뤘다. 이 도구가 1차 자료(주 출처) 
     python3 tools/dart_data.py financials 005930 --fs OFS              # 개별(별도) 재무
     python3 tools/dart_data.py company 005930                          # 기업개황
     python3 tools/dart_data.py disclosures 005930                      # 최근 공시 목록
+    python3 tools/dart_data.py financials 005930 --as-of 2025-03-31    # 2025-03-31까지 접수된 최신 사업보고서
+    python3 tools/dart_data.py disclosures 005930 --as-of 2025-03-31   # 그날까지 접수된 공시(정정 전 원공시 포함)
     python3 tools/dart_data.py resolve 005930                          # 종목코드→corp_code 확인
 
 보고서 코드(reprt_code): 11011 사업보고서(연간, 기본) / 11012 반기 / 11013 1분기 / 11014 3분기
 재무 구분(fs_div): CFS 연결(기본) / OFS 개별(별도)
+
+시점 통제(--as-of YYYY-MM-DD):
+  공시 목록의 접수일(rcept_dt)로 그 날짜까지 접수된 정기보고서만 고른다(사업연도 종료 직후처럼
+  아직 공시 전인 기간의 수치를 쓰지 않게). 재무 API는 정정공시가 있으면 정정 후 값을 돌려주는데,
+  돌려준 값의 접수번호(rcept_no) 날짜가 --as-of 보다 늦으면 '그 시점에 공개돼 있던 값'이 아니므로
+  수치를 내주지 않고 보류한다(종료 코드 5, 원공시 문서 링크 안내).
+  설계 출처: TradingAgents(Apache 2.0)의 SEC EDGAR 공시일 기준 시점 통제를 DART에 맞게 적용.
 
 필요 Python >= 3.8, 외부 종속성 없음.
 """
@@ -31,10 +40,11 @@ Yahoo/네이버(부 출처)만 다뤘다. 이 도구가 1차 자료(주 출처) 
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import zipfile
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from urllib.parse import urlencode
 from xml.etree import ElementTree
 
@@ -295,10 +305,150 @@ def _fetch_financials(corp_code, year, reprt_code, fs_div):
     return data.get("list") or None
 
 
-def cmd_financials(code: str, year=None, reprt_code="11011", fs_div="CFS"):
+# ---------------------------------------------------------------------------
+# 시점 통제(--as-of)
+# ---------------------------------------------------------------------------
+
+_PERIODIC_RE = re.compile(r"(사업|반기|분기)보고서\s*\((\d{4})\.(\d{2})\)")
+# 결산월 이후 경과 개월 → 보고서 코드
+_CODE_BY_OFFSET = {0: "11011", 3: "11013", 6: "11012", 9: "11014"}
+
+
+def _withheld(reason: str, alternative: str = ""):
+    """tools/_us_common.py 와 같은 WITHHELD 규칙(종료 코드 5)."""
+    print(f"WITHHELD: {reason}")
+    if alternative:
+        print(f"  대안: {alternative}")
+    print("  이 데이터를 추정하거나 현재 값으로 대신 채우지 마세요.")
+    sys.exit(5)
+
+
+def report_code_of(report_nm: str, acc_mt: int):
+    """정기보고서 이름 → (보고서 코드, 기간 연도, 기간 월). 정기보고서가 아니면 None.
+
+    '[기재정정]사업보고서 (2024.12)' 처럼 정정 접두어가 붙어도 같은 기간으로 읽는다.
+    분기 구분은 결산월 기준 경과 개월로 정한다(12월 결산: 3월=1분기, 6월=반기, 9월=3분기).
+    """
+    m = _PERIODIC_RE.search(report_nm or "")
+    if not m:
+        return None
+    kind, y, mo = m.group(1), int(m.group(2)), int(m.group(3))
+    offset = (mo - acc_mt) % 12
+    code = {"사업": "11011", "반기": "11012"}.get(kind) or _CODE_BY_OFFSET.get(offset)
+    if code is None:
+        return None
+    return code, y, mo
+
+
+def periodic_reports_as_of(corp_code: str, as_of: str, acc_mt: int, years_back: int = 4) -> list:
+    """as_of 까지 접수된 정기보고서 [(접수일, 접수번호, 보고서명, 코드, 기간연도)] — 최신 접수순.
+
+    last_reprt_at=N: 정정 전 원공시도 포함해야 '그 시점에 무엇이 공개돼 있었나'를 알 수 있다.
+    """
+    end = datetime.strptime(as_of, "%Y-%m-%d")
+    params = {
+        "corp_code": corp_code,
+        "bgn_de": (end - timedelta(days=365 * years_back)).strftime("%Y%m%d"),
+        "end_de": end.strftime("%Y%m%d"),
+        "pblntf_ty": "A",          # 정기공시
+        "last_reprt_at": "N",
+        "page_count": "100",
+    }
+    rows, page = [], 1
+    while True:
+        data = _api_json("list.json", dict(params, page_no=str(page)))
+        for d in data.get("list") or []:
+            parsed = report_code_of(d.get("report_nm", ""), acc_mt)
+            if parsed and d.get("rcept_dt", "") <= end.strftime("%Y%m%d"):
+                rows.append((d["rcept_dt"], d["rcept_no"], d["report_nm"], parsed[0], parsed[1]))
+        if page >= int(data.get("total_page") or 1):
+            break
+        page += 1
+    return sorted(rows, reverse=True)
+
+
+def _acc_month(corp_code: str) -> int:
+    """결산월(기업개황 acc_mt). 조회 실패 시 12월로 본다."""
+    try:
+        return int(_api_json("company.json", {"corp_code": corp_code}).get("acc_mt") or 12)
+    except (ValueError, RuntimeError, ConnectionError):
+        return 12
+
+
+def share_counts(corp_code: str, as_of: str = None):
+    """as_of 까지 접수된 가장 최근 정기보고서의 주식 총수(보통주·우선주 구분). 없으면 None.
+
+    반환: {"보통주"/"우선주": {"발행": n, "자기주식": n, "유통": n}, "기준일", "보고서", "접수번호"}
+    DART는 우선주를 종류(우, 2우B 등)와 무관하게 한 줄로 합산해 준다.
+    """
+    as_of = as_of or date.today().strftime("%Y-%m-%d")
+    acc_mt = _acc_month(corp_code)
+    for rcept_dt, rcept_no, report_nm, reprt_code, period_year in \
+            periodic_reports_as_of(corp_code, as_of, acc_mt, years_back=2):
+        # 12월 결산 외에는 사업연도 표기가 회사마다 달라 두 해를 시도하고 접수번호로 맞는 쪽을 확인한다.
+        for y in ([period_year] if acc_mt == 12 else [period_year, period_year - 1]):
+            data = _api_json("stockTotqySttus.json",
+                             {"corp_code": corp_code, "bsns_year": str(y), "reprt_code": reprt_code})
+            rows = {r.get("se"): r for r in data.get("list") or [] if r.get("rcept_no") == rcept_no}
+            if "보통주" not in rows:
+                continue
+            out = {"기준일": rows["보통주"].get("stlm_dt", ""), "보고서": report_nm, "접수번호": rcept_no}
+            for se in ("보통주", "우선주"):
+                r = rows.get(se) or {}
+                issued = _parse_amount(r.get("istc_totqy")) or 0.0
+                treasury = _parse_amount(r.get("tesstk_co")) or 0.0
+                out[se] = {"발행": issued, "자기주식": treasury,
+                           "유통": _parse_amount(r.get("distb_stock_co")) or issued - treasury}
+            return out
+    return None
+
+
+def _financials_as_of(corp_code, corp_name, code, as_of, year, reprt_code, fs_div):
+    """as_of 시점 기준 재무 → (항목, 사업연도, 재무구분, 기준 보고서 튜플)."""
+    acc_mt = _acc_month(corp_code)
+    reports = [r for r in periodic_reports_as_of(corp_code, as_of, acc_mt)
+               if r[3] == reprt_code and (year is None or r[4] in (year, year + 1))]
+    if not reports:
+        _die(f"NO_DATA: {corp_name}({code}) 의 {_REPORT_NAMES.get(reprt_code, reprt_code)}가 "
+             f"{as_of} 까지 접수된 것이 없습니다.", 3)
+    # 가장 최근 기간을 고르고, 그 기간의 공시(원공시 + as_of 이전 정정) 중 가장 늦은 것을 기준으로 삼는다.
+    period_year = max(r[4] for r in reports)
+    same_period = [r for r in reports if r[4] == period_year]
+    chosen = same_period[0]                     # 최신 접수(정정이 있으면 정정)
+    earliest = min(r[1] for r in same_period)   # 원공시 접수번호
+    rcept_dt, rcept_no, report_nm, _, _ = chosen
+    # 12월 결산은 기간 연도 = 사업연도. 그 외 결산월은 사업연도 표기가 회사마다 달라 두 해를 시도하고,
+    # 응답의 접수번호가 고른 보고서(또는 그 정정)인지로 맞는 쪽을 확인한다.
+    candidates = [year] if year else ([period_year] if acc_mt == 12 else [period_year, period_year - 1])
+    for fs in ([fs_div, "OFS"] if fs_div == "CFS" else [fs_div]):
+        for y in candidates:
+            items = _fetch_financials(corp_code, y, reprt_code, fs)
+            if not items:
+                continue
+            served = max((it.get("rcept_no", "") for it in items), default="")
+            if served and served < earliest:
+                continue  # 이 기간 원공시보다 이른 보고서의 값 → 사업연도 추정이 틀림
+            if served[:8] > as_of.replace("-", ""):
+                _withheld(
+                    f"{corp_name}({code}) {report_nm}: DART 재무 API가 {served[:8]} 접수 정정공시 값을 "
+                    f"돌려줘 {as_of} 시점에 공개돼 있던 값이 아닙니다.",
+                    f"그 시점 공시 문서를 직접 확인: https://dart.fss.or.kr/dsaf001/main.do?rcpNo={rcept_no}")
+            return items, y, fs, chosen + (served,)
+    _die(f"NO_DATA: {corp_name}({code}) {report_nm}(접수 {rcept_dt}) 의 재무 데이터를 API에서 얻지 못했습니다.", 3)
+
+
+def cmd_financials(code: str, year=None, reprt_code="11011", fs_div="CFS", as_of=None):
     corp_code, corp_name = _resolve(code)
     if not corp_code:
         _die(f"❌ 종목코드 {code} 에 해당하는 상장사를 DART에서 찾을 수 없습니다.")
+
+    if as_of and as_of < date.today().strftime("%Y-%m-%d"):
+        items, used_year, used_fs, basis = _financials_as_of(
+            corp_code, corp_name, code, as_of, year, reprt_code, fs_div)
+        _print_financials(code, corp_name, corp_code, items, used_year, reprt_code, used_fs,
+                          f"시점: {as_of} 까지 접수된 공시 기준 — {basis[2]} (접수 {basis[0]}) "
+                          f"| 값의 접수번호 {basis[5]}")
+        return
 
     # 연도 미지정 시: 당해연도 → 직전연도 → 전전연도 순으로 시도.
     # 당해연도 분기·반기 보고서(11013/11012/11014)를 우선 잡고,
@@ -327,6 +477,10 @@ def cmd_financials(code: str, year=None, reprt_code="11011", fs_div="CFS"):
              f"(연도 {try_years}, 보고서 {reprt_code}). "
              f"--year 로 연도를 지정하거나 dart.fss.or.kr 에서 확인하세요.")
 
+    _print_financials(code, corp_name, corp_code, items, used_year, reprt_code, used_fs)
+
+
+def _print_financials(code, corp_name, corp_code, items, used_year, reprt_code, used_fs, basis_line=""):
     accounts = _extract_accounts(items, used_fs)
 
     fs_label = "연결(CFS)" if used_fs == "CFS" else "개별/별도(OFS)"
@@ -336,6 +490,8 @@ def cmd_financials(code: str, year=None, reprt_code="11011", fs_div="CFS"):
     print(f"DART 재무제표: {corp_name} ({code.zfill(6)}) — {fs_label}")
     print(f"기준: {used_year}년 {_REPORT_NAMES.get(reprt_code, reprt_code)}  "
           f"| corp_code {corp_code}")
+    if basis_line:
+        print(basis_line)
     print("=" * 64)
     print(f"  {'계정':<18}{y2:>14}{y1:>14}{y0:>14}")
     print("  " + "-" * 58)
@@ -403,25 +559,29 @@ def cmd_company(code: str):
     print(f"\n  corp_code: {corp_code}")
 
 
-def cmd_disclosures(code: str, count=15):
+def cmd_disclosures(code: str, count=15, as_of=None):
     corp_code, corp_name = _resolve(code)
     if not corp_code:
         _die(f"❌ 종목코드 {code} 에 해당하는 상장사를 DART에서 찾을 수 없습니다.")
     # bgn_de(시작일) 미지정 시 DART는 '당일 접수 공시'만 반환하므로,
-    # 최근 1년치를 조회하도록 시작일을 1년 전으로 지정한다.
-    bgn_de = (date.today() - timedelta(days=365)).strftime("%Y%m%d")
+    # 기준일로부터 1년치를 조회하도록 시작일을 1년 전으로 지정한다.
+    end = datetime.strptime(as_of, "%Y-%m-%d").date() if as_of else date.today()
+    historical = end < date.today()
     data = _api_json("list.json", {
         "corp_code": corp_code,
-        "bgn_de": bgn_de,
+        "bgn_de": (end - timedelta(days=365)).strftime("%Y%m%d"),
+        "end_de": end.strftime("%Y%m%d"),
         "page_count": str(count),
-        "last_reprt_at": "Y",  # 최종보고서 기준
+        # 최종보고서 기준. 과거 시점이면 정정 전 원공시도 보여야 그때 공개돼 있던 것을 안다.
+        "last_reprt_at": "N" if historical else "Y",
     })
     disclosures = data.get("list") or []
     if not disclosures:
         _die(f"⚠️ {corp_name}({code}) 최근 공시가 없습니다.")
 
     print("=" * 64)
-    print(f"최근 공시 목록: {corp_name} ({code.zfill(6)})")
+    print(f"최근 공시 목록: {corp_name} ({code.zfill(6)})"
+          + (f" — {end} 까지 접수, 정정 전 원공시 포함" if historical else ""))
     print("=" * 64)
     for d in disclosures[:count]:
         rcept_no = d.get("rcept_no", "")
@@ -429,6 +589,17 @@ def cmd_disclosures(code: str, count=15):
         print(f"  [{d.get('rcept_dt', '')}] {d.get('report_nm', '')}")
         print(f"      제출인:{d.get('flr_nm', '')}  접수번호:{rcept_no}")
         print(f"      {url}")
+
+
+def _as_of(value: str):
+    """--as-of 를 YYYY-MM-DD로 정규화하고 미래 날짜는 오늘로 자른다. 비어 있으면 None."""
+    if not value:
+        return None
+    try:
+        d = datetime.strptime(value, "%Y-%m-%d").date()
+    except ValueError:
+        _die(f"❌ --as-of 형식 오류: {value} (YYYY-MM-DD)")
+    return min(d, date.today()).strftime("%Y-%m-%d")
 
 
 def main():
@@ -443,6 +614,7 @@ def main():
                     help="보고서코드 11011 사업(기본)/11012 반기/11013 1Q/11014 3Q")
     pf.add_argument("--fs", default="CFS", choices=["CFS", "OFS"],
                     help="CFS 연결(기본)/OFS 개별")
+    pf.add_argument("--as-of", default="", help="이 날짜까지 접수된 공시 기준(YYYY-MM-DD, 기본 오늘)")
 
     pc = sub.add_parser("company", help="기업개황")
     pc.add_argument("code")
@@ -450,6 +622,7 @@ def main():
     pd = sub.add_parser("disclosures", help="최근 공시 목록")
     pd.add_argument("code")
     pd.add_argument("--count", type=int, default=15)
+    pd.add_argument("--as-of", default="", help="이 날짜까지 접수된 공시(YYYY-MM-DD)")
 
     pr = sub.add_parser("resolve", help="종목코드 → corp_code 확인")
     pr.add_argument("code")
@@ -457,11 +630,11 @@ def main():
     args = p.parse_args()
     try:
         if args.cmd == "financials":
-            cmd_financials(args.code, args.year, args.report, args.fs)
+            cmd_financials(args.code, args.year, args.report, args.fs, _as_of(args.as_of))
         elif args.cmd == "company":
             cmd_company(args.code)
         elif args.cmd == "disclosures":
-            cmd_disclosures(args.code, args.count)
+            cmd_disclosures(args.code, args.count, _as_of(args.as_of))
         elif args.cmd == "resolve":
             cmd_resolve(args.code)
     except (ConnectionError, RuntimeError) as e:
