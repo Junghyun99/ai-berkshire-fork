@@ -45,3 +45,14 @@
 - [FRED DGS3MO](https://fred.stlouisfed.org/series/DGS3MO)
 - [한국은행 ECOS](https://ecos.bok.or.kr/)
 - `research/phase2-2-saa-data-cma-design.md`(Phase 2-2 브랜치에서 확인).
+
+
+## 2026-10-29 Work 실데이터 예비 비교 업데이트
+
+이 절은 위 최초 인계 시점의 미수집/미실행 상태를 갱신한다. #37~39 main 병합 후 FRED 4종과 ETF 4종을 실제 다운로드했고, 5자산 공통 2011-11~2026-09 입력으로 2017-01~2026-09 OOS 예비 비교를 수행했다. 한국 국채 제외 및 미국 자산 장기 비교, 비용 0/10/30bp, 동일 OOS 학습 36/60/120개월 민감도도 산출했다.
+
+- 상세: [실증 예비 보고서](../reports/saa/20261029/README.md), [원본 출처·해시](../reports/saa/20261029/source-manifest.json), [계산 결과](../reports/saa/20261029/results-summary.json).
+- 새 도구: `saa_market_data.py`, `saa_real_experiment.py`; 기존 엔진은 선택적 RF·신호 공백 기능을 추가하고 기본 인터페이스를 유지.
+- 신규 검증 포함 자동 테스트 146개 통과. #41의 기존 파일 종료 경고 수정은 별도 PR.
+- **완료 범위:** 실제 관측 자료 수집·월별 가공·부분 교차검증·프록시 시뮬레이션. **미완료:** 전체 공식 TR 데이터, 20년 한국 국채 공통 표본, 전수 검증·역사적 가용시점·독립 홀드아웃·운용 제약. `research_proxy`이며 `verified` 아님.
+- 원본 공개 재배포 권한은 미확정이므로 개인 스냅샷 보존, GitHub에는 코드·요약·manifest를 기록. IPS v0.4 DRAFT 유지.

@@ -31,8 +31,11 @@ def candidates(n, seed=17, count=2500):
     return out
 
 
-def model_weights(train, strategy, grid):
+def model_weights(train, strategy, grid, risk_free=None):
     n = len(train[0])
+    if risk_free is not None and len(risk_free) != len(train):
+        raise ValueError("risk-free training length mismatch")
+    rf_mean = sum(risk_free) / len(risk_free) if risk_free is not None else 0.
     if strategy == "equal":
         return [1 / n] * n
     cols = list(zip(*train))
@@ -52,8 +55,8 @@ def model_weights(train, strategy, grid):
         if strategy in ("minvar", "shrink_minvar"):
             return -v
         if strategy == "max_sharpe":
-            # In-sample zero risk-free return is a heuristic only.
-            return sum(x * y for x, y in zip(w, means)) / max(math.sqrt(v), 1e-8)
+            # Historical RF proxy is optional; no future rate is used.
+            return (sum(x * y for x, y in zip(w, means)) - rf_mean) / max(math.sqrt(v), 1e-8)
         if strategy == "risk_parity":
             contributions = [w[i] * sum(matrix[i][j] * w[j] for j in range(n)) for i in range(n)]
             total = sum(contributions)
@@ -65,7 +68,11 @@ def model_weights(train, strategy, grid):
     return max(grid, key=score)
 
 
-def performance(returns, turnover, cost_bps):
+def performance(returns, turnover, cost_bps, risk_free=None):
+    if not returns or len(returns) != len(turnover):
+        raise ValueError("empty or misaligned returns and turnover")
+    if risk_free is not None and (len(risk_free) != len(returns) or any(not math.isfinite(v) for v in risk_free)):
+        raise ValueError("invalid risk-free series")
     nav, peak, mdd = 1., 1., 0.
     net = []
     for r, t in zip(returns, turnover):
@@ -82,25 +89,40 @@ def performance(returns, turnover, cost_bps):
     var = sum((x - avg) ** 2 for x in net) / max(1, len(net) - 1)
     vol = math.sqrt(var)
     downside = math.sqrt(sum(min(0., r) ** 2 for r in net) / len(net))
-    return {"cagr": nav ** (1 / years) - 1, "mdd": mdd,
+    result = {"cagr": nav ** (1 / years) - 1, "mdd": mdd,
             "volatility": vol * math.sqrt(12),
             "sharpe_rf0": avg / vol * math.sqrt(12) if vol else None,
             "sortino_mar0": avg / downside * math.sqrt(12) if downside else None,
             "total_turnover": sum(turnover), "months": len(net)}
+    if risk_free is not None:
+        excess = [r - rf for r, rf in zip(net, risk_free)]
+        avg_excess = sum(excess) / len(excess)
+        std_excess = math.sqrt(sum((r - avg_excess) ** 2 for r in excess) / max(1, len(excess) - 1))
+        down_excess = math.sqrt(sum(min(0., r) ** 2 for r in excess) / len(excess))
+        result.update(sharpe_rf_proxy=avg_excess / std_excess * math.sqrt(12) if std_excess else None,
+                      sortino_rf_proxy=avg_excess / down_excess * math.sqrt(12) if down_excess else None)
+    return result
 
 
-def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed=17, grid_count=2500):
-    if len(months) <= lookback or lookback < 24 or rebalance < 1 or cost_bps < 0:
+def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed=17, grid_count=2500, risk_free=None, signal_lag=0, include_series=False):
+    if not isinstance(signal_lag, int) or signal_lag < 0:
+        raise ValueError("signal_lag must be a nonnegative integer")
+    if len(months) != len(panel) or any(len(row) != len(assets) for row in panel):
+        raise ValueError("panel shape mismatch")
+    if risk_free is not None and (len(risk_free) != len(months) or any(not math.isfinite(v) for v in risk_free)):
+        raise ValueError("invalid risk-free series")
+    if len(months) <= lookback + signal_lag or lookback < 24 or rebalance < 1 or cost_bps < 0:
         raise ValueError("invalid lookback/rebalance/cost or too few months")
     grid = candidates(len(assets), seed, grid_count)
     strategies = ("equal", "minvar", "shrink_minvar", "max_sharpe", "risk_parity")
     records = {s: {"returns": [], "turnover": [], "weights": []} for s in strategies}
     current = {}
-    for t in range(lookback, len(months)):
-        if (t - lookback) % rebalance == 0:
-            train = panel[t - lookback:t]  # No future return leakage.
+    for t in range(lookback + signal_lag, len(months)):
+        if (t - lookback - signal_lag) % rebalance == 0:
+            train = panel[t - signal_lag - lookback:t - signal_lag]  # Exclude lag months.
+            train_rf = risk_free[t - signal_lag - lookback:t - signal_lag] if risk_free is not None else None
             for s in strategies:
-                target = model_weights(train, s, grid)
+                target = model_weights(train, s, grid, train_rf)
                 prior = current.get(s, [0.] * len(assets))
                 # Turnover approximates buys/sells. First investment excluded.
                 change = 0 if s not in current else sum(abs(a - b) for a, b in zip(target, prior))
@@ -119,14 +141,16 @@ def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed
             if total <= 0:
                 raise ValueError("portfolio loss >=100%")
             current[s] = [x * (1 + r) / total for x, r in zip(w, panel[t])]
-    return {"status": "RESEARCH_ONLY", "assets": assets, "oos_start": months[lookback],
-            "oos_end": months[-1], "lookback_months": lookback, "rebalance_months": rebalance,
+    return {"status": "RESEARCH_ONLY", "assets": assets, "oos_start": months[lookback + signal_lag],
+            "oos_end": months[-1], "signal_lag_months": signal_lag, "lookback_months": lookback, "rebalance_months": rebalance,
             "round_trip_cost_bps_per_unit_turnover": cost_bps, "candidate_grid_count": len(grid),
-            "strategies": {s: {**performance(v["returns"], v["turnover"], cost_bps),
-                               "rebalance_targets": v["weights"]} for s, v in records.items()},
+            "strategies": {s: {**performance(v["returns"], v["turnover"], cost_bps, risk_free[lookback + signal_lag:] if risk_free is not None else None),
+                               "rebalance_targets": v["weights"],
+                               **({"gross_returns": v["returns"], "turnover": v["turnover"]} if include_series else {})} for s, v in records.items()},
             "limitations": ["historical return mean is not forward CMA",
                             "candidate-grid approximate solutions, not exact global optimum",
-                            "RF=0 and MAR=0 metrics; no taxes or account restrictions",
+                            "RF proxy metrics optional; legacy RF=0/MAR=0 metrics retained; no taxes or account restrictions",
+                            "signal lag is an assumption, not a point-in-time vintage guarantee",
                             "no leverage/ETF daily-reset or cashflow simulation"]}
 
 
