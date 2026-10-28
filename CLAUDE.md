@@ -9,7 +9,7 @@ Claude Code 기반의 가치투자 리서치 Skill 모음집. 4대 거장 프레
 
 ```
 .claude/skills/  — 투자 리서치 Skill 정의({이름}/SKILL.md), 프로젝트 스킬로 자동 로드
-tools/           — 보조 도구 (financial_rigor.py 정밀 계산, global_stock_data.py 한국·미국·홍콩 시세/재무 수집, dart_data.py 한국 DART 공시 원본 재무(주 출처, DART_API_KEY 필요, --as-of 접수일 기준 시점 통제), ashare_data.py 중국 A주 전용, sec_edgar_data.py 미국 SEC 공시 원본 재무, fred_data.py 미국 거시(FRED_API_KEY), alphavantage_data.py 미국 개요·뉴스 감성·내부자(ALPHA_VANTAGE_API_KEY), polymarket_data.py 예측시장 확률, decision_ledger.py 판단 원장(기록·정산·회고), fact_sheet.py 팩트시트(리서치 기준 수치표·1차 출처 교차 검증). 미국 도구는 --as-of 시점 통제 지원, 테스트: python3 -m unittest discover -s tools/tests)
+tools/           — 보조 도구 (financial_rigor.py 정밀 계산, global_stock_data.py 한국·미국·홍콩 시세/재무 수집, dart_data.py 한국 DART 공시 원본 재무(주 출처, DART_API_KEY 필요, --as-of 접수일 기준 시점 통제), ashare_data.py 중국 A주 전용, sec_edgar_data.py 미국 SEC 공시 원본 재무, fred_data.py 미국 거시(FRED_API_KEY), alphavantage_data.py 미국 개요·뉴스 감성·내부자(ALPHA_VANTAGE_API_KEY), polymarket_data.py 예측시장 확률, decision_ledger.py 판단 원장(기록·정산·회고·교훈 모음), report_check.py 보고서 형식 검사(출고 전 라벨 줄·실행 정보·필수 절), fact_sheet.py 팩트시트(리서치 기준 수치표·1차 출처 교차 검증). 미국 도구는 --as-of 시점 통제 지원, 테스트: python3 -m unittest discover -s tools/tests)
 reports/         — 투자 리서치 보고서 출력
 research/        — 외부 프레임워크 연구 자료 (예: tradingagents/ 페르소나·프롬프트·출력 정제 정리). 자동 로드되지 않음
 assets/          — 이미지 등 정적 리소스
@@ -62,8 +62,8 @@ reports/
 리서치 판단의 정확도를 추적한다. investment-research / investment-team / investment-checklist 는 결론부에 고정 라벨 줄
 `**판단**: 매수|관망|회피 | **확신도**: ★N | **내재가치**: 범위 | **반증 조건**: ...` 을 쓰고, 출고 후
 `python3 tools/decision_ledger.py add ...` 로 원장에 기록한다. 3·6·12·36개월 뒤 `settle`로 수익률·벤치마크 대비 알파를 채점하고,
-`review`로 논지 상태(유지/훼손/불명)와 회고를 남긴다. 같은 종목을 다시 리서치할 때는 `show {티커}`로 과거 판단을 먼저 본다.
-기록은 `add --from-report {보고서}`로 라벨 줄을 직접 읽게 한다(판독 실패 시 손으로 채우지 말고 라벨 줄을 고침). 보고서 맨 끝에는 `## 실행 정보` 절(작성일·스킬·데이터 시점·출처, 환경변수 `AI_BERKSHIRE_RUN_LABEL`이 있으면 실행 라벨)을 둔다. 원장(`decision-ledger.csv`)은 추가만 하고 고치지 않는다. 상세 규칙: `.claude/skills/decision-ledger/SKILL.md`.
+`review`로 논지 상태(유지/훼손/불명)와 회고를 남긴다. 같은 종목을 다시 리서치할 때는 `show {티커}`로 과거 판단을, 리서치마다 `lessons --tag {산업}`으로 종목을 넘어선 과거 교훈(점검 항목, 결론 아님)을 먼저 본다. 회고 때 `review --lesson --tags`로 남긴 교훈은 `reports/decision-lessons.md`에 자동으로 모인다.
+기록 전 `python3 tools/report_check.py {보고서}`로 형식을 검사하고(❌면 반려), 기록은 `add --from-report {보고서}`로 라벨 줄을 직접 읽게 한다(판독 실패 시 손으로 채우지 말고 라벨 줄을 고침). 보고서 맨 끝에는 `## 실행 정보` 절(작성일·스킬·데이터 시점·출처, 환경변수 `AI_BERKSHIRE_RUN_LABEL`이 있으면 실행 라벨)을 둔다. 원장(`decision-ledger.csv`)은 추가만 하고 고치지 않는다. 상세 규칙: `.claude/skills/decision-ledger/SKILL.md`.
 
 ## /quality-screen (부실기업 걸러내기) 산출물
 

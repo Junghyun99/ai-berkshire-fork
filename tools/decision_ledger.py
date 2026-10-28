@@ -11,6 +11,9 @@
   3) review  채점 결과를 보고 논지 상태(유지/훼손/불명)와 2~4문장 회고를 남긴다.
   4) show    같은 종목을 다시 리서치할 때 과거 판단·결과·회고를 꺼내 본다.
   5) summary 판단별 적중률·평균 알파, 확신도 보정, 스킬별 비교, 운/실력 4분면.
+  6) lessons 회고에서 나온 교훈을 종목을 넘어 모은다. 같은 종목·같은 태그(산업·테마)·같은 시장의 교훈을
+             다음 리서치 프롬프트에 '점검 항목'으로 넣는다(TradingAgents reflector 의 교훈 주입).
+             review 할 때마다 reports/decision-lessons.md 를 다시 만든다.
 
 판단은 앞으로 기록하는 것만 채점하므로, LLM이 학습 데이터로 미래를 이미 아는 문제(백테스트의 함정)가 없다.
 
@@ -19,7 +22,8 @@
 
 저장 파일(사람이 읽고 git diff로 추적할 수 있게 CSV):
   reports/decision-ledger.csv    판단 기록(추가만, 수정하지 않음)
-  reports/decision-outcomes.csv  평가 시점별 채점 + 회고
+  reports/decision-outcomes.csv  평가 시점별 채점 + 회고·교훈·태그
+  reports/decision-lessons.md    교훈 모음(자동 생성, 직접 고치지 않음)
 
 사용법:
     # 권장: 리포트의 결론 라벨 줄과 '## 실행 정보' 절을 읽어 기록(리포트와 원장이 어긋나지 않게)
@@ -34,7 +38,8 @@
   또는 --run-label 로 지정하고, summary 에서 라벨별 적중을 비교한다(예: 설정을 바꾼 전후 비교).
     python3 tools/decision_ledger.py settle
     python3 tools/decision_ledger.py review --id 2026-10-27-000660-investment-team --horizon 3M \\
-        --thesis-status 유지 --note "..."
+        --thesis-status 유지 --note "..." --lesson "교훈 한 문장" --tags "메모리,사이클"
+    python3 tools/decision_ledger.py lessons --ticker 000660 --tag 메모리 --market KOSPI
     python3 tools/decision_ledger.py show 000660
     python3 tools/decision_ledger.py summary
     python3 tools/decision_ledger.py list
@@ -57,11 +62,12 @@ _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 _DIR = os.environ.get("DECISION_LEDGER_DIR") or os.path.join(_ROOT, "reports")
 LEDGER = os.path.join(_DIR, "decision-ledger.csv")
 OUTCOMES = os.path.join(_DIR, "decision-outcomes.csv")
+LESSONS = os.path.join(_DIR, "decision-lessons.md")
 
 LEDGER_FIELDS = ["id", "기록일", "종목", "티커", "심볼", "시장", "통화", "스킬", "리포트", "판단", "확신도",
                  "기록시점가", "내재가치하단", "내재가치상단", "벤치마크", "핵심논지", "반증조건", "실행라벨"]
 OUTCOME_FIELDS = ["id", "구간", "진입일", "진입가", "평가일", "평가가", "수익률", "벤치마크수익률", "알파",
-                  "방향적중", "내재가치위치", "정산일", "논지상태", "회고"]
+                  "방향적중", "내재가치위치", "정산일", "논지상태", "회고", "교훈", "태그"]
 
 VERDICTS = {"매수": 1, "관망": 0, "회피": -1}
 HORIZONS = {"3M": 3, "6M": 6, "12M": 12, "36M": 36}
@@ -426,8 +432,14 @@ def cmd_review(a):
         raise NoDataError(f"정산된 결과가 없습니다: {a.id} [{a.horizon}] — settle 먼저 실행")
     target[0]["논지상태"] = a.thesis_status
     target[0]["회고"] = a.note.replace("\n", " ").strip()
+    target[0]["교훈"] = a.lesson.replace("\n", " ").strip()
+    target[0]["태그"] = ",".join(split_tags(a.tags))
     _write(OUTCOMES, OUTCOME_FIELDS, outcomes)
     print(f"✅ 회고 기록: {a.id} [{a.horizon}] 논지 {a.thesis_status}")
+    if not target[0]["교훈"]:
+        print("   ⚠️ --lesson 이 없어 교훈 모음에는 회고 원문이 들어갑니다. 다른 종목에도 쓸 교훈 한 문장을 권장.")
+    n = write_lessons(_read(LEDGER), outcomes)
+    print(f"   교훈 모음 갱신: {os.path.relpath(LESSONS, _ROOT)} ({n}건)")
 
 
 def _pct(v) -> str:
@@ -462,6 +474,16 @@ def cmd_show(a):
                 print(f"       회고: {o['회고']}")
 
 
+def quadrant(r: dict, o: dict) -> str:
+    """운/실력 4분면. 회고가 끝난 매수·회피만(관망은 방향 주장이 없어 분면이 없다)."""
+    d = VERDICTS.get(r["판단"], 0)
+    if not d or o.get("논지상태") not in ("유지", "훼손"):
+        return ""
+    up = float(o["알파"]) * d > 0
+    return {("유지", True): "실력", ("유지", False): "인내 구간",
+            ("훼손", True): "운", ("훼손", False): "오판"}[(o["논지상태"], up)]
+
+
 def summarize(ledger: list, outcomes: list) -> dict:
     """구간별 집계. 매수·회피는 방향 적중률, 관망은 방향 주장이 없으므로 적중률 없음."""
     by_id = {r["id"]: r for r in ledger}
@@ -484,10 +506,8 @@ def summarize(ledger: list, outcomes: list) -> dict:
                 sec["conviction"].setdefault(r["확신도"], []).append(float(o["알파"]) * d)
                 sec["skill"].setdefault(r["스킬"], []).append(float(o["알파"]) * d)
                 sec["run"].setdefault(r.get("실행라벨") or "(라벨 없음)", []).append(float(o["알파"]) * d)
-            if o["논지상태"] in ("유지", "훼손") and d:
-                up = float(o["알파"]) * d > 0
-                q = {("유지", True): "실력", ("유지", False): "인내 구간",
-                     ("훼손", True): "운", ("훼손", False): "오판"}[(o["논지상태"], up)]
+            q = quadrant(r, o)
+            if q:
                 sec["quadrant"][q] = sec["quadrant"].get(q, 0) + 1
         out[h] = sec
     return out
@@ -525,6 +545,113 @@ def cmd_summary(a):
             print("  운/실력 4분면(회고 완료·매수/회피만): " +
                   ", ".join(f"{k} {v}" for k, v in sec["quadrant"].items()))
     print("\n주의: 표본이 적으면 우연이 크게 작용한다. 알파는 수정종가 기준, 벤치마크는 지수 추종 ETF.")
+
+
+# ---------------------------------------------------------------------------
+# 교훈: 회고를 종목 밖으로 꺼내 다음 리서치의 점검 항목으로 쓴다
+# ---------------------------------------------------------------------------
+
+# 틀린 판단에서 나온 교훈을 먼저 보여준다(맞은 판단의 교훈은 확증 편향을 키우기 쉽다).
+_LESSON_ORDER = {"오판": 0, "운": 1, "인내 구간": 2, "실력": 3}
+
+
+def split_tags(value) -> list:
+    """'메모리, 사이클 / 반도체' → ['메모리','사이클','반도체'] (중복 제거, 순서 유지)."""
+    items = value if isinstance(value, (list, tuple)) else [value or ""]
+    out = []
+    for item in items:
+        for t in re.split(r"[,/;]", item or ""):
+            t = t.strip()
+            if t and t not in out:
+                out.append(t)
+    return out
+
+
+def collect_lessons(ledger: list, outcomes: list) -> list:
+    """회고가 있는 정산 결과 → 교훈 목록(같은 판단의 같은 문장은 한 번만)."""
+    by_id = {r["id"]: r for r in ledger}
+    out, seen = [], set()
+    for o in outcomes:
+        r = by_id.get(o["id"])
+        text = (o.get("교훈") or "").strip() or (o.get("회고") or "").strip()
+        if not r or not text or (o["id"], text) in seen:
+            continue
+        seen.add((o["id"], text))
+        out.append({"id": o["id"], "기록일": r["기록일"], "종목": r["종목"], "티커": r["티커"], "심볼": r["심볼"],
+                    "시장": r["시장"], "판단": r["판단"], "확신도": r["확신도"], "구간": o["구간"], "알파": o["알파"],
+                    "논지상태": o.get("논지상태") or "", "분면": quadrant(r, o),
+                    "태그": split_tags(o.get("태그") or ""), "교훈": text,
+                    "원문": "" if (o.get("교훈") or "").strip() else "회고 원문"})
+    return out
+
+
+def select_lessons(lessons: list, ticker: str = "", tags=(), market: str = "", limit: int = 10) -> list:
+    """같은 종목 → 같은 태그 → 같은 시장 순으로, 각 안에서는 오판·운 먼저, 최근 먼저.
+
+    필터를 하나도 주지 않으면 전부. 태그는 대소문자 무시 부분 일치(예: '메모리' ↔ '메모리 반도체').
+    """
+    key = (ticker or "").upper()
+    wanted = [t.lower() for t in split_tags(list(tags))]
+
+    def tier(l):
+        if key and key in (l["티커"].upper(), l["심볼"].upper()):
+            return 0
+        if wanted and any(w in t.lower() or t.lower() in w for t in l["태그"] for w in wanted):
+            return 1
+        if market and l["시장"] == market:
+            return 2
+        return None if (key or wanted or market) else 3
+
+    picked = [(tier(l), l) for l in lessons]
+    picked = [(t, l) for t, l in picked if t is not None]
+    picked.sort(key=lambda x: (x[0], _LESSON_ORDER.get(x[1]["분면"], 4), _neg_date(x[1]["기록일"])))
+    return [l for _, l in picked][:limit] if limit else [l for _, l in picked]
+
+
+def _neg_date(d: str) -> int:
+    return -int(d.replace("-", "") or 0)
+
+
+def format_lesson(l: dict) -> str:
+    stars = "★" * int(l["확신도"] or 0)
+    status = l["분면"] or (f"논지 {l['논지상태']}" if l["논지상태"] else "논지 미검토")
+    tags = f" | 태그: {', '.join(l['태그'])}" if l["태그"] else ""
+    src = f" ({l['원문']})" if l["원문"] else ""
+    return (f"- [{status} | {l['구간']} 알파 {_pct(l['알파'])} | {l['기록일']} {l['종목']} {l['판단']}{stars}{tags}] "
+            f"{l['교훈']}{src} `{l['id']}`")
+
+
+def write_lessons(ledger: list, outcomes: list) -> int:
+    lessons = select_lessons(collect_lessons(ledger, outcomes), limit=0)
+    lines = ["# 판단 원장 교훈 모음", "",
+             "> 자동 생성 파일 — 직접 고치지 말 것. `python3 tools/decision_ledger.py review ... --lesson ... --tags ...` 로 기록하면 다시 만들어진다.",
+             "> 교훈은 다음 리서치의 **점검 항목**이지 결론이 아니다. 표본이 적은 교훈을 규칙처럼 쓰지 않는다.", ""]
+    for name in ("오판", "운", "인내 구간", "실력", ""):
+        group = [l for l in lessons if l["분면"] == name]
+        if group:
+            lines += [f"## {name or '관망·논지 불명'} ({len(group)}건)", ""] + [format_lesson(l) for l in group] + [""]
+    if not lessons:
+        lines += ["(아직 교훈이 없다)", ""]
+    os.makedirs(os.path.dirname(LESSONS), exist_ok=True)
+    with open(LESSONS, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+    return len(lessons)
+
+
+def cmd_lessons(a):
+    ledger, outcomes = _read(LEDGER), _read(OUTCOMES)
+    if a.write:
+        n = write_lessons(ledger, outcomes)
+        print(f"✅ 교훈 모음 갱신: {os.path.relpath(LESSONS, _ROOT)} ({n}건)")
+        return
+    picked = select_lessons(collect_lessons(ledger, outcomes), a.ticker, a.tag, a.market, a.limit)
+    if not picked:
+        raise NoDataError("조건에 맞는 교훈이 없습니다(회고가 아직 없거나 종목·태그·시장이 일치하지 않음).")
+    cond = ", ".join(x for x in (a.ticker and f"종목 {a.ticker}", a.tag and f"태그 {'/'.join(a.tag)}",
+                                 a.market and f"시장 {a.market}") if x) or "전체"
+    print(f"과거 교훈 {len(picked)}건 ({cond}) — 점검 항목이지 결론이 아니다. 오판·운에서 나온 교훈 먼저.")
+    for l in picked:
+        print(format_lesson(l))
 
 
 def cmd_list(a):
@@ -565,15 +692,23 @@ def main():
     pr.add_argument("--horizon", required=True, choices=list(HORIZONS))
     pr.add_argument("--thesis-status", required=True, help="유지 / 훼손 / 불명")
     pr.add_argument("--note", required=True, help="2~4문장: ①수치가 말해주는 것 ②논지의 맞은/틀린 부분 ③교훈 1개")
+    pr.add_argument("--lesson", default="", help="다른 종목에도 쓸 수 있는 교훈 한 문장(교훈 모음·프롬프트 주입용)")
+    pr.add_argument("--tags", default="", help="교훈이 적용될 산업·테마 태그, 쉼표로 구분(예: 메모리,사이클)")
 
     ps = sub.add_parser("show", help="종목의 과거 판단·결과·회고")
     ps.add_argument("ticker", help="티커 또는 종목명")
     sub.add_parser("summary", help="집계")
     sub.add_parser("list", help="전체 목록")
+    pl = sub.add_parser("lessons", help="교훈 모음(같은 종목·태그·시장 우선)")
+    pl.add_argument("--ticker", default="", help="이 종목의 교훈을 맨 앞에")
+    pl.add_argument("--tag", action="append", default=[], help="산업·테마 태그(여러 번 지정 가능)")
+    pl.add_argument("--market", default="", help="KOSPI / KOSDAQ / US / HK / CN / JP")
+    pl.add_argument("--limit", type=int, default=10, help="최대 건수(0이면 전부)")
+    pl.add_argument("--write", action="store_true", help="reports/decision-lessons.md 를 다시 만든다")
 
     a = p.parse_args()
     {"add": cmd_add, "settle": cmd_settle, "review": cmd_review, "show": cmd_show,
-     "summary": cmd_summary, "list": cmd_list}[a.cmd](a)
+     "summary": cmd_summary, "list": cmd_list, "lessons": cmd_lessons}[a.cmd](a)
 
 
 if __name__ == "__main__":

@@ -42,6 +42,7 @@ $ARGUMENTS 에 대해 체계적인 투자 리서치 분석을 수행한다.
 > **팩트시트(확정 수치표)**: `python3 tools/fact_sheet.py {종목코드}` 로 시세·재무·교차 검증 표를 먼저 만든다. 정확한 수치는 이 표가 기준이며, 다른 출처 값이 다르면 불일치로 표기하고 맞춘 숫자를 만들지 않는다. `데이터 없음`은 추정으로 채우지 않는다. 주가·재무 통화가 다르면 섞어 계산하지 않는다. 백그라운드 데이터 수집 Agent에도 이 표를 그대로 넘기고, 보고서 부록에 붙인다. (과거 시점 분석이면 `dart_data.py`/`sec_edgar_data.py --as-of` 결과를 기준값으로)
 
 > **과거 판단 확인**: 먼저 `python3 tools/decision_ledger.py show {티커}` 로 이 종목의 과거 판단·결과·회고를 확인한다. 기록이 있으면 8단계 메모에 "과거 판단과의 비교"(무엇이 바뀌었나, 지난 교훈을 어떻게 적용했나)를 넣는다. 규칙: `.claude/skills/decision-ledger/SKILL.md` 1-3.
+> 이어서 `python3 tools/decision_ledger.py lessons --ticker {티커} --tag {산업} --tag {테마} --market {시장}` 으로 종목을 넘어선 과거 교훈을 확인한다(같은 문서 1-4). 교훈은 점검 항목이다 — 8단계 판정 근거에 교훈마다 해당 여부와 반영 내용을 한 줄씩 쓴다(없으면 "해당 교훈 없음").
 
 > **데이터 소스 규범**: `.claude/skills/financial-data/SKILL.md` 참조. 모든 재무 데이터는 두 개의 독립 출처에서 가져와야 하며, 오차 >1%는 표기.
 > - 미국 주식: macrotrends (주) + stockanalysis (부)
@@ -191,7 +192,7 @@ python3 tools/financial_rigor.py three-scenario \
 4. **가장 강한 반대 논거**를 하나 골라 데이터로 답한다. 답하지 못하면 그 사실을 쓰고 확신도를 낮춘다.
 5. 판정 근거에 쓰는 수치는 팩트시트 기준이다.
 
-판정 근거(결정한 논거 2~3개 + 가장 강한 반대 논거와 그 답 + 판단을 바꿀 조건)를 메모에 포함한다.
+판정 근거(결정한 논거 2~3개 + 가장 강한 반대 논거와 그 답 + 판단을 바꿀 조건 + 과거 교훈 점검)를 메모에 포함한다.
 
 메모 맨 앞에 **결론 라벨 줄**을 고정 형식으로 쓴다(판단 원장이 읽는 줄, `.claude/skills/decision-ledger/SKILL.md` 1-1):
 
@@ -262,9 +263,10 @@ python3 tools/report_audit.py verdict \
 
 ## 판단 원장 기록 (출고 후)
 
-출고된 보고서의 결론 라벨 줄을 도구가 직접 읽어 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
+출고된 보고서의 결론 라벨 줄을 도구가 직접 읽어 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2). 기록 전에 형식 검사가 `PASS`여야 한다:
 
 ```bash
+python3 tools/report_check.py reports/{회사명}/{회사명}-research-{YYYYMMDD}.md
 python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} \
   --from-report reports/{회사명}/{회사명}-research-{YYYYMMDD}.md --thesis "{핵심 논지 한 줄}"
 ```
