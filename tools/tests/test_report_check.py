@@ -12,6 +12,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 import report_check as rc  # noqa: E402
 
 LABEL = "**판단**: 관망 | **확신도**: ★★★ | **내재가치**: 180,000~200,000원 | **반증 조건**: 고정가 하락"
+PLAN = ("**실행 계획**: 비중 상한 5% | **분할 매수**: 161,500원 1.5% / 142,500원 1.5% / 123,500원 2% | "
+        "**축소 검토**: 240,000원 이상 또는 반증 조건 발생 | **현재 상태**: 대기")
 RUN_INFO = """## 실행 정보
 - 작성일: 2026-10-28
 - 스킬: {skill}
@@ -21,7 +23,7 @@ RUN_INFO = """## 실행 정보
 """
 
 
-def final_report(skill="investment-team", label=LABEL, run_info=None, extra=""):
+def final_report(skill="investment-team", label=LABEL, run_info=None, extra="", plan=PLAN):
     return f"""# 테스트 최종보고서
 
 ## 1. 한 문장 결론
@@ -29,6 +31,9 @@ def final_report(skill="investment-team", label=LABEL, run_info=None, extra=""):
 
 ## 5.5 판정 근거
 - 결정한 논거
+
+## 7. 최종 투자 제안
+{plan}
 
 {extra}
 ## 부록: 팩트시트
@@ -54,11 +59,16 @@ class ReportCheckTest(unittest.TestCase):
         self.write("05-교차반론.md", "\n".join(f"**최종**: **관점 판단**: 관망 유지 — 이유 {i}" for i in range(rebuttal)))
         self.write("README.md", "# 개요")
 
+    def debate(self, final_line=PLAN):
+        # 기준선 줄(첫 줄)과 Team Lead 결정 줄(마지막 줄). 최종보고서와 비교하는 것은 마지막 줄이다.
+        self.write("06-리스크토론-비중.md", f"## 기준선\n{PLAN}\n\n## 결정\n{final_line}\n")
+
     def marks(self, c):
         return [m for m, _ in c.items]
 
     def test_complete_team_report_passes(self):
         self.team()
+        self.debate()
         c = rc.check(self.write("최종보고서.md", final_report()))
         self.assertFalse(c.failed, c.items)
         self.assertNotIn("⚠️", self.marks(c))
@@ -105,8 +115,25 @@ class ReportCheckTest(unittest.TestCase):
         self.assertTrue(any("(알리바바): 회피" in m for m in oks))
         self.assertFalse(c.failed, c.items)
 
+    def test_plan_line_missing_mismatched_or_malformed(self):
+        self.team()
+        # 06 없음 + 실행 계획 없음 → 7.5단계 이전 형식(경고)
+        c = rc.check(self.write("최종보고서.md", final_report(plan="")))
+        self.assertFalse(c.failed, c.items)
+        self.assertTrue(any("7.5단계 리스크 토론 이전" in m for mark, m in c.items if mark == "⚠️"))
+        # 06 있음 + 최종 줄 다름 → 반려
+        self.debate(final_line=PLAN.replace("비중 상한 5%", "비중 상한 3%"))
+        c = rc.check(self.write("최종보고서.md", final_report()))
+        self.assertTrue(any("실행 계획이 다릅니다" in m for _, m in c.items))
+        # 분할 매수 합계가 상한 초과 → 반려
+        bad = PLAN.replace("비중 상한 5%", "비중 상한 4%")
+        self.debate(final_line=bad)
+        c = rc.check(self.write("최종보고서.md", final_report(plan=bad)))
+        self.assertTrue(any("비중 상한 4% 를 넘습니다" in m for _, m in c.items))
+
     def test_style_warnings_do_not_fail(self):
         self.team()
+        self.debate()
         c = rc.check(self.write("최종보고서.md", final_report(extra="점수 ★★★☆. 명백히 싸다.\n")))
         self.assertFalse(c.failed)
         msgs = " ".join(m for mark, m in c.items if mark == "⚠️")

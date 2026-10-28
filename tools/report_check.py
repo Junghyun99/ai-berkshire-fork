@@ -14,6 +14,8 @@ report_audit.py 가 '숫자가 맞는가'를 표본으로 본다면, 이 도구�
             ⚠️ 반 별/빈 별(☆, ½) · ⚠️ 주관 표현("내 생각에는", "느낌상", "명백히")
   investment-team      '판정 근거' 절 · '## 부록: 팩트시트' 절 · 같은 폴더의 01~04 관점 보고서 각각의
                        `**관점 판단**: 매수|관망|회피` 줄 · 05-교차반론.md 의 관점 판단 4개 · README.md
+                       · `**실행 계획**` 줄(position_plan.py 형식)과 06-리스크토론-비중.md 의 마지막 실행 계획 줄 일치
+                         (06 이 없으면 7.5단계 이전 보고서로 보고 ⚠️)
   investment-research  '판정 근거' · '## 부록: 팩트시트'
   investment-checklist 라벨 줄(복수 회사면 **종목** 필드로 회사마다 하나)
 
@@ -32,6 +34,7 @@ import unicodedata
 
 from _us_common import EXIT_NO_DATA
 import decision_ledger as dl
+import position_plan as pp
 
 SKILLS = ("investment-team", "investment-research", "investment-checklist")
 RUN_INFO_KEYS = ("작성일", "스킬", "데이터 시점", "데이터 출처·도구", "표본 검사")
@@ -176,8 +179,43 @@ def check_team_dir(c: Checker, report_path: str):
                    (f", 판독 불가 {bad}" if bad else "") + ").")
         else:
             c.ok(f"05-교차반론.md: 관점 판단 {len(views)}개 ({', '.join(views)})")
+    check_plan(c, report_path, folder)
     (c.ok if os.path.exists(os.path.join(folder, "README.md")) else c.warn)(
         "README.md(프레임 개요)" + ("" if os.path.exists(os.path.join(folder, "README.md")) else " 가 없습니다."))
+
+
+def _plan_lines(text: str) -> list:
+    return [line.strip() for _, line in _outside_code(text) if pp._PLAN_RE.search(line)]
+
+
+def check_plan(c: Checker, report_path: str, folder: str):
+    """최종보고서의 **실행 계획** 줄이 판독되고, 06 파일의 최종(마지막) 실행 계획 줄과 같은지."""
+    with open(report_path, encoding="utf-8") as f:
+        text = _norm(f.read())
+    debate = os.path.join(folder, "06-리스크토론-비중.md")
+    lines = _plan_lines(text)
+    if not os.path.exists(debate):
+        (c.warn if not lines else c.fail)(
+            "06-리스크토론-비중.md 가 없습니다(7.5단계 리스크 토론 이전 형식)." if not lines else
+            "최종보고서에 **실행 계획** 줄이 있는데 06-리스크토론-비중.md 가 없습니다.")
+        return
+    if not lines:
+        c.fail("최종보고서에 `**실행 계획**:` 줄이 없습니다(7절, position_plan.py 형식).")
+        return
+    try:
+        plan = pp.parse_plan(text)
+    except dl.NoDataError as e:
+        c.fail(f"최종보고서 실행 계획 줄: {e}")
+        return
+    with open(debate, encoding="utf-8") as f:
+        d_lines = _plan_lines(_norm(f.read()))
+    if not d_lines:
+        c.fail("06-리스크토론-비중.md 에 Team Lead 결정 `**실행 계획**:` 줄이 없습니다.")
+    elif d_lines[-1] != lines[0]:
+        c.fail("최종보고서와 06-리스크토론-비중.md(마지막 줄)의 실행 계획이 다릅니다.")
+    else:
+        buys = ", ".join(f"{p:,.0f}@{w:g}%" for p, w in plan["분할매수"]) or "-"
+        c.ok(f"실행 계획: 비중 상한 {plan['비중상한']:g}% · 분할 매수 {buys} (06 과 일치)")
 
 
 def _view_verdicts(path: str) -> list:

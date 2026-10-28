@@ -39,6 +39,8 @@ $ARGUMENTS 에 대해 체계적인 투자 리서치 분석을 수행한다.
 
 ### 1단계: 데이터 수집
 
+> **실행 상태**: 시작 전 `python3 tools/run_state.py status --company {회사명} --skill investment-research` 로 진행 중인 실행이 있는지 본다. 없으면 `start --company {회사명} --ticker {종목코드} --skill investment-research --report reports/{회사명}/{회사명}-research-{YYYYMMDD}.md` 로 시작하고, 단계(context·factsheet·report·check·ledger)를 끝낼 때마다 `done --step ...` 으로 기록한다. 진행 중이면 다음 단계부터 이어서 하고 팩트시트는 `get --key factsheet` 로 저장된 값을 쓴다. 다 끝나면 `finish`. 규칙은 investment-team 0단계와 같다.
+
 > **팩트시트(확정 수치표)**: `python3 tools/fact_sheet.py {종목코드}` 로 시세·재무·교차 검증 표를 먼저 만든다. 정확한 수치는 이 표가 기준이며, 다른 출처 값이 다르면 불일치로 표기하고 맞춘 숫자를 만들지 않는다. `데이터 없음`은 추정으로 채우지 않는다. 주가·재무 통화가 다르면 섞어 계산하지 않는다. 백그라운드 데이터 수집 Agent에도 이 표를 그대로 넘기고, 보고서 부록에 붙인다. (과거 시점 분석이면 `dart_data.py`/`sec_edgar_data.py --as-of` 결과를 기준값으로)
 
 > **과거 판단 확인**: 먼저 `python3 tools/decision_ledger.py show {티커}` 로 이 종목의 과거 판단·결과·회고를 확인한다. 기록이 있으면 8단계 메모에 "과거 판단과의 비교"(무엇이 바뀌었나, 지난 교훈을 어떻게 적용했나)를 넣는다. 규칙: `.claude/skills/decision-ledger/SKILL.md` 1-3.
