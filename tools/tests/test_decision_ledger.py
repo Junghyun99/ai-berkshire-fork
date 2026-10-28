@@ -50,7 +50,8 @@ class _LedgerBase(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         for name, value in (("LEDGER", os.path.join(self.tmp.name, "l.csv")),
-                            ("OUTCOMES", os.path.join(self.tmp.name, "o.csv"))):
+                            ("OUTCOMES", os.path.join(self.tmp.name, "o.csv")),
+                            ("LESSONS", os.path.join(self.tmp.name, "lessons.md"))):
             p = mock.patch.object(dl, name, value)
             p.start()
             self.addCleanup(p.stop)
@@ -180,6 +181,67 @@ REPORT = """# 삼성전자 최종보고서
 - 실행 라벨: lab-a
 - 데이터 출처·도구: DART(dart_data.py), 네이버 금융
 """
+
+
+class LessonsTest(_LedgerBase):
+    """회고 교훈을 종목 밖으로 모으고, 같은 종목 → 태그 → 시장 순, 오판·운 먼저 고른다."""
+
+    def setUp(self):
+        super().setUp()
+        L = ["id", "기록일", "종목", "티커", "심볼", "시장", "판단", "확신도"]
+        rows = [("a", "2025-01-02", "삼성전자", "005930", "005930.KS", "KOSPI", "매수", "4"),
+                ("b", "2025-03-02", "SK하이닉스", "000660", "000660.KS", "KOSPI", "매수", "3"),
+                ("c", "2025-05-02", "애플", "AAPL", "AAPL", "US", "회피", "2"),
+                ("d", "2025-06-02", "네이버", "035420", "035420.KS", "KOSPI", "관망", "3")]
+        dl._write(dl.LEDGER, dl.LEDGER_FIELDS, [dict(zip(L, r)) for r in rows])
+        O = ["id", "구간", "알파", "논지상태", "회고", "교훈", "태그"]
+        outs = [("a", "12M", "0.10", "유지", "알파 양수.", "실적 정점 전에 주가가 먼저 꺾인다", "메모리,사이클"),
+                ("b", "12M", "-0.20", "훼손", "알파 음수.", "후행 신호로는 정점을 못 잡는다", "메모리 반도체"),
+                ("b", "6M", "-0.05", "훼손", "알파 음수.", "후행 신호로는 정점을 못 잡는다", "메모리 반도체"),
+                ("c", "12M", "0.15", "훼손", "회피했는데 올랐다. 해자 과소평가.", "", ""),
+                ("d", "12M", "0.02", "불명", "", "", "플랫폼")]   # 회고·교훈 없음 → 제외
+        dl._write(dl.OUTCOMES, dl.OUTCOME_FIELDS, [dict(zip(O, o)) for o in outs])
+
+    def test_collect_dedupes_and_falls_back_to_note(self):
+        ls = dl.collect_lessons(dl._read(dl.LEDGER), dl._read(dl.OUTCOMES))
+        self.assertEqual(len(ls), 3)                       # b 의 같은 교훈은 한 번, d 는 빈 회고
+        c = [l for l in ls if l["id"] == "c"][0]
+        self.assertEqual((c["교훈"], c["원문"], c["분면"]), ("회피했는데 올랐다. 해자 과소평가.", "회고 원문", "오판"))
+
+    def test_select_order_ticker_then_tag_then_market(self):
+        ls = dl.collect_lessons(dl._read(dl.LEDGER), dl._read(dl.OUTCOMES))
+        ids = [l["id"] for l in dl.select_lessons(ls, ticker="005930", tags=["메모리"], market="US")]
+        self.assertEqual(ids, ["a", "b", "c"])             # 종목 → 태그(부분 일치) → 시장
+        ids = [l["id"] for l in dl.select_lessons(ls, tags=["반도체"])]
+        self.assertEqual(ids, ["b"])
+        ids = [l["id"] for l in dl.select_lessons(ls)]     # 필터 없음: 오판(b·c, 최근 먼저) → 실력(a)
+        self.assertEqual(ids, ["c", "b", "a"])
+
+    def test_cli_lessons_and_no_match(self):
+        code, out = run_cli(["lessons", "--tag", "메모리", "--limit", "1"])
+        self.assertEqual(code, 0, out)
+        self.assertIn("후행 신호로는 정점을 못 잡는다", out)
+        self.assertNotIn("실적 정점 전에", out)            # limit 1
+        code, out = run_cli(["lessons", "--tag", "바이오"])
+        self.assertEqual(code, 3, out)
+
+    def test_review_records_lesson_and_rewrites_file(self):
+        code, out = run_cli(["review", "--id", "d", "--horizon", "12M", "--thesis-status", "불명",
+                             "--note", "판단 불가.", "--lesson", "플랫폼 규제는 숫자보다 먼저 온다",
+                             "--tags", "플랫폼, 규제 / 플랫폼"])
+        self.assertEqual(code, 0, out)
+        d = [o for o in dl._read(dl.OUTCOMES) if o["id"] == "d"][0]
+        self.assertEqual((d["교훈"], d["태그"]), ("플랫폼 규제는 숫자보다 먼저 온다", "플랫폼,규제"))
+        text = open(dl.LESSONS, encoding="utf-8").read()
+        self.assertIn("## 오판 (2건)", text)
+        self.assertIn("## 관망·논지 불명 (1건)", text)
+        self.assertIn("플랫폼 규제는 숫자보다 먼저 온다", text)
+
+    def test_old_outcomes_file_without_lesson_columns(self):
+        old = [f for f in dl.OUTCOME_FIELDS if f not in ("교훈", "태그")]
+        dl._write(dl.OUTCOMES, old, [{"id": "a", "구간": "12M", "알파": "0.1", "논지상태": "유지", "회고": "옛 회고"}])
+        ls = dl.collect_lessons(dl._read(dl.LEDGER), dl._read(dl.OUTCOMES))
+        self.assertEqual([l["교훈"] for l in ls], ["옛 회고"])
 
 
 class ReportParseTest(unittest.TestCase):

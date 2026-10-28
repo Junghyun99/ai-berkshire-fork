@@ -245,12 +245,13 @@ Checklist 결과와 판단의 대응:
 
 완전한 보고서를 CLAUDE.md 명명 규칙에 따라 저장한다: 단일 회사 `reports/{회사명}/{회사명}-checklist-{YYYYMMDD}.md`, 복수 회사 `reports/다중회사비교-checklist-{YYYYMMDD}.md`.
 
-저장 후 회사마다(N/A 제외) 판단 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
+저장 후 형식을 검사하고(`FAIL`이면 라벨 줄·실행 정보를 고친다), 회사마다(N/A 제외) 판단 원장에 기록한다(`.claude/skills/decision-ledger/SKILL.md` 1-2):
 ```bash
+python3 tools/report_check.py {보고서 경로}
 python3 tools/decision_ledger.py add --ticker {종목코드} --name {회사명} --from-report {보고서 경로}
 ```
 판독 실패(`NO_DATA`)면 값을 손으로 채우지 말고 라벨 줄을 고쳐 다시 실행한다.
-분석 전에는 회사마다 `python3 tools/decision_ledger.py show {티커}` 로 과거 판단을 확인한다.
+분석 전에는 회사마다 `python3 tools/decision_ledger.py show {티커}` 로 과거 판단을, `python3 tools/decision_ledger.py lessons --ticker {티커} --tag {산업} --market {시장}` 으로 종목을 넘어선 과거 교훈을 확인한다(같은 문서 1-3·1-4). 교훈은 점검 항목이다 — 해당하는 교훈은 결론 근거에 반영 여부를 한 줄로 쓴다.
 
 ## 출력 형식 요구사항
 
