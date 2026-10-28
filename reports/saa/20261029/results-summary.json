@@ -1,5 +1,5 @@
 {
-  "status": "PROVISIONAL_RESEARCH_ONLY",
+  "status": "SOURCE_RECONCILIATION_REQUIRED",
   "as_of": "2026-09-30",
   "base_currency": "KRW",
   "seed": 17,
@@ -100,7 +100,7 @@
   },
   "universes": {
     "five_asset": {
-      "status": "PROVISIONAL_LATEST_VINTAGE_ETF_PROXY_SIMULATION",
+      "status": "BLOCKED_KOREAN_SOURCE_DATA; HISTORICAL_OUTPUT_ONLY",
       "assets": [
         "KR_EQUITY",
         "US_SP500",
@@ -414,7 +414,7 @@
       "input_months": 179
     },
     "without_kr_bonds": {
-      "status": "PROVISIONAL_LATEST_VINTAGE_ETF_PROXY_SIMULATION",
+      "status": "BLOCKED_KOREAN_SOURCE_DATA; HISTORICAL_OUTPUT_ONLY",
       "assets": [
         "KR_EQUITY",
         "US_SP500",
@@ -1041,7 +1041,7 @@
   },
   "matched_oos_lookbacks": {
     "36": {
-      "status": "RESEARCH_ONLY",
+      "status": "BLOCKED_KOREAN_SOURCE_DATA; HISTORICAL_OUTPUT_ONLY",
       "assets": [
         "KR_EQUITY",
         "US_SP500",
@@ -1122,7 +1122,7 @@
       ]
     },
     "60": {
-      "status": "RESEARCH_ONLY",
+      "status": "BLOCKED_KOREAN_SOURCE_DATA; HISTORICAL_OUTPUT_ONLY",
       "assets": [
         "KR_EQUITY",
         "US_SP500",
@@ -1203,7 +1203,7 @@
       ]
     },
     "120": {
-      "status": "RESEARCH_ONLY",
+      "status": "BLOCKED_KOREAN_SOURCE_DATA; HISTORICAL_OUTPUT_ONLY",
       "assets": [
         "KR_EQUITY",
         "US_SP500",
@@ -1283,5 +1283,6 @@
         "no leverage/ETF daily-reset or cashflow simulation"
       ]
     }
-  }
+  },
+  "validation_report": "../20261029-validation/README.md"
 }

@@ -6,11 +6,13 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from pathlib import Path
 from saa_backtest import backtest, performance
+from saa_source_gate import enforce
 from saa_market_data import ASSETS, build, month_range, read_series, monthly
 
 
 def run(root, output):
     coverage = build(root)
+    enforce(root)  # Stop before publishing performance on unresolved ETF source gaps.
     with (root/'processed/monthly_returns.csv').open() as f:
         rows = list(csv.DictReader(f))
     with (root/'processed/rates.csv').open() as f:

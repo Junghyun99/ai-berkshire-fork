@@ -1,0 +1,23 @@
+[
+  {
+    "path": "recheck-private/official-0.bin",
+    "url": "https://www.samsungfund.com/excel_standar.do?fId=2ETF01&gijunYMD=20261027",
+    "sha256": "031fde1cb2d3b82e482e926f7f61db4a120721200d34814a0fbb175d2b4dbc98",
+    "retrieved_at": "2026-10-28T16:32:42.866183+00:00",
+    "redistribution": "not cleared; preserved privately for source verification"
+  },
+  {
+    "path": "recheck-private/official-1.bin",
+    "url": "https://www.samsungfund.com/excel-divid-list.do?id=2ETF01",
+    "sha256": "0b8f7f0e26369480ce45a5d31f77cc87b6ad54b05dd5c34b2497689553dcef55",
+    "retrieved_at": "2026-10-28T16:32:40.356932+00:00",
+    "redistribution": "not cleared; preserved privately for source verification"
+  },
+  {
+    "path": "recheck-private/official-2.bin",
+    "url": "https://www.samsungfund.com/api/v1/kodex/product/2ETF19.do",
+    "sha256": "5fe974e82d8723d9b8f95de149ac225a5d33059585cfd5cac1fc9790c33ea40d",
+    "retrieved_at": "2026-10-28T16:32:41.784170+00:00",
+    "redistribution": "not cleared; preserved privately for source verification"
+  }
+]

@@ -69,8 +69,13 @@ def read_series(root, s):
         j = json.loads((root / 'raw/yahoo' / (s + '.json')).read_text())['chart']['result'][0]
         if j['meta']['dataGranularity'] != '1d':
             raise ValueError(f'{s}: daily data required (provider silently resampled)')
+        expected_currency = 'KRW' if s.endswith('.KS') else 'USD'
+        if j['meta'].get('symbol') != s or j['meta'].get('currency') != expected_currency:
+            raise ValueError(f'{s}: source identity/currency mismatch')
         z = ZoneInfo(j['meta']['exchangeTimezoneName'])
         adj = j['indicators']['adjclose'][0]['adjclose']
+        if len(j['timestamp']) != len(adj):
+            raise ValueError(f'{s}: timestamp/price length mismatch')
         observations = [(datetime.fromtimestamp(t, z).date().isoformat(), float(v))
                         for t, v in zip(j['timestamp'], adj) if v is not None]
         nulls = len(adj) - len(observations)
@@ -102,6 +107,10 @@ def build(root, end_month='2026-09'):
     if len(manifest) != len(expected) or {r['source_id'] for r in manifest} != expected:
         raise ValueError('incomplete or duplicate source manifest')
     for r in manifest:
+        symbol = r['source_id']
+        expected_path = ('raw/fred/' + symbol + '.csv') if symbol in FRED else ('raw/yahoo/' + symbol + '.json')
+        if r['path'] != expected_path:
+            raise ValueError('source manifest path mismatch: ' + symbol)
         if hashlib.sha256((root / r['path']).read_bytes()).hexdigest() != r['sha256']:
             raise ValueError('raw hash mismatch: ' + r['source_id'])
     levels, coverage = {}, {}

@@ -1,0 +1,217 @@
+{
+  "SPY": {
+    "status": "INTERNAL_CHECK_PASS",
+    "issues": [],
+    "limitation": "reported-date validation is not an exchange calendar or independent source certification"
+  },
+  "IEF": {
+    "status": "INTERNAL_CHECK_PASS",
+    "issues": [],
+    "limitation": "reported-date validation is not an exchange calendar or independent source certification"
+  },
+  "069500.KS": {
+    "status": "BLOCKED_SOURCE_RECONCILIATION",
+    "issues": [
+      {
+        "kind": "dividend_on_missing_quote",
+        "dates": [
+          "2007-10-30",
+          "2008-04-29",
+          "2008-07-30"
+        ],
+        "next_valid": "2009-04-17"
+      },
+      {
+        "kind": "dividend_prior_quote_gap",
+        "date": "2023-07-28",
+        "amount": 75.0,
+        "actual_factor_change": -1.3226833428525708e-07,
+        "missing_dates": [
+          "2023-07-27"
+        ]
+      },
+      {
+        "kind": "dividend_on_missing_quote",
+        "dates": [
+          "2024-10-30"
+        ],
+        "next_valid": "2024-10-31"
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-02",
+        "last_reported": "2007-02-28",
+        "last_valid": "2007-02-07"
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-03",
+        "last_reported": "2007-03-30",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-04",
+        "last_reported": "2007-04-30",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-05",
+        "last_reported": "2007-05-31",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-06",
+        "last_reported": "2007-06-29",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-07",
+        "last_reported": "2007-07-31",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-08",
+        "last_reported": "2007-08-31",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-09",
+        "last_reported": "2007-09-28",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-10",
+        "last_reported": "2007-10-31",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-11",
+        "last_reported": "2007-11-30",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2007-12",
+        "last_reported": "2007-12-28",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-01",
+        "last_reported": "2008-01-31",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-02",
+        "last_reported": "2008-02-29",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-03",
+        "last_reported": "2008-03-31",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-04",
+        "last_reported": "2008-04-30",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-05",
+        "last_reported": "2008-05-30",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-06",
+        "last_reported": "2008-06-30",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-07",
+        "last_reported": "2008-07-31",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-08",
+        "last_reported": "2008-08-29",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-09",
+        "last_reported": "2008-09-30",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-10",
+        "last_reported": "2008-10-31",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-11",
+        "last_reported": "2008-11-28",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2008-12",
+        "last_reported": "2008-12-31",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2009-01",
+        "last_reported": "2009-01-30",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2009-02",
+        "last_reported": "2009-02-27",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2009-03",
+        "last_reported": "2009-03-31",
+        "last_valid": null
+      },
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2023-07",
+        "last_reported": "2023-07-31",
+        "last_valid": "2023-07-28"
+      }
+    ],
+    "limitation": "reported-date validation is not an exchange calendar or independent source certification"
+  },
+  "148070.KS": {
+    "status": "BLOCKED_SOURCE_RECONCILIATION",
+    "issues": [
+      {
+        "kind": "missing_last_reported_month_quote",
+        "month": "2023-07",
+        "last_reported": "2023-07-31",
+        "last_valid": "2023-07-28"
+      }
+    ],
+    "limitation": "reported-date validation is not an exchange calendar or independent source certification"
+  }
+}

@@ -1,0 +1,3 @@
+# Optional independent research validation; core tools remain stdlib-only.
+numpy==2.3.5
+pandas==2.2.3
