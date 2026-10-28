@@ -23,6 +23,9 @@ Yahoo/네이버(부 출처)만 다뤘다. 이 도구가 1차 자료(주 출처) 
     python3 tools/dart_data.py financials 005930 --as-of 2025-03-31    # 2025-03-31까지 접수된 최신 사업보고서
     python3 tools/dart_data.py disclosures 005930 --as-of 2025-03-31   # 그날까지 접수된 공시(정정 전 원공시 포함)
     python3 tools/dart_data.py resolve 005930                          # 종목코드→corp_code 확인
+    python3 tools/dart_data.py insiders 005930 --days 180              # 임원·주요주주 소유 보고(내부자 지분 변동)
+    python3 tools/dart_data.py major-holders 005930 --days 365         # 5% 이상 대량보유 보고
+    python3 tools/dart_data.py insiders 005930 --as-of 2025-06-30      # 그날까지 접수된 보고만
 
 보고서 코드(reprt_code): 11011 사업보고서(연간, 기본) / 11012 반기 / 11013 1분기 / 11014 3분기
 재무 구분(fs_div): CFS 연결(기본) / OFS 개별(별도)
@@ -33,6 +36,14 @@ Yahoo/네이버(부 출처)만 다뤘다. 이 도구가 1차 자료(주 출처) 
   돌려준 값의 접수번호(rcept_no) 날짜가 --as-of 보다 늦으면 '그 시점에 공개돼 있던 값'이 아니므로
   수치를 내주지 않고 보류한다(종료 코드 5, 원공시 문서 링크 안내).
   설계 출처: TradingAgents(Apache 2.0)의 SEC EDGAR 공시일 기준 시점 통제를 DART에 맞게 적용.
+  insiders / major-holders 는 보고서 접수일(rcept_dt)로 자르므로 그 시점에 공개돼 있던 보고만 쓴다.
+
+내부자·대량보유(insiders / major-holders):
+  TradingAgents·Alpha Vantage 의 insider transactions 에 해당하는 한국 데이터.
+  - insiders: '임원ㆍ주요주주 특정증권등 소유상황보고서'(elestock). 보고마다 직전 보고 대비 증감 주식수가 있다.
+    증감 사유(장내매수·장내매도·주식보상·상속·증여 등)는 API에 없으므로 원문으로 확인해야 하고,
+    증가를 '매수 신호'로 바로 읽지 않는다(대기업 임원 보고의 상당수는 주식보상).
+  - major-holders: '주식등의 대량보유상황보고서'(majorstock, 5% 룰). 보고자의 지분율은 특별관계자 합산 기준.
 
 필요 Python >= 3.8, 외부 종속성 없음.
 """
@@ -124,10 +135,10 @@ def _curl(url: str, binary: bool = False, timeout: int = _TIMEOUT):
     return result.stdout if binary else result.stdout.decode("utf-8")
 
 
-def _api_json(endpoint: str, params: dict) -> dict:
+def _api_json(endpoint: str, params: dict, timeout: int = _TIMEOUT) -> dict:
     params = dict(params, crtfc_key=_api_key())
     url = f"{_BASE}/{endpoint}?{urlencode(params)}"
-    data = json.loads(_curl(url))
+    data = json.loads(_curl(url, timeout=timeout))
     status = data.get("status")
     # DART 상태코드: 000 정상, 013 데이터 없음, 그 외 오류
     if status and status not in ("000", "013"):
@@ -591,6 +602,149 @@ def cmd_disclosures(code: str, count=15, as_of=None):
         print(f"      {url}")
 
 
+# ---------------------------------------------------------------------------
+# 내부자(임원·주요주주) · 대량보유(5%)
+# ---------------------------------------------------------------------------
+
+_HOLDINGS_CACHE_TTL = 6 * 3600
+
+
+def _holdings_rows(endpoint: str, corp_code: str) -> list:
+    """elestock·majorstock 은 기간 인자 없이 전체 이력을 돌려준다(대기업은 수천 건, 1분 이상).
+    같은 날 반복 조회(현재·과거 시점 비교 등)를 위해 6시간 캐시한다."""
+    from _us_common import read_cache, write_cache
+    name = f"dart_{endpoint}_{corp_code}"
+    rows = read_cache(name, _HOLDINGS_CACHE_TTL)
+    if rows is None:
+        rows = _api_json(f"{endpoint}.json", {"corp_code": corp_code}, timeout=_TIMEOUT_BULK).get("list") or []
+        write_cache(name, rows)
+    return rows
+
+
+_INSIDER_CAVEAT = ("증감 사유(장내매수·매도·주식보상·상속·증여 등)는 이 API에 없다. 큰 변동은 원문(접수번호 링크)으로 "
+                   "사유를 확인하고, 증가를 곧 매수 신호로 읽지 않는다.")
+
+
+def _window(rows: list, as_of: str, days: int) -> list:
+    """접수일이 (as_of - days, as_of] 안인 보고, 접수일·접수번호 순."""
+    end = datetime.strptime(as_of, "%Y-%m-%d").date()
+    start = (end - timedelta(days=days)).strftime("%Y-%m-%d")
+    picked = [r for r in rows if start < (r.get("rcept_dt") or "") <= as_of]
+    return sorted(picked, key=lambda r: (r.get("rcept_dt", ""), r.get("rcept_no", "")))
+
+
+def _shares(value) -> int:
+    v = _parse_amount(value)
+    return int(v) if v is not None else 0
+
+
+def summarize_insiders(rows: list, as_of: str, days: int) -> dict:
+    """elestock 행 → 기간 요약. 순수 함수(테스트용)."""
+    win = _window(rows, as_of, days)
+    people = {}
+    for r in win:
+        d = _shares(r.get("sp_stock_lmp_irds_cnt"))
+        p = people.setdefault(r.get("repror", ""), {"이름": r.get("repror", ""), "보고": 0, "순증감": 0,
+                                                    "증가": 0, "감소": 0})
+        p["보고"] += 1
+        p["순증감"] += d
+        if d:
+            p["증가" if d > 0 else "감소"] += d
+        p.update({"등기": r.get("isu_exctv_rgist_at", ""), "직위": r.get("isu_exctv_ofcps", ""),
+                  "주요주주": r.get("isu_main_shrholdr", ""), "보유": _shares(r.get("sp_stock_lmp_cnt")),
+                  "최근접수": r.get("rcept_dt", "")})
+    deltas = [_shares(r.get("sp_stock_lmp_irds_cnt")) for r in win]
+    return {
+        "rows": win, "people": sorted(people.values(), key=lambda p: -abs(p["순증감"])),
+        "증가건": sum(1 for d in deltas if d > 0), "증가주식": sum(d for d in deltas if d > 0),
+        "감소건": sum(1 for d in deltas if d < 0), "감소주식": sum(d for d in deltas if d < 0),
+    }
+
+
+def summarize_major(rows: list, as_of: str, days: int) -> dict:
+    """majorstock 행 → as_of 시점 보고자별 최신 지분 + 기간 내 변동 보고. 순수 함수(테스트용)."""
+    known = sorted((r for r in rows if (r.get("rcept_dt") or "") <= as_of),
+                   key=lambda r: (r.get("rcept_dt", ""), r.get("rcept_no", "")))
+    latest = {}
+    for r in known:
+        latest[r.get("repror", "")] = r
+    holders = sorted(latest.values(), key=lambda r: -(_parse_amount(r.get("stkrt")) or 0))
+    return {"holders": holders, "changes": _window(rows, as_of, days)}
+
+
+def _fmt_delta(n: int) -> str:
+    return f"{n:+,}주" if n else "0주"
+
+
+def _link(rcept_no: str) -> str:
+    return f"https://dart.fss.or.kr/dsaf001/main.do?rcpNo={rcept_no}"
+
+
+def cmd_insiders(code: str, days=180, as_of=None, top=10):
+    corp_code, corp_name = _resolve(code)
+    if not corp_code:
+        _die(f"❌ 종목코드 {code} 에 해당하는 상장사를 DART에서 찾을 수 없습니다.")
+    as_of = as_of or date.today().strftime("%Y-%m-%d")
+    rows = _holdings_rows("elestock", corp_code)
+    s = summarize_insiders(rows, as_of, days)
+    if not s["rows"]:
+        _die(f"NO_DATA: {corp_name}({code}) 의 임원·주요주주 소유 보고가 {as_of} 이전 {days}일 동안 없습니다.", 3)
+    net = s["증가주식"] + s["감소주식"]
+    print("=" * 64)
+    print(f"임원·주요주주 소유 보고: {corp_name} ({code.zfill(6)}) — {as_of} 이전 {days}일 접수분")
+    print("=" * 64)
+    print(f"  보고 {len(s['rows'])}건 · 보고자 {len(s['people'])}명")
+    print(f"  증가 {s['증가건']}건({_fmt_delta(s['증가주식'])}) · 감소 {s['감소건']}건({_fmt_delta(s['감소주식'])}) · "
+          f"순증감 {_fmt_delta(net)}")
+    print(f"  ⚠️ {_INSIDER_CAVEAT}")
+    key = [p for p in s["people"] if p["등기"] == "등기임원" or p["주요주주"] not in ("", "-")]
+    if key:
+        print("\n  [등기임원·주요주주]")
+        for p in key[:top]:
+            role = "/".join(x for x in (p["등기"], p["직위"], p["주요주주"] if p["주요주주"] != "-" else "") if x)
+            print(f"    {p['이름']} ({role}) 순증감 {_fmt_delta(p['순증감'])} · 보유 {p['보유']:,}주 · "
+                  f"보고 {p['보고']}건 · 최근 {p['최근접수']}")
+    print(f"\n  [보고자별 순증감 상위 {min(top, len(s['people']))}]")
+    for p in s["people"][:top]:
+        print(f"    {p['이름']} ({p['등기']}/{p['직위']}) 순증감 {_fmt_delta(p['순증감'])} · "
+              f"보유 {p['보유']:,}주 · 보고 {p['보고']}건")
+    print(f"\n  [최근 보고 {min(top, len(s['rows']))}건]")
+    for r in s["rows"][-top:][::-1]:
+        print(f"    [{r.get('rcept_dt')}] {r.get('repror')} ({r.get('isu_exctv_ofcps')}) "
+              f"{_fmt_delta(_shares(r.get('sp_stock_lmp_irds_cnt')))} → 보유 {_shares(r.get('sp_stock_lmp_cnt')):,}주")
+        print(f"        {_link(r.get('rcept_no', ''))}")
+    print("\n  출처: DART 임원ㆍ주요주주 특정증권등 소유상황보고서(OpenDART elestock). 증감은 직전 보고 대비.")
+
+
+def cmd_major_holders(code: str, days=365, as_of=None):
+    corp_code, corp_name = _resolve(code)
+    if not corp_code:
+        _die(f"❌ 종목코드 {code} 에 해당하는 상장사를 DART에서 찾을 수 없습니다.")
+    as_of = as_of or date.today().strftime("%Y-%m-%d")
+    rows = _holdings_rows("majorstock", corp_code)
+    s = summarize_major(rows, as_of, days)
+    if not s["holders"]:
+        _die(f"NO_DATA: {corp_name}({code}) 의 대량보유(5%) 보고가 {as_of} 까지 없습니다.", 3)
+    print("=" * 64)
+    print(f"대량보유(5% 이상) 보고: {corp_name} ({code.zfill(6)}) — {as_of} 까지 접수분")
+    print("=" * 64)
+    print("  [보고자별 최신 보고 — 특별관계자 합산 지분율]")
+    for r in s["holders"]:
+        below = (_parse_amount(r.get("stkrt")) or 0) < 5
+        print(f"    {r.get('repror')}: {r.get('stkrt')}% ({_shares(r.get('stkqy')):,}주) · "
+              f"최근 {r.get('rcept_dt')} {r.get('report_tp', '')}"
+              + (" — 5% 미만으로 내려간 보고, 이후 변동은 보고 의무 없음(현재 지분 불명)" if below else ""))
+    print(f"\n  [{as_of} 이전 {days}일 변동 보고 {len(s['changes'])}건]")
+    for r in s["changes"][::-1][:15]:
+        reason = " / ".join(x.strip("- ").strip() for x in (r.get("report_resn") or "").splitlines() if x.strip())
+        print(f"    [{r.get('rcept_dt')}] {r.get('repror')} {_fmt_delta(_shares(r.get('stkqy_irds')))} "
+              f"→ {r.get('stkrt')}% ({r.get('stkrt_irds')}%p) · {reason}")
+        print(f"        {_link(r.get('rcept_no', ''))}")
+    if not s["changes"]:
+        print("    (없음)")
+    print("\n  출처: DART 주식등의 대량보유상황보고서(OpenDART majorstock). 5% 이상 보유자·1%p 이상 변동 시 보고.")
+
+
 def _as_of(value: str):
     """--as-of 를 YYYY-MM-DD로 정규화하고 미래 날짜는 오늘로 자른다. 비어 있으면 None."""
     if not value:
@@ -627,6 +781,17 @@ def main():
     pr = sub.add_parser("resolve", help="종목코드 → corp_code 확인")
     pr.add_argument("code")
 
+    pi = sub.add_parser("insiders", help="임원·주요주주 소유 보고(내부자 지분 변동)")
+    pi.add_argument("code")
+    pi.add_argument("--days", type=int, default=180, help="기준일 이전 조회 기간(일, 기본 180)")
+    pi.add_argument("--top", type=int, default=10, help="표시 인원·건수(기본 10)")
+    pi.add_argument("--as-of", default="", help="이 날짜까지 접수된 보고(YYYY-MM-DD)")
+
+    pm = sub.add_parser("major-holders", help="5% 이상 대량보유 보고")
+    pm.add_argument("code")
+    pm.add_argument("--days", type=int, default=365, help="변동 보고 조회 기간(일, 기본 365)")
+    pm.add_argument("--as-of", default="", help="이 날짜까지 접수된 보고(YYYY-MM-DD)")
+
     args = p.parse_args()
     try:
         if args.cmd == "financials":
@@ -637,6 +802,10 @@ def main():
             cmd_disclosures(args.code, args.count, _as_of(args.as_of))
         elif args.cmd == "resolve":
             cmd_resolve(args.code)
+        elif args.cmd == "insiders":
+            cmd_insiders(args.code, args.days, _as_of(args.as_of), args.top)
+        elif args.cmd == "major-holders":
+            cmd_major_holders(args.code, args.days, _as_of(args.as_of))
     except (ConnectionError, RuntimeError) as e:
         _die(f"❌ {e}")
 
