@@ -9,7 +9,7 @@ Claude Code 기반의 가치투자 리서치 Skill 모음집. 4대 거장 프레
 
 ```
 .claude/skills/  — 투자 리서치 Skill 정의({이름}/SKILL.md), 프로젝트 스킬로 자동 로드
-tools/           — 보조 도구 (financial_rigor.py 정밀 계산, global_stock_data.py 한국·미국·홍콩 시세/재무 수집, dart_data.py 한국 DART 공시 원본 재무(주 출처, DART_API_KEY 필요, --as-of 접수일 기준 시점 통제)·내부자(insiders)·5% 대량보유(major-holders), ashare_data.py 중국 A주 전용, sec_edgar_data.py 미국 SEC 공시 원본 재무, fred_data.py 미국 거시(FRED_API_KEY), alphavantage_data.py 미국 개요·뉴스 감성·내부자(ALPHA_VANTAGE_API_KEY), polymarket_data.py 예측시장 확률, decision_ledger.py 판단 원장(기록·정산·회고·교훈 모음), report_check.py 보고서 형식 검사(출고 전 라벨 줄·실행 정보·필수 절), fact_sheet.py 팩트시트(리서치 기준 수치표·1차 출처 교차 검증), position_plan.py 실행 계획 기준선(비중 상한·분할 매수·축소 검토, **실행 계획** 줄 판독), run_state.py 실행 상태(중단 후 이어서 실행: 단계별 산출물 검증·입력 고정·재개). 미국 도구는 --as-of 시점 통제 지원, 테스트: python3 -m unittest discover -s tools/tests)
+tools/           — 보조 도구 (financial_rigor.py 정밀 계산, global_stock_data.py 한국·미국·홍콩 시세/재무 수집, dart_data.py 한국 DART 공시 원본 재무(주 출처, DART_API_KEY 필요, --as-of 접수일 기준 시점 통제)·내부자(insiders)·5% 대량보유(major-holders), ashare_data.py 중국 A주 전용, sec_edgar_data.py 미국 SEC 공시 원본 재무, fred_data.py 미국 거시(FRED_API_KEY), alphavantage_data.py 미국 개요·뉴스 감성·내부자(ALPHA_VANTAGE_API_KEY), polymarket_data.py 예측시장 확률, decision_ledger.py 판단 원장(기록·정산·회고·교훈 모음), report_check.py 보고서 형식 검사(출고 전 라벨 줄·실행 정보·필수 절), fact_sheet.py 팩트시트(리서치 기준 수치표·1차 출처 교차 검증), position_plan.py 실행 계획 기준선(비중 상한·분할 매수와 52주·3년 최저 대비 위치·신규 매수 금지·보유 시 축소, **실행 계획** 줄과 차수별 조건 판독), run_state.py 실행 상태(중단 후 이어서 실행: 단계별 산출물 검증·입력 고정·재개). 미국 도구는 --as-of 시점 통제 지원, 테스트: python3 -m unittest discover -s tools/tests)
 reports/         — 투자 리서치 보고서 출력
 research/        — 외부 프레임워크 연구 자료 (예: tradingagents/ 페르소나·프롬프트·출력 정제 정리). 자동 로드되지 않음
 assets/          — 이미지 등 정적 리소스
