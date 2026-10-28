@@ -39,8 +39,12 @@
       "sha": "9310ee6eb0da264f"
     },
     "view-lilu": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-28 08:15:35",
+      "error": "",
+      "note": "",
+      "sha": "b7df0d29f304b636"
     },
     "rebuttal": {
       "status": "대기",
@@ -85,6 +89,7 @@
     "2026-10-28 08:03:32 put factsheet",
     "2026-10-28 08:03:32 done factsheet",
     "2026-10-28 08:12:18 done view-duan",
-    "2026-10-28 08:13:29 done view-munger"
+    "2026-10-28 08:13:29 done view-munger",
+    "2026-10-28 08:15:35 done view-lilu"
   ]
 }
