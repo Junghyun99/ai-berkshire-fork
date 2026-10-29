@@ -1,0 +1,73 @@
+{
+  "status": "PROVISIONAL_RECONSTRUCTED_RESEARCH_PROXY",
+  "official_bond_TR": false,
+  "issuer_price_count": 4142,
+  "issuer_dividends": 50,
+  "stock_price_cross_check_count": 4110,
+  "stock_price_mismatches": 0,
+  "bond_calendar_cross_check": "matches issuer KODEX trading-date observations; not independent KRX calendar",
+  "bond_observations": 3673,
+  "bond_overlap": 3639,
+  "bond_max_relative_level_difference": 6.252634259751311e-05,
+  "bond_level_tolerance": 0.0001,
+  "corrected_months": [
+    {
+      "asset": "KR_EQUITY",
+      "month": "2022-07",
+      "old": 0.04890685294150421,
+      "rebuilt": 0.05119885954696568,
+      "delta": 0.002292006605461472
+    },
+    {
+      "asset": "KR_EQUITY",
+      "month": "2022-10",
+      "old": 0.06656364002708126,
+      "rebuilt": 0.0634904714142428,
+      "delta": -0.0030731686128384617
+    },
+    {
+      "asset": "KR_EQUITY",
+      "month": "2023-07",
+      "old": 0.015312046430888016,
+      "rebuilt": 0.022089598363270513,
+      "delta": 0.006777551932382497
+    },
+    {
+      "asset": "KR_EQUITY",
+      "month": "2023-08",
+      "old": -0.0262471241121478,
+      "rebuilt": -0.030604879457196033,
+      "delta": -0.004357755345048231
+    },
+    {
+      "asset": "KR_TREASURY10Y",
+      "month": "2023-07",
+      "old": 0.0016432350314425914,
+      "rebuilt": -0.00046375642705920317,
+      "delta": -0.0021069914585017946
+    },
+    {
+      "asset": "KR_TREASURY10Y",
+      "month": "2023-08",
+      "old": -0.002961903443850722,
+      "rebuilt": -0.0008674251593641102,
+      "delta": 0.0020944782844866117
+    }
+  ],
+  "cash_vs_adjusted_proxy_max_monthly_difference": 0.0003296414874265352,
+  "limitations": [
+    "secondary bond methodology not certified by issuer",
+    "historical available_at unknown",
+    "adjusted-price convention differs from ex-date-close cash reinvestment and actual payment-date execution",
+    "issuer reference adjustment confirms event coverage only for selected sample",
+    "raw source snapshots are latest vintage; no untouched holdout"
+  ],
+  "input_manifest_hashes": {
+    "original": "72832989a68af3bb3277f80858fe537798531b10249f77c3a301461757bff389",
+    "supplement": "022250cba102c73a759418002f96a373397f74b8472a25d36f78456b0bde3ad4"
+  },
+  "processed_hashes": {
+    "monthly_returns.csv": "67473443e3d1d5779f682a6e302c1d5f82cb5ac950ed4c0ccd69ef6b84a60f87",
+    "rates.csv": "e32b26fcfe3944f02d4182589a644e8ecc3388f129997971d0cf997f479d02c8"
+  }
+}

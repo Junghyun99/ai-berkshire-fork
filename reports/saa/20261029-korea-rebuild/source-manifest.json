@@ -1,0 +1,178 @@
+[
+  {
+    "path": "raw/kodex-standard.xls",
+    "source_url": "https://www.samsungfund.com/excel_standar.do?fId=2ETF01&gijunYMD=20261027",
+    "retrieval_at": "2026-10-28T16:32:42.866183+00:00",
+    "sha256": "031fde1cb2d3b82e482e926f7f61db4a120721200d34814a0fbb175d2b4dbc98",
+    "kind": "issuer_price_xls",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/SHEET51394Kodex200.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20100409/SHEET51394Kodex200.pdf",
+    "retrieval_at": "2026-10-28T23:02:27.743520+00:00",
+    "sha256": "6ec0f618149c987be4451e3d2799e8b0d132228060b2441569eae3abfb964449",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/SHEET55642Kodex200.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20110412/SHEET55642Kodex200.pdf",
+    "retrieval_at": "2026-10-28T23:02:27.404667+00:00",
+    "sha256": "bb8a27d20ccbf042a793a92808bfc109cb5804d951abb8917272e660917295bc",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/SHEET2231Kodex200.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20120413/SHEET2231Kodex200.pdf",
+    "retrieval_at": "2026-10-28T23:02:27.281253+00:00",
+    "sha256": "3b60706640b4514ef22b2125de7eea3463472580caf6e07d12abc3590ee442dc",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/2ETF01_20130331.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20130409/2ETF01_20130331.pdf",
+    "retrieval_at": "2026-10-28T23:02:34.825214+00:00",
+    "sha256": "910bc3666579eb2ed1e337566a20a6df3da47a589e42ab146326a903ab8ae636",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/2ETF01_20140331.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20140411/2ETF01_20140331.pdf",
+    "retrieval_at": "2026-10-28T23:02:34.724252+00:00",
+    "sha256": "10af528dad4dbd8b3f8097495fbde699db42fcea151919c125f91748897eea3a",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/2ETF01_20150331.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20150409/2ETF01_20150331.pdf",
+    "retrieval_at": "2026-10-28T23:02:34.732013+00:00",
+    "sha256": "67c05b2fdd10bceed5448a272ee84cf28d258f01f883a6c70ac12ca0fe6007db",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/2ETF01_20160331.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20160411/2ETF01_20160331.pdf",
+    "retrieval_at": "2026-10-28T23:02:40.374636+00:00",
+    "sha256": "f06b38f281ee2e59bc68f91bcba59e93d4de767b7a8674a0f86ceb42337cc19c",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/2ETF01_20170331.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20170406/2ETF01_20170331.pdf",
+    "retrieval_at": "2026-10-28T23:02:40.245755+00:00",
+    "sha256": "1640800d76e8b4e053e0d1aa02804fa7b0b84769405723de817d2f281254d372",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/2ETF01_20180331.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20180409/2ETF01_20180331.pdf",
+    "retrieval_at": "2026-10-28T23:02:40.346827+00:00",
+    "sha256": "76c85c64fb50eee674257e6f5c187a2f28b2fc7abde1a6226a8deb3d5e0e711b",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/2ETF01_20190331.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20190409/2ETF01_20190331.pdf",
+    "retrieval_at": "2026-10-28T23:02:45.917071+00:00",
+    "sha256": "9ad4fe2474dab3da2b7790d8b323dd05f769f6b9e265d0dc4f1e20a91f6d713d",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/2ETF01_20200331.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20200410/2ETF01_20200331.pdf",
+    "retrieval_at": "2026-10-28T23:02:46.034255+00:00",
+    "sha256": "975fc2f16d0af1da8142b243adbdad4d7690cd3555eb054845526a3d16fa6ada",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/2ETF01_20210331.pdf",
+    "source_url": "https://www.samsungfund.com/sheet/20210421/2ETF01_20210331.pdf",
+    "retrieval_at": "2026-10-28T23:02:45.873010+00:00",
+    "sha256": "17b51a97f3f7c62b7e850d3e6b021463daad2918f2314d10f900bfea2a5c5215",
+    "kind": "issuer_factsheet_pdf",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/kodex-divid.json",
+    "source_url": "https://www.samsungfund.com/api/v1/kodex/divid-info.do?id=2ETF01",
+    "retrieval_at": "2026-10-28T22:57:16.769547+00:00",
+    "sha256": "4330e90805842edd9f2edcb3696af58d0f9953049395ece119955502e84b1b1d",
+    "kind": "issuer_dividends_json",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/naver-bond-adjusted.txt",
+    "source_url": "https://api.finance.naver.com/siseJson.naver?symbol=148070&requestType=1&startTime=20111001&endTime=20260930&timeframe=day",
+    "retrieval_at": "2026-10-28T23:01:24.759198+00:00",
+    "sha256": "721ec612690d71bbaf240c585da53e74c36f06d2bfe122a5be0aeec7493cc2e6",
+    "kind": "secondary_adjusted_prices",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  },
+  {
+    "path": "raw/official-events-extract.json",
+    "source_url": "https://m.samsungfund.com/sheet/20221011/2ETF01_20220930.pdf",
+    "retrieval_at": "2026-10-28T23:05:15.633507+00:00",
+    "sha256": "53652afd83f274cfb3dd2c10f787d9212915087899e7fb48a0b7aee1a6f18001",
+    "kind": "issuer_pdf_table_transcription",
+    "vintage": "latest_at_retrieval",
+    "available_at": null,
+    "license": "provider terms apply; public raw redistribution NOT cleared",
+    "quality": "observed_or_explicitly_transcribed_research_source"
+  }
+]
