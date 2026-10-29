@@ -1,0 +1,18 @@
+{
+  "status": "distribution_table_matches_only",
+  "event_count": 12,
+  "source_url": "https://www.kiwoometf.com/service/etf/KO02010200M?gcode=148070",
+  "source_retrieval_date_kst": "2026-10-29",
+  "source_capture": "web search text extraction; no local HTML snapshot",
+  "source_page_as_of": "2026-09-11",
+  "official_tr_verified": false,
+  "inputs_sha256": {
+    "../saa-research/data/snapshot-20261029/raw/yahoo/148070.KS.json": "9176199a81adb72cd9c0b5c19b0a6933bfdab5a3515fb180b3c493bf4c7a8efd",
+    "data/official-korea/raw/naver-bond-adjusted.txt": "721ec612690d71bbaf240c585da53e74c36f06d2bfe122a5be0aeec7493cc2e6"
+  },
+  "limits": [
+    "record-to-ex-date mapping uses secondary observed calendar",
+    "no proof of unlisted events being absent",
+    "not a price, adjustment-factor, or full-TR verification"
+  ]
+}

@@ -101,3 +101,23 @@ python3 tools/saa_rebuilt_experiment.py \
 - [네이버 국고채10년 관측 수정가격](https://api.finance.naver.com/siseJson.naver?symbol=148070&requestType=1&startTime=20111001&endTime=20260930&timeframe=day)
 - 나머지 과거 PDF 12개 개별 경로와 해시는 `source-manifest.json`. 2009~2012 분기 표 형식 PDF도 증거 묶음에 있지만, 이번 자동 분배 집계는 지급기준일이 명시된 표만 사용한다.
 - 기준일 2026-09-30, 수집/실행일 2026-10-29 KST. Work Linux. 정책 활성화·주문 실행 없음.
+
+## 후속: 한국 국채 분배금 12건 대조 및 공식 지수 접근 범위
+
+2026-10-29 KST 추가 확인. [키움 공식 상품 페이지](https://www.kiwoometf.com/service/etf/KO02010200M?gcode=148070)의 웹 검색 본문 추출에서 2011~2025년 분배금 12건을 확인했다(표 기준일 2026-09-11). 이전 7건 확인을 확장한다. 직접 페이지 열기는 502로 실패했으므로 로컬 원본 HTML 확보로 표시하지 않는다.
+
+`check_bond_distributions.py`에 출처·관측 방식과 사실 전사를 남겼다. 네이버 관측 거래일의 기준일 직전 날짜를 분배락일로 대응해 기존 Yahoo 이벤트 집합과 정확히 대조했고 **12건 모두 날짜·금액 일치**했다. 이는 공식 KRX 거래일 검증이나 표에 없는 분배금이 없다는 증명이 아니다. 결과와 입력 SHA256은 `bond-distribution-check.json`에 기록한다.
+
+재현(저장된 원본 ZIP 두 자료 경로를 전달):
+
+```bash
+python3 reports/saa/20261029-korea-rebuild/check_bond_distributions.py \
+  PATH_TO_ORIGINAL/raw/yahoo/148070.KS.json \
+  PATH_TO_SUPPLEMENT/raw/naver-bond-adjusted.txt
+```
+
+[공식 KIS 실시간지수 안내](https://www.bond.co.kr/conts/10051)는 최근 7일 이전 자료와 엑셀 다운로드에 KIS-NET 로그인이 필요하다고 명시한다. 공개 웹 추출로 장기 TR 원본을 확보하지 못했다. 키움 설명의 기준일은 2010-09-01, ETF 상장일은 2011-10-20이다. 이 정보만으로 20년 관측 표본을 충족하지 않는다. 지수 연장값을 임의 생성하거나 다른 만기의 채권으로 바꾸지 않는다.
+
+**현재 판단:** 분배금 부분 검증은 보강되었으나 공식 장기 가격·조정계수·TR 전수 검증은 미완료다. source gate와 `research_proxy` 상태를 유지한다. 입력 패널/백테스트 결과는 변경하지 않아 성과 재실행은 하지 않았다. 다음 수집 입력은 접근 권한이 있는 KIS KTB 10Y TR 날짜/지수값 원본 또는 운용사 전체 일별 가격과 분배금이다. 확보 후 해시·단위·기간·누락·재투자 방식·재배포 권한을 검사하고 같은 OOS를 재평가한다.
+
+실행 정보: Python 3.12, 위 대조 스크립트 성공; `python3 -m unittest discover -s tools/tests` 164개 통과(0.240초). 테스트 통과는 원천 데이터 인증과 다르다. 투자정책 DRAFT 및 주문 금지 유지.
