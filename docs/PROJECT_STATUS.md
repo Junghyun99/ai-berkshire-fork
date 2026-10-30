@@ -1,5 +1,9 @@
 # AI Berkshire — Project Status / Work Handoff
 
+## 정책 게이트 보완 — 2026-10-30
+
+#49 통합은 #58을 통해 main에 반영됐다. #50 후속으로 [G01~G12 구현 추적표](../methodology/fund-management/policy-gate-implementation.md)와 [검증 보고서](../reports/policies/validation-20261030/README.md)를 추가했다. 정책 입력 계약의 누락·모순 검사 및 gate별 결과를 보완했고 196개 테스트가 통과했다. 이번 보완은 해당 PR 병합 전까지 작업 브랜치 변경이다. 실제 승인/자료 진위 인증은 아니며 #51/#52와 정책 DRAFT 경계는 유지한다.
+
 ## 최신 통합 검증 — 2026-10-30
 
 [통합 검증 보고서](../reports/integration/20261030-phase2/README.md): main #41과 #42~48 누적 연구를 결합해 문서 충돌 해결, 180개 테스트·경고 0건, 결과 JSON 4종 해시 동일 재현, 초기 소스 차단 유지 확인. 통합 PR의 실제 병합 상태는 GitHub에서 확인한다. 아래 미병합 표기는 각 기록 시점의 상태다. 자료·정책 미결 #50~56은 유지하며 #49 통합 추적과 구분한다.
