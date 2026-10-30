@@ -1,0 +1,121 @@
+{
+  "as_of_kst": "2026-10-30",
+  "research_head": "70abbcaf322b1e53331c221dc6cc266715ff7a0a",
+  "sources": [
+    {
+      "path": "reports/saa/20261029-korea-rebuild/results-summary.json",
+      "sha256": "39a8da82e4264f2f9a70a0bc7b9d1c1520d653db6b9ae501de4d520fb3f044af"
+    },
+    {
+      "path": "reports/saa/20261030-matched-universes/results-summary.json",
+      "sha256": "bdacb9ba7c3ddbe7f1cb09237530a5f2a652703922ac7babf09cd388d038571f"
+    },
+    {
+      "path": "reports/saa/20261030-defensive-mix/results-summary.json",
+      "sha256": "f614170295ce4f8338367d714b344d863652f2b89bf9da487508a21252c68994"
+    },
+    {
+      "path": "reports/saa/20261030-defense-uncertainty/results-summary.json",
+      "sha256": "ce784f0b3115abb5962affc0a136d518862bd5b18c442d15eed765695905ead6"
+    }
+  ],
+  "document_checks": {
+    "common_oos_start": "2017-01",
+    "common_oos_end": "2026-09",
+    "common_oos_months": 117,
+    "intervals_containing_zero": 18
+  },
+  "tests": "prior PR47 local execution: 180 OK, 0.350s; not rerun for docs",
+  "github_pr_snapshot": [
+    {
+      "number": 37,
+      "state": "closed",
+      "merged": true,
+      "draft": false,
+      "base": "main",
+      "head": "b798be0ccfa1e1be7ea47873b4d101cfadfa0693",
+      "mergeable": true
+    },
+    {
+      "number": 38,
+      "state": "closed",
+      "merged": true,
+      "draft": false,
+      "base": "main",
+      "head": "f5469959625e1caf84138b19c4e708cbe73a6b3c",
+      "mergeable": true
+    },
+    {
+      "number": 39,
+      "state": "closed",
+      "merged": true,
+      "draft": false,
+      "base": "main",
+      "head": "7190da96e67891fc951e48ca965cfd2f4d1433c4",
+      "mergeable": true
+    },
+    {
+      "number": 41,
+      "state": "closed",
+      "merged": true,
+      "draft": false,
+      "base": "main",
+      "head": "79f2a7aeadf6fbd59ce1046ed1b97a7aaa0b1df0",
+      "mergeable": true
+    },
+    {
+      "number": 42,
+      "state": "open",
+      "merged": false,
+      "draft": true,
+      "base": "main",
+      "head": "8f573a4f422e7a9055904b900f7c897280f4f65b",
+      "mergeable": false
+    },
+    {
+      "number": 43,
+      "state": "open",
+      "merged": false,
+      "draft": false,
+      "base": "research/phase2-3-real-data-20261029",
+      "head": "5d72f470caa001424972f9e77e4878ac41225879",
+      "mergeable": true
+    },
+    {
+      "number": 44,
+      "state": "open",
+      "merged": false,
+      "draft": false,
+      "base": "fix/phase2-source-gates-validation-20261029",
+      "head": "67128b702ad13c869d55f6cdb3775c1673452bad",
+      "mergeable": true
+    },
+    {
+      "number": 45,
+      "state": "open",
+      "merged": false,
+      "draft": false,
+      "base": "research/official-korea-rebuild-20261029",
+      "head": "c3a5aa86a5ce28b6feaca881b0166d7c2e5560b9",
+      "mergeable": true
+    },
+    {
+      "number": 46,
+      "state": "open",
+      "merged": false,
+      "draft": false,
+      "base": "research/matched-universe-20261030",
+      "head": "ab162b8abb953af070a6dd5c21608de0c5a63ffc",
+      "mergeable": true
+    },
+    {
+      "number": 47,
+      "state": "open",
+      "merged": false,
+      "draft": false,
+      "base": "research/fixed-equity-defense-20261030",
+      "head": "70abbcaf322b1e53331c221dc6cc266715ff7a0a",
+      "mergeable": true
+    }
+  ]
+}
