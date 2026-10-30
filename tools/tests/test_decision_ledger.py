@@ -232,7 +232,8 @@ class LessonsTest(_LedgerBase):
         self.assertEqual(code, 0, out)
         d = [o for o in dl._read(dl.OUTCOMES) if o["id"] == "d"][0]
         self.assertEqual((d["교훈"], d["태그"]), ("플랫폼 규제는 숫자보다 먼저 온다", "플랫폼,규제"))
-        text = open(dl.LESSONS, encoding="utf-8").read()
+        with open(dl.LESSONS, encoding="utf-8") as source:
+            text = source.read()
         self.assertIn("## 오판 (2건)", text)
         self.assertIn("## 관망·논지 불명 (1건)", text)
         self.assertIn("플랫폼 규제는 숫자보다 먼저 온다", text)
