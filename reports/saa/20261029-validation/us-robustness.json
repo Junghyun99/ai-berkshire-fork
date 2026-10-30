@@ -1,0 +1,1959 @@
+{
+  "status": "US_SUBSET_ONLY_PROVISIONAL",
+  "as_of": "2026-09-30",
+  "excluded": "Korean ETF sources require month-end/dividend reconciliation; no Korean allocation conclusion",
+  "bootstrap": "1000 paired circular 12-month blocks, seed 29; conditional OOS Sharpe difference vs equal, not refitted strategy or unseen holdout",
+  "results": {
+    "us_three_equal": {
+      "assets": [
+        "SPY",
+        "NASDAQXNDX",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.13302198266806098,
+        "mdd": -0.17341202446774584,
+        "volatility": 0.1035166307454548,
+        "sharpe_rf0": 1.264162322714265,
+        "sortino_mar0": 2.2794432995474647,
+        "sharpe_rf_proxy": 1.038561685512803,
+        "sortino_rf_proxy": 1.7823142360866238,
+        "total_turnover": 1.2538343911929415
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.1331031688636497,
+          "mdd": -0.17334844912661518,
+          "volatility": 0.1035160839389621,
+          "sharpe_rf0": 1.264867449682697,
+          "sortino_mar0": 2.2811192285527166,
+          "sharpe_rf_proxy": 1.0392649427840455,
+          "sortino_rf_proxy": 1.7838497615624176,
+          "total_turnover": 1.2538343911929415
+        },
+        "10": {
+          "cagr": 0.13302198266806098,
+          "mdd": -0.17341202446774584,
+          "volatility": 0.1035166307454548,
+          "sharpe_rf0": 1.264162322714265,
+          "sortino_mar0": 2.2794432995474647,
+          "sharpe_rf_proxy": 1.038561685512803,
+          "sortino_rf_proxy": 1.7823142360866238,
+          "total_turnover": 1.2538343911929415
+        },
+        "30": {
+          "cagr": 0.13285959837525851,
+          "mdd": -0.1735391751500075,
+          "volatility": 0.10351796824287256,
+          "sharpe_rf0": 1.2627491161290008,
+          "sortino_mar0": 2.276084709119014,
+          "sharpe_rf_proxy": 1.0371527435877888,
+          "sortino_rf_proxy": 1.7792387949428914,
+          "total_turnover": 1.2538343911929415
+        }
+      }
+    },
+    "us_three_minvar": {
+      "assets": [
+        "SPY",
+        "NASDAQXNDX",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.0851963435010239,
+        "mdd": -0.15104711275071037,
+        "volatility": 0.08390025722344394,
+        "sharpe_rf0": 1.0195160596801858,
+        "sortino_mar0": 1.7600047397846563,
+        "sharpe_rf_proxy": 0.7405019629602672,
+        "sortino_rf_proxy": 1.1979728477554559,
+        "total_turnover": 2.5511007320445285
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.0853545706568033,
+          "mdd": -0.1510471127507106,
+          "volatility": 0.08390039637696754,
+          "sharpe_rf0": 1.0212637736198191,
+          "sortino_mar0": 1.7636925194944173,
+          "sharpe_rf_proxy": 0.7422443718883848,
+          "sortino_rf_proxy": 1.2012553936904158,
+          "total_turnover": 2.5511007320445285
+        },
+        "10": {
+          "cagr": 0.0851963435010239,
+          "mdd": -0.15104711275071037,
+          "volatility": 0.08390025722344394,
+          "sharpe_rf0": 1.0195160596801858,
+          "sortino_mar0": 1.7600047397846563,
+          "sharpe_rf_proxy": 0.7405019629602672,
+          "sortino_rf_proxy": 1.1979728477554559,
+          "total_turnover": 2.5511007320445285
+        },
+        "30": {
+          "cagr": 0.0848798458217277,
+          "mdd": -0.15104711275071037,
+          "volatility": 0.08390118092398295,
+          "sharpe_rf0": 1.0160060584218922,
+          "sortino_mar0": 1.7526188614039353,
+          "sharpe_rf_proxy": 0.7370064940735644,
+          "sortino_rf_proxy": 1.1914035689630058,
+          "total_turnover": 2.5511007320445285
+        }
+      }
+    },
+    "us_three_shrink_minvar": {
+      "assets": [
+        "SPY",
+        "NASDAQXNDX",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.09893007543557775,
+        "mdd": -0.14657012148337767,
+        "volatility": 0.08755277632285256,
+        "sharpe_rf0": 1.125200560384967,
+        "sortino_mar0": 1.9954270677497168,
+        "sharpe_rf_proxy": 0.857763199914315,
+        "sortino_rf_proxy": 1.429772991746875,
+        "total_turnover": 2.3972474577192173
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.09908064044536591,
+          "mdd": -0.14657012148337767,
+          "volatility": 0.08755412883062971,
+          "sharpe_rf0": 1.1267611702558709,
+          "sortino_mar0": 1.9989436821147546,
+          "sharpe_rf_proxy": 0.8593217934856597,
+          "sortino_rf_proxy": 1.4329215700693565,
+          "total_turnover": 2.3972474577192173
+        },
+        "10": {
+          "cagr": 0.09893007543557775,
+          "mdd": -0.14657012148337767,
+          "volatility": 0.08755277632285256,
+          "sharpe_rf0": 1.125200560384967,
+          "sortino_mar0": 1.9954270677497168,
+          "sharpe_rf_proxy": 0.857763199914315,
+          "sortino_rf_proxy": 1.429772991746875,
+          "total_turnover": 2.3972474577192173
+        },
+        "30": {
+          "cagr": 0.09862890444176631,
+          "mdd": -0.14657012148337756,
+          "volatility": 0.08755111789285544,
+          "sharpe_rf0": 1.1220657826614633,
+          "sortino_mar0": 1.988384733031756,
+          "sharpe_rf_proxy": 0.8546355925594903,
+          "sortino_rf_proxy": 1.4234712345282414,
+          "total_turnover": 2.3972474577192173
+        }
+      }
+    },
+    "us_three_max_sharpe": {
+      "assets": [
+        "SPY",
+        "NASDAQXNDX",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.1370770122594689,
+        "mdd": -0.22660362729038053,
+        "volatility": 0.1341940803457488,
+        "sharpe_rf0": 1.0288849241750382,
+        "sortino_mar0": 1.801322793779712,
+        "sharpe_rf_proxy": 0.8540834113596715,
+        "sortino_rf_proxy": 1.4368562887975291,
+        "total_turnover": 8.273562299975328
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.13761491455654218,
+          "mdd": -0.22619583902102613,
+          "volatility": 0.13420253581354388,
+          "sharpe_rf0": 1.0323864934367253,
+          "sortino_mar0": 1.809260386196488,
+          "sharpe_rf_proxy": 0.8575968510381005,
+          "sortino_rf_proxy": 1.4442192721646423,
+          "total_turnover": 8.273562299975328
+        },
+        "10": {
+          "cagr": 0.1370770122594689,
+          "mdd": -0.22660362729038053,
+          "volatility": 0.1341940803457488,
+          "sharpe_rf0": 1.0288849241750382,
+          "sortino_mar0": 1.801322793779712,
+          "sharpe_rf_proxy": 0.8540834113596715,
+          "sortino_rf_proxy": 1.4368562887975291,
+          "total_turnover": 8.273562299975328
+        },
+        "30": {
+          "cagr": 0.13600080832402384,
+          "mdd": -0.2274192038290891,
+          "volatility": 0.1341847417192532,
+          "sharpe_rf0": 1.021822794971544,
+          "sortino_mar0": 1.785376796956488,
+          "sharpe_rf_proxy": 0.8470075141347593,
+          "sortino_rf_proxy": 1.4220876696816536,
+          "total_turnover": 8.273562299975328
+        }
+      }
+    },
+    "us_three_risk_parity": {
+      "assets": [
+        "SPY",
+        "NASDAQXNDX",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.11298667801984941,
+        "mdd": -0.14497014181204448,
+        "volatility": 0.09244502513404766,
+        "sharpe_rf0": 1.2090490598766033,
+        "sortino_mar0": 2.164247887818785,
+        "sharpe_rf_proxy": 0.9560751918449811,
+        "sortino_rf_proxy": 1.6164512387281127,
+        "total_turnover": 1.7145017448261985
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.11309573388793348,
+          "mdd": -0.14482033861806287,
+          "volatility": 0.0924437658768356,
+          "sharpe_rf0": 1.2101331697957198,
+          "sortino_mar0": 2.166848289700424,
+          "sharpe_rf_proxy": 0.9571514923451288,
+          "sortino_rf_proxy": 1.6187642826223454,
+          "total_turnover": 1.7145017448261985
+        },
+        "10": {
+          "cagr": 0.11298667801984941,
+          "mdd": -0.14497014181204448,
+          "volatility": 0.09244502513404766,
+          "sharpe_rf0": 1.2090490598766033,
+          "sortino_mar0": 2.164247887818785,
+          "sharpe_rf_proxy": 0.9560751918449811,
+          "sortino_rf_proxy": 1.6164512387281127,
+          "total_turnover": 1.7145017448261985
+        },
+        "30": {
+          "cagr": 0.11276854119985735,
+          "mdd": -0.14526974820000793,
+          "volatility": 0.09244808785436145,
+          "sharpe_rf0": 1.2068738242023802,
+          "sortino_mar0": 2.159040154210616,
+          "sharpe_rf_proxy": 0.9539170306043485,
+          "sortino_rf_proxy": 1.6118216057311647,
+          "total_turnover": 1.7145017448261985
+        }
+      }
+    },
+    "no_nasdaq_equal": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.0919249507325901,
+        "mdd": -0.13205767446005579,
+        "volatility": 0.08763972687181083,
+        "sharpe_rf0": 1.0506217787864636,
+        "sortino_mar0": 1.847792368498798,
+        "sharpe_rf_proxy": 0.7839565942835628,
+        "sortino_rf_proxy": 1.294372184211235,
+        "total_turnover": 1.3134468826237355
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.09200691299281272,
+          "mdd": -0.13205767446005567,
+          "volatility": 0.08763849173536682,
+          "sharpe_rf0": 1.0514979404042708,
+          "sortino_mar0": 1.8496907796731288,
+          "sharpe_rf_proxy": 0.7848279791326697,
+          "sortino_rf_proxy": 1.2960704218611379,
+          "total_turnover": 1.3134468826237355
+        },
+        "10": {
+          "cagr": 0.0919249507325901,
+          "mdd": -0.13205767446005579,
+          "volatility": 0.08763972687181083,
+          "sharpe_rf0": 1.0506217787864636,
+          "sortino_mar0": 1.847792368498798,
+          "sharpe_rf_proxy": 0.7839565942835628,
+          "sortino_rf_proxy": 1.294372184211235,
+          "total_turnover": 1.3134468826237355
+        },
+        "30": {
+          "cagr": 0.09176101027053485,
+          "mdd": -0.13205767446005579,
+          "volatility": 0.08764254702956992,
+          "sharpe_rf0": 1.048865342360491,
+          "sortino_mar0": 1.843986924460576,
+          "sharpe_rf_proxy": 0.7822107633737645,
+          "sortino_rf_proxy": 1.290971119937624,
+          "total_turnover": 1.3134468826237355
+        }
+      }
+    },
+    "no_nasdaq_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.08509263504437148,
+        "mdd": -0.15158026681749714,
+        "volatility": 0.08371707419145993,
+        "sharpe_rf0": 1.0204184385482409,
+        "sortino_mar0": 1.760318826701921,
+        "sharpe_rf_proxy": 0.7408729337613702,
+        "sortino_rf_proxy": 1.1979877494688445,
+        "total_turnover": 2.233499476512989
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.08523114872972015,
+          "mdd": -0.15158026681749714,
+          "volatility": 0.0837200365493102,
+          "sharpe_rf0": 1.0219199751625814,
+          "sortino_mar0": 1.7635512588199223,
+          "sharpe_rf_proxy": 0.7423788990747521,
+          "sortino_rf_proxy": 1.200863771961927,
+          "total_turnover": 2.233499476512989
+        },
+        "10": {
+          "cagr": 0.08509263504437148,
+          "mdd": -0.15158026681749714,
+          "volatility": 0.08371707419145993,
+          "sharpe_rf0": 1.0204184385482409,
+          "sortino_mar0": 1.760318826701921,
+          "sharpe_rf_proxy": 0.7408729337613702,
+          "sortino_rf_proxy": 1.1979877494688445,
+          "total_turnover": 2.233499476512989
+        },
+        "30": {
+          "cagr": 0.08481556433765935,
+          "mdd": -0.15158026681749703,
+          "volatility": 0.08371219250683087,
+          "sharpe_rf0": 1.0174023697888162,
+          "sortino_mar0": 1.7538486494549768,
+          "sharpe_rf_proxy": 0.7378514256734423,
+          "sortino_rf_proxy": 1.1922341509658223,
+          "total_turnover": 2.233499476512989
+        }
+      }
+    },
+    "no_nasdaq_shrink_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.08504506868832484,
+        "mdd": -0.14778605032343894,
+        "volatility": 0.08354006958057311,
+        "sharpe_rf0": 1.0218623332730845,
+        "sortino_mar0": 1.7701625509388013,
+        "sharpe_rf_proxy": 0.7417184317047476,
+        "sortino_rf_proxy": 1.203987500741432,
+        "total_turnover": 2.1546084784110127
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.085178683687134,
+          "mdd": -0.14778605032343917,
+          "volatility": 0.08354306993044834,
+          "sharpe_rf0": 1.023312262575291,
+          "sortino_mar0": 1.7732817391649498,
+          "sharpe_rf_proxy": 0.7431723700334693,
+          "sortino_rf_proxy": 1.2067641767216535,
+          "total_turnover": 2.1546084784110127
+        },
+        "10": {
+          "cagr": 0.08504506868832484,
+          "mdd": -0.14778605032343894,
+          "volatility": 0.08354006958057311,
+          "sharpe_rf0": 1.0218623332730845,
+          "sortino_mar0": 1.7701625509388013,
+          "sharpe_rf_proxy": 0.7417184317047476,
+          "sortino_rf_proxy": 1.203987500741432,
+          "total_turnover": 2.1546084784110127
+        },
+        "30": {
+          "cagr": 0.08477779501245819,
+          "mdd": -0.14778605032343894,
+          "volatility": 0.08353507942223533,
+          "sharpe_rf0": 1.0189498356006645,
+          "sortino_mar0": 1.7639190710983312,
+          "sharpe_rf_proxy": 0.7388012358331807,
+          "sortino_rf_proxy": 1.1984325041797275,
+          "total_turnover": 2.1546084784110127
+        }
+      }
+    },
+    "no_nasdaq_max_sharpe": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.09954318043592547,
+        "mdd": -0.20959404898210132,
+        "volatility": 0.12293242380898714,
+        "sharpe_rf0": 0.8360939578472866,
+        "sortino_mar0": 1.3873139501514822,
+        "sharpe_rf_proxy": 0.6452659274689353,
+        "sortino_rf_proxy": 1.0271883802990627,
+        "total_turnover": 5.589246889082664
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.09989452159228929,
+          "mdd": -0.20959404898210132,
+          "volatility": 0.1229046816792536,
+          "sharpe_rf0": 0.8388742744953007,
+          "sortino_mar0": 1.3926878965925105,
+          "sharpe_rf_proxy": 0.6480032361065717,
+          "sortino_rf_proxy": 1.0321083624359815,
+          "total_turnover": 5.589246889082664
+        },
+        "10": {
+          "cagr": 0.09954318043592547,
+          "mdd": -0.20959404898210132,
+          "volatility": 0.12293242380898714,
+          "sharpe_rf0": 0.8360939578472866,
+          "sortino_mar0": 1.3873139501514822,
+          "sharpe_rf_proxy": 0.6452659274689353,
+          "sortino_rf_proxy": 1.0271883802990627,
+          "total_turnover": 5.589246889082664
+        },
+        "30": {
+          "cagr": 0.09884019319157344,
+          "mdd": -0.20959404898210132,
+          "volatility": 0.12299238466532475,
+          "sharpe_rf0": 0.8305068581040906,
+          "sortino_mar0": 1.3765127385877942,
+          "sharpe_rf_proxy": 0.6397718154157875,
+          "sortino_rf_proxy": 1.0173182822085396,
+          "total_turnover": 5.589246889082664
+        }
+      }
+    },
+    "no_nasdaq_risk_parity": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.08824852964259011,
+        "mdd": -0.13886490905158888,
+        "volatility": 0.08465111391110776,
+        "sharpe_rf0": 1.0445897188890405,
+        "sortino_mar0": 1.823017759254161,
+        "sharpe_rf_proxy": 0.7682886964224321,
+        "sortino_rf_proxy": 1.2570627126881306,
+        "total_turnover": 1.6947880664231623
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.08835393560935545,
+          "mdd": -0.138864909051589,
+          "volatility": 0.08465154418776709,
+          "sharpe_rf0": 1.0457367969735822,
+          "sortino_mar0": 1.8255251301273865,
+          "sharpe_rf_proxy": 0.7694331307146195,
+          "sortino_rf_proxy": 1.259286441899295,
+          "total_turnover": 1.6947880664231623
+        },
+        "10": {
+          "cagr": 0.08824852964259011,
+          "mdd": -0.13886490905158888,
+          "volatility": 0.08465111391110776,
+          "sharpe_rf0": 1.0445897188890405,
+          "sortino_mar0": 1.823017759254161,
+          "sharpe_rf_proxy": 0.7682886964224321,
+          "sortino_rf_proxy": 1.2570627126881306,
+          "total_turnover": 1.6947880664231623
+        },
+        "30": {
+          "cagr": 0.08803769192446098,
+          "mdd": -0.13886490905158888,
+          "volatility": 0.08465085428863646,
+          "sharpe_rf0": 1.0422881285490153,
+          "sortino_mar0": 1.8179969907925935,
+          "sharpe_rf_proxy": 0.7659943154306101,
+          "sortino_rf_proxy": 1.2526127312092514,
+          "total_turnover": 1.6947880664231623
+        }
+      }
+    },
+    "fixed_60_40": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.10559769297679722,
+        "mdd": -0.12607692456360797,
+        "volatility": 0.09140983039687356,
+        "sharpe_rf0": 1.1481751892431937,
+        "sortino_mar0": 2.0473997464321307,
+        "sharpe_rf_proxy": 0.8924718572262493,
+        "sortino_rf_proxy": 1.5007121262550527,
+        "total_turnover": 1.2318491597857018
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.10567552527596713,
+          "mdd": -0.12607692456360797,
+          "volatility": 0.0914097334323875,
+          "sharpe_rf0": 1.148952596512347,
+          "sortino_mar0": 2.049182650658923,
+          "sharpe_rf_proxy": 0.8932478748208998,
+          "sortino_rf_proxy": 1.5023174941582687,
+          "total_turnover": 1.2318491597857018
+        },
+        "10": {
+          "cagr": 0.10559769297679722,
+          "mdd": -0.12607692456360797,
+          "volatility": 0.09140983039687356,
+          "sharpe_rf0": 1.1481751892431937,
+          "sortino_mar0": 2.0473997464321307,
+          "sharpe_rf_proxy": 0.8924718572262493,
+          "sortino_rf_proxy": 1.5007121262550527,
+          "total_turnover": 1.2318491597857018
+        },
+        "30": {
+          "cagr": 0.10544201473864367,
+          "mdd": -0.12607692456360808,
+          "volatility": 0.09141031525716296,
+          "sharpe_rf0": 1.1466167303077572,
+          "sortino_mar0": 2.043826135968378,
+          "sharpe_rf_proxy": 0.8909169824196869,
+          "sortino_rf_proxy": 1.4974968956972659,
+          "total_turnover": 1.2318491597857018
+        }
+      }
+    },
+    "fixed_two_thirds_equity": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.11455077479037268,
+        "mdd": -0.12218053846606425,
+        "volatility": 0.0952829712590952,
+        "sharpe_rf0": 1.1906644919970961,
+        "sortino_mar0": 2.131845398543745,
+        "sharpe_rf_proxy": 0.9453234561298545,
+        "sortino_rf_proxy": 1.6014792608051878,
+        "total_turnover": 1.1238607225164778
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.11462235838051571,
+          "mdd": -0.12218053846606425,
+          "volatility": 0.09528353614067728,
+          "sharpe_rf0": 1.191337797003602,
+          "sortino_mar0": 2.133427902297094,
+          "sharpe_rf_proxy": 0.9459971718274673,
+          "sortino_rf_proxy": 1.6029133767673214,
+          "total_turnover": 1.1238607225164778
+        },
+        "10": {
+          "cagr": 0.11455077479037268,
+          "mdd": -0.12218053846606425,
+          "volatility": 0.0952829712590952,
+          "sharpe_rf0": 1.1906644919970961,
+          "sortino_mar0": 2.131845398543745,
+          "sharpe_rf_proxy": 0.9453234561298545,
+          "sortino_rf_proxy": 1.6014792608051878,
+          "total_turnover": 1.1238607225164778
+        },
+        "30": {
+          "cagr": 0.11440759645049314,
+          "mdd": -0.12218053846606425,
+          "volatility": 0.09528207186179247,
+          "sharpe_rf0": 1.1893149825901197,
+          "sortino_mar0": 2.1286741771624307,
+          "sharpe_rf_proxy": 0.9439737121083889,
+          "sortino_rf_proxy": 1.5986072466165584,
+          "total_turnover": 1.1238607225164778
+        }
+      }
+    },
+    "lb36_equal": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 36,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.09992403055062615,
+        "mdd": -0.13205767446005567,
+        "volatility": 0.09139724147747429,
+        "sharpe_rf0": 1.0916529033901903,
+        "sortino_mar0": 1.8603833741940354,
+        "sharpe_rf_proxy": 0.8634081512141153,
+        "sortino_rf_proxy": 1.3938715806832902,
+        "total_turnover": 0.8802587562647619
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.10000149594635643,
+          "mdd": -0.13205767446005567,
+          "volatility": 0.09140091073745359,
+          "sharpe_rf0": 1.0923891222621727,
+          "sortino_mar0": 1.8619832330618618,
+          "sharpe_rf_proxy": 0.8641523386409994,
+          "sortino_rf_proxy": 1.395335608244591,
+          "total_turnover": 0.8802587562647619
+        },
+        "10": {
+          "cagr": 0.09992403055062615,
+          "mdd": -0.13205767446005567,
+          "volatility": 0.09139724147747429,
+          "sharpe_rf0": 1.0916529033901903,
+          "sortino_mar0": 1.8603833741940354,
+          "sharpe_rf_proxy": 0.8634081512141153,
+          "sortino_rf_proxy": 1.3938715806832902,
+          "total_turnover": 0.8802587562647619
+        },
+        "30": {
+          "cagr": 0.09976908463430312,
+          "mdd": -0.13205767446005579,
+          "volatility": 0.09139021360398984,
+          "sharpe_rf0": 1.0901765826375904,
+          "sortino_mar0": 1.8571810182462616,
+          "sharpe_rf_proxy": 0.8619166498671084,
+          "sortino_rf_proxy": 1.3909420972009323,
+          "total_turnover": 0.8802587562647619
+        }
+      }
+    },
+    "lb36_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 36,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.07658495812341082,
+        "mdd": -0.14490439314355985,
+        "volatility": 0.08703057864573144,
+        "sharpe_rf0": 0.8938455729327639,
+        "sortino_mar0": 1.4615664131367139,
+        "sharpe_rf_proxy": 0.6531205566423872,
+        "sortino_rf_proxy": 1.0096825885720975,
+        "total_turnover": 2.21557813254359
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.076775825627305,
+          "mdd": -0.14490439314355974,
+          "volatility": 0.08704259749044888,
+          "sharpe_rf0": 0.8957828043040248,
+          "sortino_mar0": 1.4653741936098512,
+          "sharpe_rf_proxy": 0.6550903031946179,
+          "sortino_rf_proxy": 1.0131805603783648,
+          "total_turnover": 2.21557813254359
+        },
+        "10": {
+          "cagr": 0.07658495812341082,
+          "mdd": -0.14490439314355985,
+          "volatility": 0.08703057864573144,
+          "sharpe_rf0": 0.8938455729327639,
+          "sortino_mar0": 1.4615664131367139,
+          "sharpe_rf_proxy": 0.6531205566423872,
+          "sortino_rf_proxy": 1.0096825885720975,
+          "total_turnover": 2.21557813254359
+        },
+        "30": {
+          "cagr": 0.07620314490201796,
+          "mdd": -0.14490439314355985,
+          "volatility": 0.08700843257299797,
+          "sharpe_rf0": 0.8899501560842991,
+          "sortino_mar0": 1.4539371546035793,
+          "sharpe_rf_proxy": 0.6491653001084242,
+          "sortino_rf_proxy": 1.0026804906322329,
+          "total_turnover": 2.21557813254359
+        }
+      }
+    },
+    "lb36_shrink_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 36,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.07822750961058711,
+        "mdd": -0.14145036709944347,
+        "volatility": 0.08660175039711349,
+        "sharpe_rf0": 0.9155428205061817,
+        "sortino_mar0": 1.5076848366355604,
+        "sharpe_rf_proxy": 0.6737796425930704,
+        "sortino_rf_proxy": 1.0483202105188154,
+        "total_turnover": 1.8950932730010275
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.07839101470330556,
+          "mdd": -0.14145036709944347,
+          "volatility": 0.08661443726889073,
+          "sharpe_rf0": 0.9171825391079582,
+          "sortino_mar0": 1.5109744794104407,
+          "sharpe_rf_proxy": 0.6754529212505636,
+          "sortino_rf_proxy": 1.0513276338895463,
+          "total_turnover": 1.8950932730010275
+        },
+        "10": {
+          "cagr": 0.07822750961058711,
+          "mdd": -0.14145036709944347,
+          "volatility": 0.08660175039711349,
+          "sharpe_rf0": 0.9155428205061817,
+          "sortino_mar0": 1.5076848366355604,
+          "sharpe_rf_proxy": 0.6737796425930704,
+          "sortino_rf_proxy": 1.0483202105188154,
+          "total_turnover": 1.8950932730010275
+        },
+        "30": {
+          "cagr": 0.07790042155999544,
+          "mdd": -0.14145036709944359,
+          "volatility": 0.08657799296349125,
+          "sharpe_rf0": 0.9122449107357506,
+          "sortino_mar0": 1.5011005999903082,
+          "sharpe_rf_proxy": 0.6704190567752939,
+          "sortino_rf_proxy": 1.0423035435580401,
+          "total_turnover": 1.8950932730010275
+        }
+      }
+    },
+    "lb36_max_sharpe": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 36,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.13014985704599757,
+        "mdd": -0.17546794864861726,
+        "volatility": 0.11970809319136501,
+        "sharpe_rf0": 1.0871069886941482,
+        "sortino_mar0": 1.8030770799150648,
+        "sharpe_rf_proxy": 0.9140883279831413,
+        "sortino_rf_proxy": 1.460425301260995,
+        "total_turnover": 3.894512372278748
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.1305021396165864,
+          "mdd": -0.17546794864861726,
+          "volatility": 0.11975240675249284,
+          "sharpe_rf0": 1.0893763898268713,
+          "sortino_mar0": 1.8078523321265663,
+          "sharpe_rf_proxy": 0.9164239212499753,
+          "sortino_rf_proxy": 1.4649778510396791,
+          "total_turnover": 3.894512372278748
+        },
+        "10": {
+          "cagr": 0.13014985704599757,
+          "mdd": -0.17546794864861726,
+          "volatility": 0.11970809319136501,
+          "sharpe_rf0": 1.0871069886941482,
+          "sortino_mar0": 1.8030770799150648,
+          "sharpe_rf_proxy": 0.9140883279831413,
+          "sortino_rf_proxy": 1.460425301260995,
+          "total_turnover": 3.894512372278748
+        },
+        "30": {
+          "cagr": 0.12944491815165926,
+          "mdd": -0.17546794864861726,
+          "volatility": 0.11962479861714173,
+          "sharpe_rf0": 1.082514884451177,
+          "sortino_mar0": 1.7935227404146101,
+          "sharpe_rf_proxy": 0.9093711785490023,
+          "sortino_rf_proxy": 1.45131831194461,
+          "total_turnover": 3.894512372278748
+        }
+      }
+    },
+    "lb36_risk_parity": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 36,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.08879820508481973,
+        "mdd": -0.13573246564314423,
+        "volatility": 0.08782975643192342,
+        "sharpe_rf0": 1.0157637488070457,
+        "sortino_mar0": 1.7021222953572002,
+        "sharpe_rf_proxy": 0.7777970822566436,
+        "sortino_rf_proxy": 1.2325862046700413,
+        "total_turnover": 1.1964391295196273
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.08890243586999169,
+          "mdd": -0.13573246564314423,
+          "volatility": 0.0878404142039085,
+          "sharpe_rf0": 1.0167482379177963,
+          "sortino_mar0": 1.7042319800823793,
+          "sharpe_rf_proxy": 0.7788074745816197,
+          "sortino_rf_proxy": 1.234518426475388,
+          "total_turnover": 1.1964391295196273
+        },
+        "10": {
+          "cagr": 0.08879820508481973,
+          "mdd": -0.13573246564314423,
+          "volatility": 0.08782975643192342,
+          "sharpe_rf0": 1.0157637488070457,
+          "sortino_mar0": 1.7021222953572002,
+          "sharpe_rf_proxy": 0.7777970822566436,
+          "sortino_rf_proxy": 1.2325862046700413,
+          "total_turnover": 1.1964391295196273
+        },
+        "30": {
+          "cagr": 0.08858970540997313,
+          "mdd": -0.13573246564314423,
+          "volatility": 0.08780915081623861,
+          "sharpe_rf0": 1.0137858572053478,
+          "sortino_mar0": 1.697901479800162,
+          "sharpe_rf_proxy": 0.7757692524715412,
+          "sortino_rf_proxy": 1.2287212506644904,
+          "total_turnover": 1.1964391295196273
+        }
+      }
+    },
+    "lb60_equal": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.09992403055062615,
+        "mdd": -0.13205767446005567,
+        "volatility": 0.09139724147747429,
+        "sharpe_rf0": 1.0916529033901903,
+        "sortino_mar0": 1.8603833741940354,
+        "sharpe_rf_proxy": 0.8634081512141153,
+        "sortino_rf_proxy": 1.3938715806832902,
+        "total_turnover": 0.8802587562647619
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.10000149594635643,
+          "mdd": -0.13205767446005567,
+          "volatility": 0.09140091073745359,
+          "sharpe_rf0": 1.0923891222621727,
+          "sortino_mar0": 1.8619832330618618,
+          "sharpe_rf_proxy": 0.8641523386409994,
+          "sortino_rf_proxy": 1.395335608244591,
+          "total_turnover": 0.8802587562647619
+        },
+        "10": {
+          "cagr": 0.09992403055062615,
+          "mdd": -0.13205767446005567,
+          "volatility": 0.09139724147747429,
+          "sharpe_rf0": 1.0916529033901903,
+          "sortino_mar0": 1.8603833741940354,
+          "sharpe_rf_proxy": 0.8634081512141153,
+          "sortino_rf_proxy": 1.3938715806832902,
+          "total_turnover": 0.8802587562647619
+        },
+        "30": {
+          "cagr": 0.09976908463430312,
+          "mdd": -0.13205767446005579,
+          "volatility": 0.09139021360398984,
+          "sharpe_rf0": 1.0901765826375904,
+          "sortino_mar0": 1.8571810182462616,
+          "sharpe_rf_proxy": 0.8619166498671084,
+          "sortino_rf_proxy": 1.3909420972009323,
+          "total_turnover": 0.8802587562647619
+        }
+      }
+    },
+    "lb60_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.08014026335987112,
+        "mdd": -0.15158026681749714,
+        "volatility": 0.08746179204443244,
+        "sharpe_rf0": 0.927775981554742,
+        "sortino_mar0": 1.5340589513553147,
+        "sharpe_rf_proxy": 0.6880641096717184,
+        "sortino_rf_proxy": 1.07524605030779,
+        "total_turnover": 1.8293514197485385
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.08029837175760712,
+          "mdd": -0.15158026681749703,
+          "volatility": 0.08747231361680848,
+          "sharpe_rf0": 0.9293584553930566,
+          "sortino_mar0": 1.5372834772358959,
+          "sharpe_rf_proxy": 0.6896700835484036,
+          "sortino_rf_proxy": 1.078182867706957,
+          "total_turnover": 1.8293514197485385
+        },
+        "10": {
+          "cagr": 0.08014026335987112,
+          "mdd": -0.15158026681749714,
+          "volatility": 0.08746179204443244,
+          "sharpe_rf0": 0.927775981554742,
+          "sortino_mar0": 1.5340589513553147,
+          "sharpe_rf_proxy": 0.6880641096717184,
+          "sortino_rf_proxy": 1.07524605030779,
+          "total_turnover": 1.8293514197485385
+        },
+        "30": {
+          "cagr": 0.07982399390512995,
+          "mdd": -0.15158026681749714,
+          "volatility": 0.08744202243076844,
+          "sharpe_rf0": 0.9245964250946161,
+          "sortino_mar0": 1.527608580103803,
+          "sharpe_rf_proxy": 0.6848409649025572,
+          "sortino_rf_proxy": 1.06937300989646,
+          "total_turnover": 1.8293514197485385
+        }
+      }
+    },
+    "lb60_shrink_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.08159324213609476,
+        "mdd": -0.14778605032343917,
+        "volatility": 0.08724747377836356,
+        "sharpe_rf0": 0.9453356812084759,
+        "sortino_mar0": 1.5725935022612927,
+        "sharpe_rf_proxy": 0.7050860274638371,
+        "sortino_rf_proxy": 1.1081799238045187,
+        "total_turnover": 1.81928653856825
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.08175069195030216,
+          "mdd": -0.14778605032343906,
+          "volatility": 0.08725642942175114,
+          "sharpe_rf0": 0.946926278835433,
+          "sortino_mar0": 1.575840209370064,
+          "sharpe_rf_proxy": 0.706695393934414,
+          "sortino_rf_proxy": 1.111134298130257,
+          "total_turnover": 1.81928653856825
+        },
+        "10": {
+          "cagr": 0.08159324213609476,
+          "mdd": -0.14778605032343917,
+          "volatility": 0.08724747377836356,
+          "sharpe_rf0": 0.9453356812084759,
+          "sortino_mar0": 1.5725935022612927,
+          "sharpe_rf_proxy": 0.7050860274638371,
+          "sortino_rf_proxy": 1.1081799238045187,
+          "total_turnover": 1.81928653856825
+        },
+        "30": {
+          "cagr": 0.08127829052269964,
+          "mdd": -0.14778605032343906,
+          "volatility": 0.08723082199923111,
+          "sharpe_rf0": 0.9421399025802767,
+          "sortino_mar0": 1.56609815178068,
+          "sharpe_rf_proxy": 0.7018560964244297,
+          "sortino_rf_proxy": 1.1022713815362342,
+          "total_turnover": 1.81928653856825
+        }
+      }
+    },
+    "lb60_max_sharpe": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.1388846662723322,
+        "mdd": -0.16507276998457743,
+        "volatility": 0.12196831749968598,
+        "sharpe_rf0": 1.1328344286021401,
+        "sortino_mar0": 1.918010990550264,
+        "sharpe_rf_proxy": 0.9612278474533102,
+        "sortino_rf_proxy": 1.5701457684645936,
+        "total_turnover": 2.681936661109777
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.13912909747833813,
+          "mdd": -0.1650727699845772,
+          "volatility": 0.12194407362169024,
+          "sharpe_rf0": 1.1348126589821514,
+          "sortino_mar0": 1.922467843472588,
+          "sharpe_rf_proxy": 0.9631724119250115,
+          "sortino_rf_proxy": 1.574222326509991,
+          "total_turnover": 2.681936661109777
+        },
+        "10": {
+          "cagr": 0.1388846662723322,
+          "mdd": -0.16507276998457743,
+          "volatility": 0.12196831749968598,
+          "sharpe_rf0": 1.1328344286021401,
+          "sortino_mar0": 1.918010990550264,
+          "sharpe_rf_proxy": 0.9612278474533102,
+          "sortino_rf_proxy": 1.5701457684645936,
+          "total_turnover": 2.681936661109777
+        },
+        "30": {
+          "cagr": 0.13839565109375407,
+          "mdd": -0.16507276998457732,
+          "volatility": 0.12201888915631343,
+          "sharpe_rf0": 1.1288610466123503,
+          "sortino_mar0": 1.909050996171183,
+          "sharpe_rf_proxy": 0.9573246812249673,
+          "sortino_rf_proxy": 1.561960606335535,
+          "total_turnover": 2.681936661109777
+        }
+      }
+    },
+    "lb60_risk_parity": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.09081478826743838,
+        "mdd": -0.13886490905158888,
+        "volatility": 0.08837442480014007,
+        "sharpe_rf0": 1.0311195541823732,
+        "sortino_mar0": 1.7353914740475214,
+        "sharpe_rf_proxy": 0.7944431106523151,
+        "sortino_rf_proxy": 1.2645886269859918,
+        "total_turnover": 1.3328943363648533
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.0909311209833783,
+          "mdd": -0.13886490905158888,
+          "volatility": 0.08837924932325097,
+          "sharpe_rf0": 1.0322830980348752,
+          "sortino_mar0": 1.7378669408636245,
+          "sharpe_rf_proxy": 0.795615398339492,
+          "sortino_rf_proxy": 1.2668306798188582,
+          "total_turnover": 1.3328943363648533
+        },
+        "10": {
+          "cagr": 0.09081478826743838,
+          "mdd": -0.13886490905158888,
+          "volatility": 0.08837442480014007,
+          "sharpe_rf0": 1.0311195541823732,
+          "sortino_mar0": 1.7353914740475214,
+          "sharpe_rf_proxy": 0.7944431106523151,
+          "sortino_rf_proxy": 1.2645886269859918,
+          "total_turnover": 1.3328943363648533
+        },
+        "30": {
+          "cagr": 0.09058209255693761,
+          "mdd": -0.138864909051589,
+          "volatility": 0.08836546716557396,
+          "sharpe_rf0": 1.0287840355779279,
+          "sortino_mar0": 1.7304386383010282,
+          "sharpe_rf_proxy": 0.7920919053673398,
+          "sortino_rf_proxy": 1.2601041141479954,
+          "total_turnover": 1.3328943363648533
+        }
+      }
+    },
+    "lb120_equal": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 120,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.09992403055062615,
+        "mdd": -0.13205767446005567,
+        "volatility": 0.09139724147747429,
+        "sharpe_rf0": 1.0916529033901903,
+        "sortino_mar0": 1.8603833741940354,
+        "sharpe_rf_proxy": 0.8634081512141153,
+        "sortino_rf_proxy": 1.3938715806832902,
+        "total_turnover": 0.8802587562647619
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.10000149594635643,
+          "mdd": -0.13205767446005567,
+          "volatility": 0.09140091073745359,
+          "sharpe_rf0": 1.0923891222621727,
+          "sortino_mar0": 1.8619832330618618,
+          "sharpe_rf_proxy": 0.8641523386409994,
+          "sortino_rf_proxy": 1.395335608244591,
+          "total_turnover": 0.8802587562647619
+        },
+        "10": {
+          "cagr": 0.09992403055062615,
+          "mdd": -0.13205767446005567,
+          "volatility": 0.09139724147747429,
+          "sharpe_rf0": 1.0916529033901903,
+          "sortino_mar0": 1.8603833741940354,
+          "sharpe_rf_proxy": 0.8634081512141153,
+          "sortino_rf_proxy": 1.3938715806832902,
+          "total_turnover": 0.8802587562647619
+        },
+        "30": {
+          "cagr": 0.09976908463430312,
+          "mdd": -0.13205767446005579,
+          "volatility": 0.09139021360398984,
+          "sharpe_rf0": 1.0901765826375904,
+          "sortino_mar0": 1.8571810182462616,
+          "sharpe_rf_proxy": 0.8619166498671084,
+          "sortino_rf_proxy": 1.3909420972009323,
+          "total_turnover": 0.8802587562647619
+        }
+      }
+    },
+    "lb120_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 120,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.09074973523119145,
+        "mdd": -0.14711442400052333,
+        "volatility": 0.0922968929028504,
+        "sharpe_rf0": 0.9904955031636152,
+        "sortino_mar0": 1.6440462751517018,
+        "sharpe_rf_proxy": 0.7631978571740965,
+        "sortino_rf_proxy": 1.2031158146180225,
+        "total_turnover": 1.4235525394768442
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.09087397695289612,
+          "mdd": -0.14711442400052333,
+          "volatility": 0.09230080978306245,
+          "sharpe_rf0": 0.9917000003249351,
+          "sortino_mar0": 1.6464915937284037,
+          "sharpe_rf_proxy": 0.7644083767392272,
+          "sortino_rf_proxy": 1.2053579531456615,
+          "total_turnover": 1.4235525394768442
+        },
+        "10": {
+          "cagr": 0.09074973523119145,
+          "mdd": -0.14711442400052333,
+          "volatility": 0.0922968929028504,
+          "sharpe_rf0": 0.9904955031636152,
+          "sortino_mar0": 1.6440462751517018,
+          "sharpe_rf_proxy": 0.7631978571740965,
+          "sortino_rf_proxy": 1.2031158146180225,
+          "total_turnover": 1.4235525394768442
+        },
+        "30": {
+          "cagr": 0.09050120129644235,
+          "mdd": -0.14711442400052344,
+          "volatility": 0.09228997405678507,
+          "sharpe_rf0": 0.9880764067494882,
+          "sortino_mar0": 1.639149296129038,
+          "sharpe_rf_proxy": 0.7607689433884416,
+          "sortino_rf_proxy": 1.198628267945383,
+          "total_turnover": 1.4235525394768442
+        }
+      }
+    },
+    "lb120_shrink_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 120,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.09126219054363949,
+        "mdd": -0.14588636041868996,
+        "volatility": 0.09210541043828846,
+        "sharpe_rf0": 0.9974979588503802,
+        "sortino_mar0": 1.6582592144276866,
+        "sharpe_rf_proxy": 0.7697828593364563,
+        "sortino_rf_proxy": 1.2151959350056156,
+        "total_turnover": 1.3692473190981604
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.09138174863823068,
+          "mdd": -0.14588636041868985,
+          "volatility": 0.09210867307818559,
+          "sharpe_rf0": 0.9986636624192611,
+          "sortino_mar0": 1.660623123632142,
+          "sharpe_rf_proxy": 0.7709528512697358,
+          "sortino_rf_proxy": 1.217362405040142,
+          "total_turnover": 1.3692473190981604
+        },
+        "10": {
+          "cagr": 0.09126219054363949,
+          "mdd": -0.14588636041868996,
+          "volatility": 0.09210541043828846,
+          "sharpe_rf0": 0.9974979588503802,
+          "sortino_mar0": 1.6582592144276866,
+          "sharpe_rf_proxy": 0.7697828593364563,
+          "sortino_rf_proxy": 1.2151959350056156,
+          "total_turnover": 1.3692473190981604
+        },
+        "30": {
+          "cagr": 0.09102302407992324,
+          "mdd": -0.14588636041868985,
+          "volatility": 0.0920997690882642,
+          "sharpe_rf0": 0.9951567528067591,
+          "sortino_mar0": 1.6535253438100495,
+          "sharpe_rf_proxy": 0.7674352344007785,
+          "sortino_rf_proxy": 1.2108598431999256,
+          "total_turnover": 1.3692473190981604
+        }
+      }
+    },
+    "lb120_max_sharpe": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 120,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.13661943236945984,
+        "mdd": -0.17546794864861726,
+        "volatility": 0.12235144533037534,
+        "sharpe_rf0": 1.1132780469742296,
+        "sortino_mar0": 1.8733460010565381,
+        "sharpe_rf_proxy": 0.9434004275117311,
+        "sortino_rf_proxy": 1.5306039462824084,
+        "total_turnover": 2.2126277292317416
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.13682066730941633,
+          "mdd": -0.17546794864861737,
+          "volatility": 0.12237790359272935,
+          "sharpe_rf0": 1.1145232314798297,
+          "sortino_mar0": 1.8763312725579038,
+          "sharpe_rf_proxy": 0.9446833729369433,
+          "sortino_rf_proxy": 1.5334154043145825,
+          "total_turnover": 2.2126277292317416
+        },
+        "10": {
+          "cagr": 0.13661943236945984,
+          "mdd": -0.17546794864861726,
+          "volatility": 0.12235144533037534,
+          "sharpe_rf0": 1.1132780469742296,
+          "sortino_mar0": 1.8733460010565381,
+          "sharpe_rf_proxy": 0.9434004275117311,
+          "sortino_rf_proxy": 1.5306039462824084,
+          "total_turnover": 2.2126277292317416
+        },
+        "30": {
+          "cagr": 0.1362169260745727,
+          "mdd": -0.17546794864861726,
+          "volatility": 0.12229956474684255,
+          "sharpe_rf0": 1.1107766527136322,
+          "sortino_mar0": 1.8673735198757542,
+          "sharpe_rf_proxy": 0.940824870110496,
+          "sortino_rf_proxy": 1.5249804184015587,
+          "total_turnover": 2.2126277292317416
+        }
+      }
+    },
+    "lb120_risk_parity": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2014-04",
+      "oos_end": "2026-09",
+      "lookback": 120,
+      "rebalance": 12,
+      "metrics": {
+        "cagr": 0.09568575154399728,
+        "mdd": -0.1386319222410055,
+        "volatility": 0.09120808066901963,
+        "sharpe_rf0": 1.051085892632667,
+        "sortino_mar0": 1.7681322783593496,
+        "sharpe_rf_proxy": 0.8217274380381335,
+        "sortino_rf_proxy": 1.3107163374132718,
+        "total_turnover": 1.1089693116055306
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.09578297150421111,
+          "mdd": -0.1386319222410054,
+          "volatility": 0.09121091793996473,
+          "sharpe_rf0": 1.052035937865446,
+          "sortino_mar0": 1.770125642279098,
+          "sharpe_rf_proxy": 0.8226820334553568,
+          "sortino_rf_proxy": 1.3125341105993997,
+          "total_turnover": 1.1089693116055306
+        },
+        "10": {
+          "cagr": 0.09568575154399728,
+          "mdd": -0.1386319222410055,
+          "volatility": 0.09120808066901963,
+          "sharpe_rf0": 1.051085892632667,
+          "sortino_mar0": 1.7681322783593496,
+          "sharpe_rf_proxy": 0.8217274380381335,
+          "sortino_rf_proxy": 1.3107163374132718,
+          "total_turnover": 1.1089693116055306
+        },
+        "30": {
+          "cagr": 0.09549128289376951,
+          "mdd": -0.1386319222410054,
+          "volatility": 0.09120294732975893,
+          "sharpe_rf0": 1.0491793989164844,
+          "sortino_mar0": 1.7641420273030926,
+          "sharpe_rf_proxy": 0.8198131788971897,
+          "sortino_rf_proxy": 1.3070789931692364,
+          "total_turnover": 1.1089693116055306
+        }
+      }
+    },
+    "rebalance3_equal": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 3,
+      "metrics": {
+        "cagr": 0.09071628021365497,
+        "mdd": -0.13424796485566004,
+        "volatility": 0.08684084431439594,
+        "sharpe_rf0": 1.0466427127898197,
+        "sortino_mar0": 1.8448274808191256,
+        "sharpe_rf_proxy": 0.7777040916970832,
+        "sortino_rf_proxy": 1.286251073117831,
+        "total_turnover": 2.5641824873827117
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.09087611380539262,
+          "mdd": -0.13418744808872962,
+          "volatility": 0.08684467310159366,
+          "sharpe_rf0": 1.0482989935870097,
+          "sortino_mar0": 1.84859090687279,
+          "sharpe_rf_proxy": 0.7793726527669814,
+          "sortino_rf_proxy": 1.2895975046401176,
+          "total_turnover": 2.5641824873827117
+        },
+        "10": {
+          "cagr": 0.09071628021365497,
+          "mdd": -0.13424796485566004,
+          "volatility": 0.08684084431439594,
+          "sharpe_rf0": 1.0466427127898197,
+          "sortino_mar0": 1.8448274808191256,
+          "sharpe_rf_proxy": 0.7777040916970832,
+          "sortino_rf_proxy": 1.286251073117831,
+          "total_turnover": 2.5641824873827117
+        },
+        "30": {
+          "cagr": 0.09039665333824098,
+          "mdd": -0.13436899838952032,
+          "volatility": 0.08683344899214925,
+          "sharpe_rf0": 1.0433265619696526,
+          "sortino_mar0": 1.8373035905965263,
+          "sharpe_rf_proxy": 0.7743641770687983,
+          "sortino_rf_proxy": 1.2795619934159128,
+          "total_turnover": 2.5641824873827117
+        }
+      }
+    },
+    "rebalance3_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 3,
+      "metrics": {
+        "cagr": 0.08272720445217652,
+        "mdd": -0.15187048438141082,
+        "volatility": 0.08318968120097926,
+        "sharpe_rf0": 0.9999457797342268,
+        "sortino_mar0": 1.724508589952935,
+        "sharpe_rf_proxy": 0.7191491465661698,
+        "sortino_rf_proxy": 1.1612211694439483,
+        "total_turnover": 3.5226756335642744
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.0829451864106534,
+          "mdd": -0.1518626250596975,
+          "volatility": 0.08319706593909348,
+          "sharpe_rf0": 1.0022993221079726,
+          "sortino_mar0": 1.7296386732703974,
+          "sharpe_rf_proxy": 0.7215243706887863,
+          "sortino_rf_proxy": 1.1657615303707574,
+          "total_turnover": 3.5226756335642744
+        },
+        "10": {
+          "cagr": 0.08272720445217652,
+          "mdd": -0.15187048438141082,
+          "volatility": 0.08318968120097926,
+          "sharpe_rf0": 0.9999457797342268,
+          "sortino_mar0": 1.724508589952935,
+          "sharpe_rf_proxy": 0.7191491465661698,
+          "sortino_rf_proxy": 1.1612211694439483,
+          "total_turnover": 3.5226756335642744
+        },
+        "30": {
+          "cagr": 0.08229130236252091,
+          "mdd": -0.1518862030248379,
+          "volatility": 0.08317558312040384,
+          "sharpe_rf0": 0.995229407637387,
+          "sortino_mar0": 1.7142533781114577,
+          "sharpe_rf_proxy": 0.7143915637117179,
+          "sortino_rf_proxy": 1.1521472000723405,
+          "total_turnover": 3.5226756335642744
+        }
+      }
+    },
+    "rebalance3_shrink_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 3,
+      "metrics": {
+        "cagr": 0.08269494580231873,
+        "mdd": -0.14898865432459518,
+        "volatility": 0.08300043239393444,
+        "sharpe_rf0": 1.0016643346885314,
+        "sortino_mar0": 1.7336552329708297,
+        "sharpe_rf_proxy": 0.7202492055565262,
+        "sortino_rf_proxy": 1.1669324066936309,
+        "total_turnover": 3.265008949254461
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.08289697558619125,
+          "mdd": -0.14895597827564877,
+          "volatility": 0.08300540455744713,
+          "sharpe_rf0": 1.0038712026333496,
+          "sortino_mar0": 1.7385096652940997,
+          "sharpe_rf_proxy": 0.7224690096408635,
+          "sortino_rf_proxy": 1.171203265931963,
+          "total_turnover": 3.265008949254461
+        },
+        "10": {
+          "cagr": 0.08269494580231873,
+          "mdd": -0.14898865432459518,
+          "volatility": 0.08300043239393444,
+          "sharpe_rf0": 1.0016643346885314,
+          "sortino_mar0": 1.7336552329708297,
+          "sharpe_rf_proxy": 0.7202492055565262,
+          "sortino_rf_proxy": 1.1669324066936309,
+          "total_turnover": 3.265008949254461
+        },
+        "30": {
+          "cagr": 0.08229093666281062,
+          "mdd": -0.14905400642248723,
+          "volatility": 0.08299109836983859,
+          "sharpe_rf0": 0.9972424718741437,
+          "sortino_mar0": 1.7239528769913832,
+          "sharpe_rf_proxy": 0.7158034275238083,
+          "sortino_rf_proxy": 1.1583978828515207,
+          "total_turnover": 3.265008949254461
+        }
+      }
+    },
+    "rebalance3_max_sharpe": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 3,
+      "metrics": {
+        "cagr": 0.09875307579858772,
+        "mdd": -0.20959404898210132,
+        "volatility": 0.11843656897477042,
+        "sharpe_rf0": 0.8569419099278646,
+        "sortino_mar0": 1.4638323825112007,
+        "sharpe_rf_proxy": 0.659125191558419,
+        "sortino_rf_proxy": 1.073408666406355,
+        "total_turnover": 10.044784740095798
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.09938403892071945,
+          "mdd": -0.20959404898210132,
+          "volatility": 0.1184513909070499,
+          "sharpe_rf0": 0.8617326571453224,
+          "sortino_mar0": 1.473442808748717,
+          "sharpe_rf_proxy": 0.6639373767121368,
+          "sortino_rf_proxy": 1.0823097227125307,
+          "total_turnover": 10.044784740095798
+        },
+        "10": {
+          "cagr": 0.09875307579858772,
+          "mdd": -0.20959404898210132,
+          "volatility": 0.11843656897477042,
+          "sharpe_rf0": 0.8569419099278646,
+          "sortino_mar0": 1.4638323825112007,
+          "sharpe_rf_proxy": 0.659125191558419,
+          "sortino_rf_proxy": 1.073408666406355,
+          "total_turnover": 10.044784740095798
+        },
+        "30": {
+          "cagr": 0.0974915682203521,
+          "mdd": -0.20959404898210132,
+          "volatility": 0.1184114813809129,
+          "sharpe_rf0": 0.8473242124814703,
+          "sortino_mar0": 1.4446028730466582,
+          "sharpe_rf_proxy": 0.6494721673216279,
+          "sortino_rf_proxy": 1.055614495058469,
+          "total_turnover": 10.044784740095798
+        }
+      }
+    },
+    "rebalance3_risk_parity": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 3,
+      "metrics": {
+        "cagr": 0.08639993036239146,
+        "mdd": -0.14086691797291517,
+        "volatility": 0.08386819788161735,
+        "sharpe_rf0": 1.0331462439478711,
+        "sortino_mar0": 1.8033996820590592,
+        "sharpe_rf_proxy": 0.7546651465904869,
+        "sortino_rf_proxy": 1.234492744446485,
+        "total_turnover": 2.777563273416573
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.08657238175114679,
+          "mdd": -0.1408120149615777,
+          "volatility": 0.08387303493058587,
+          "sharpe_rf0": 1.0349961119954592,
+          "sortino_mar0": 1.80757380724242,
+          "sharpe_rf_proxy": 0.756528822021547,
+          "sortino_rf_proxy": 1.238174190714724,
+          "total_turnover": 2.777563273416573
+        },
+        "10": {
+          "cagr": 0.08639993036239146,
+          "mdd": -0.14086691797291517,
+          "volatility": 0.08386819788161735,
+          "sharpe_rf0": 1.0331462439478711,
+          "sortino_mar0": 1.8033996820590592,
+          "sharpe_rf_proxy": 0.7546651465904869,
+          "sortino_rf_proxy": 1.234492744446485,
+          "total_turnover": 2.777563273416573
+        },
+        "30": {
+          "cagr": 0.08605507017811376,
+          "mdd": -0.1409767239955898,
+          "volatility": 0.08385889442030611,
+          "sharpe_rf0": 1.0294413177294863,
+          "sortino_mar0": 1.7950567241520072,
+          "sharpe_rf_proxy": 0.7509337749926835,
+          "sortino_rf_proxy": 1.2271359324292554,
+          "total_turnover": 2.777563273416573
+        }
+      }
+    },
+    "rebalance6_equal": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 6,
+      "metrics": {
+        "cagr": 0.09147193792550401,
+        "mdd": -0.13205767446005567,
+        "volatility": 0.08701374819127777,
+        "sharpe_rf0": 1.0527535601199653,
+        "sortino_mar0": 1.8534152610141164,
+        "sharpe_rf_proxy": 0.784392023643109,
+        "sortino_rf_proxy": 1.296127826310767,
+        "total_turnover": 1.9807794593947015
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.09159549118177113,
+          "mdd": -0.13205767446005579,
+          "volatility": 0.0870097682347302,
+          "sharpe_rf0": 1.0541078331341982,
+          "sortino_mar0": 1.856379912079165,
+          "sharpe_rf_proxy": 0.78573498083991,
+          "sortino_rf_proxy": 1.2987521338081154,
+          "total_turnover": 1.9807794593947015
+        },
+        "10": {
+          "cagr": 0.09147193792550401,
+          "mdd": -0.13205767446005567,
+          "volatility": 0.08701374819127777,
+          "sharpe_rf0": 1.0527535601199653,
+          "sortino_mar0": 1.8534152610141164,
+          "sharpe_rf_proxy": 0.784392023643109,
+          "sortino_rf_proxy": 1.296127826310767,
+          "total_turnover": 1.9807794593947015
+        },
+        "30": {
+          "cagr": 0.09122484099248851,
+          "mdd": -0.13205767446005556,
+          "volatility": 0.0870220138627255,
+          "sharpe_rf0": 1.0500416963063295,
+          "sortino_mar0": 1.8474807999162834,
+          "sharpe_rf_proxy": 0.7817037273610339,
+          "sortino_rf_proxy": 1.2908776954458916,
+          "total_turnover": 1.9807794593947015
+        }
+      }
+    },
+    "rebalance6_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 6,
+      "metrics": {
+        "cagr": 0.08407992061562597,
+        "mdd": -0.15158026681749703,
+        "volatility": 0.08327188915323336,
+        "sharpe_rf0": 1.0141361702318459,
+        "sortino_mar0": 1.7509489048660518,
+        "sharpe_rf_proxy": 0.7335189365756087,
+        "sortino_rf_proxy": 1.1860896862603383,
+        "total_turnover": 2.913300299452418
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.08426041988384703,
+          "mdd": -0.15158026681749714,
+          "volatility": 0.08326929533982083,
+          "sharpe_rf0": 1.0161772832200613,
+          "sortino_mar0": 1.755474186941706,
+          "sharpe_rf_proxy": 0.7355479533198996,
+          "sortino_rf_proxy": 1.1900206779537184,
+          "total_turnover": 2.913300299452418
+        },
+        "10": {
+          "cagr": 0.08407992061562597,
+          "mdd": -0.15158026681749703,
+          "volatility": 0.08327188915323336,
+          "sharpe_rf0": 1.0141361702318459,
+          "sortino_mar0": 1.7509489048660518,
+          "sharpe_rf_proxy": 0.7335189365756087,
+          "sortino_rf_proxy": 1.1860896862603383,
+          "total_turnover": 2.913300299452418
+        },
+        "30": {
+          "cagr": 0.08371893544833942,
+          "mdd": -0.15158026681749714,
+          "volatility": 0.08327785448463773,
+          "sharpe_rf0": 1.0100448931339032,
+          "sortino_mar0": 1.7418973632533863,
+          "sharpe_rf_proxy": 0.7294543883360778,
+          "sortino_rf_proxy": 1.1782306596115526,
+          "total_turnover": 2.913300299452418
+        }
+      }
+    },
+    "rebalance6_shrink_minvar": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 6,
+      "metrics": {
+        "cagr": 0.08385398220445284,
+        "mdd": -0.14778605032343928,
+        "volatility": 0.0830673858643137,
+        "sharpe_rf0": 1.0138900411794387,
+        "sortino_mar0": 1.756832411760209,
+        "sharpe_rf_proxy": 0.7326039019763246,
+        "sortino_rf_proxy": 1.188601326634207,
+        "total_turnover": 2.7626653637305854
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.08402511207738939,
+          "mdd": -0.14778605032343917,
+          "volatility": 0.08306392642381376,
+          "sharpe_rf0": 1.0158415531410017,
+          "sortino_mar0": 1.7611738893086772,
+          "sharpe_rf_proxy": 0.7345398544626914,
+          "sortino_rf_proxy": 1.1923612665298102,
+          "total_turnover": 2.7626653637305854
+        },
+        "10": {
+          "cagr": 0.08385398220445284,
+          "mdd": -0.14778605032343928,
+          "volatility": 0.0830673858643137,
+          "sharpe_rf0": 1.0138900411794387,
+          "sortino_mar0": 1.756832411760209,
+          "sharpe_rf_proxy": 0.7326039019763246,
+          "sortino_rf_proxy": 1.188601326634207,
+          "total_turnover": 2.7626653637305854
+        },
+        "30": {
+          "cagr": 0.08351173131568568,
+          "mdd": -0.14778605032343917,
+          "volatility": 0.08307503847921816,
+          "sharpe_rf0": 1.0099785844599698,
+          "sortino_mar0": 1.7481478799530292,
+          "sharpe_rf_proxy": 0.7287259577108673,
+          "sortino_rf_proxy": 1.181083536182823,
+          "total_turnover": 2.7626653637305854
+        }
+      }
+    },
+    "rebalance6_max_sharpe": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 6,
+      "metrics": {
+        "cagr": 0.10023960024923317,
+        "mdd": -0.20959404898210132,
+        "volatility": 0.11977509737988276,
+        "sharpe_rf0": 0.8600685635065044,
+        "sortino_mar0": 1.4678836899340815,
+        "sharpe_rf_proxy": 0.6644322311509772,
+        "sortino_rf_proxy": 1.0823452980405066,
+        "total_turnover": 8.053401858546815
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.10074614459395814,
+          "mdd": -0.20959404898210132,
+          "volatility": 0.11977049403690984,
+          "sharpe_rf0": 0.863968495544722,
+          "sortino_mar0": 1.4760343765358725,
+          "sharpe_rf_proxy": 0.6683193119549035,
+          "sortino_rf_proxy": 1.08976683070122,
+          "total_turnover": 8.053401858546815
+        },
+        "10": {
+          "cagr": 0.10023960024923317,
+          "mdd": -0.20959404898210132,
+          "volatility": 0.11977509737988276,
+          "sharpe_rf0": 0.8600685635065044,
+          "sortino_mar0": 1.4678836899340815,
+          "sharpe_rf_proxy": 0.6644322311509772,
+          "sortino_rf_proxy": 1.0823452980405066,
+          "total_turnover": 8.053401858546815
+        },
+        "30": {
+          "cagr": 0.09922658867189349,
+          "mdd": -0.20959404898210132,
+          "volatility": 0.1197886362810913,
+          "sharpe_rf0": 0.8522387759312271,
+          "sortino_mar0": 1.4515587136695927,
+          "sharpe_rf_proxy": 0.6566351031239627,
+          "sortino_rf_proxy": 1.0674981711619096,
+          "total_turnover": 8.053401858546815
+        }
+      }
+    },
+    "rebalance6_risk_parity": {
+      "assets": [
+        "SPY",
+        "IEF"
+      ],
+      "oos_start": "2009-04",
+      "oos_end": "2026-09",
+      "lookback": 60,
+      "rebalance": 6,
+      "metrics": {
+        "cagr": 0.08730877386257552,
+        "mdd": -0.138864909051589,
+        "volatility": 0.08401876586350623,
+        "sharpe_rf0": 1.0414653043845374,
+        "sortino_mar0": 1.8184467392306625,
+        "sharpe_rf_proxy": 0.7634535299508615,
+        "sortino_rf_proxy": 1.2492333260997612,
+        "total_turnover": 2.264809651119569
+      },
+      "cost_sensitivity": {
+        "0": {
+          "cagr": 0.0874495073884074,
+          "mdd": -0.138864909051589,
+          "volatility": 0.08401324791164443,
+          "sharpe_rf0": 1.043078984724907,
+          "sortino_mar0": 1.8220259605481206,
+          "sharpe_rf_proxy": 0.7650474571309581,
+          "sortino_rf_proxy": 1.2523492550193382,
+          "total_turnover": 2.264809651119569
+        },
+        "10": {
+          "cagr": 0.08730877386257552,
+          "mdd": -0.138864909051589,
+          "volatility": 0.08401876586350623,
+          "sharpe_rf0": 1.0414653043845374,
+          "sortino_mar0": 1.8184467392306625,
+          "sharpe_rf_proxy": 0.7634535299508615,
+          "sortino_rf_proxy": 1.2492333260997612,
+          "total_turnover": 2.264809651119569
+        },
+        "30": {
+          "cagr": 0.08702731690135179,
+          "mdd": -0.13886490905158888,
+          "volatility": 0.08403024003601532,
+          "sharpe_rf0": 1.038233164447904,
+          "sortino_mar0": 1.8112845269656281,
+          "sharpe_rf_proxy": 0.7602623006942406,
+          "sortino_rf_proxy": 1.2430017176932566,
+          "total_turnover": 2.264809651119569
+        }
+      }
+    }
+  },
+  "bootstrap_sharpe_difference": {
+    "minvar": {
+      "p025": -0.1883558974088005,
+      "median": -0.0395875830669844,
+      "p975": 0.10863678177325134
+    },
+    "shrink_minvar": {
+      "p025": -0.1783146602742952,
+      "median": -0.04026091767424286,
+      "p975": 0.09903510424192777
+    },
+    "max_sharpe": {
+      "p025": -0.36802924174823226,
+      "median": -0.13983867561299745,
+      "p975": 0.10544310019443943
+    },
+    "risk_parity": {
+      "p025": -0.08346144450318783,
+      "median": -0.014757424280289394,
+      "p975": 0.05396336523062933
+    }
+  }
+}

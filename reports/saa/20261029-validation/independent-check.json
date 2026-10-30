@@ -1,0 +1,44 @@
+{
+  "status": "NUMERICAL_REFERENCE_PASS",
+  "source_snapshot_manifest_sha256": "72832989a68af3bb3277f80858fe537798531b10249f77c3a301461757bff389",
+  "numpy_version": "2.3.5",
+  "pandas_version": "2.2.3",
+  "metric_comparisons": 120,
+  "max_panel_error": 9.974659986866641e-17,
+  "max_path_error": 2.220446049250313e-16,
+  "max_metric_error": 8.881784197001252e-16,
+  "dividend_adjustment_checks": {
+    "SPY": {
+      "event_count": 92,
+      "factor_anomalies": [],
+      "scope": "same-vendor internal consistency; not independent source verification"
+    },
+    "IEF": {
+      "event_count": 272,
+      "factor_anomalies": [],
+      "scope": "same-vendor internal consistency; not independent source verification"
+    },
+    "069500.KS": {
+      "event_count": 51,
+      "factor_anomalies": [
+        {
+          "date": "2023-07-28",
+          "factor_difference": -0.0021966471314180946,
+          "dividend": 75.0
+        },
+        {
+          "date": "2024-10-31",
+          "factor_difference": 0.003440935792057509,
+          "dividend": 0
+        }
+      ],
+      "scope": "same-vendor internal consistency; not independent source verification"
+    },
+    "148070.KS": {
+      "event_count": 12,
+      "factor_anomalies": [],
+      "scope": "same-vendor internal consistency; not independent source verification"
+    }
+  },
+  "source_verification": "PARTIAL; annual issuer spot checks only, full historical official reconciliation unresolved"
+}

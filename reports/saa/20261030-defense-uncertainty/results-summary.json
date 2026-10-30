@@ -1,0 +1,260 @@
+{
+  "status": "EXPLORATORY_PROXY_PATH_UNCERTAINTY",
+  "oos_start": "2017-01",
+  "oos_end": "2026-09",
+  "months": 117,
+  "method": "paired circular block bootstrap of realized net returns and RF; percentile intervals",
+  "blocks": [
+    3,
+    6,
+    12
+  ],
+  "replicates_per_block": 2000,
+  "seed": 20261030,
+  "block_seed_rule": "seed + block_length",
+  "numpy_version": "2.3.5",
+  "input_hashes": {
+    "monthly_returns.csv": "67473443e3d1d5779f682a6e302c1d5f82cb5ac950ed4c0ccd69ef6b84a60f87",
+    "rates.csv": "e32b26fcfe3944f02d4182589a644e8ecc3388f129997971d0cf997f479d02c8"
+  },
+  "qa_sha256": "bf9a147e5ce201ec98cbbd80ef77e2aac83a861e2553330f0b1d705a4ebe4d3e",
+  "baseline_sha256": "f614170295ce4f8338367d714b344d863652f2b89bf9da487508a21252c68994",
+  "baseline_check": {
+    "metric_count": 24,
+    "max_difference": 6.661338147750939e-16
+  },
+  "results": {
+    "3": {
+      "us_bond - kr_bond": {
+        "sharpe_rf_proxy": {
+          "observed": 0.06084930356452978,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.16538830206887692,
+            0.34558442698437575
+          ],
+          "positive_fraction": 0.7035,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        },
+        "sortino_rf_proxy": {
+          "observed": 0.13102185718735027,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.3421678265039414,
+            1.0823616083694119
+          ],
+          "positive_fraction": 0.7025,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        }
+      },
+      "mixed_bonds - kr_bond": {
+        "sharpe_rf_proxy": {
+          "observed": 0.038216005141123555,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.07669369594298626,
+            0.17849751495699748
+          ],
+          "positive_fraction": 0.747,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        },
+        "sortino_rf_proxy": {
+          "observed": 0.08512610082798466,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.1544868133436842,
+            0.5167780758822357
+          ],
+          "positive_fraction": 0.755,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        }
+      },
+      "us_bond - mixed_bonds": {
+        "sharpe_rf_proxy": {
+          "observed": 0.022633298423406223,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.09085882285650464,
+            0.16888364341641895
+          ],
+          "positive_fraction": 0.6545,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        },
+        "sortino_rf_proxy": {
+          "observed": 0.0458957563593656,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.18600188677095547,
+            0.5617925425294465
+          ],
+          "positive_fraction": 0.651,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        }
+      }
+    },
+    "6": {
+      "us_bond - kr_bond": {
+        "sharpe_rf_proxy": {
+          "observed": 0.06084930356452978,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.15993607737292773,
+            0.3090864602929528
+          ],
+          "positive_fraction": 0.7105,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        },
+        "sortino_rf_proxy": {
+          "observed": 0.13102185718735027,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.31485169559332316,
+            1.0187214343422135
+          ],
+          "positive_fraction": 0.7025,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        }
+      },
+      "mixed_bonds - kr_bond": {
+        "sharpe_rf_proxy": {
+          "observed": 0.038216005141123555,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.07410158457631753,
+            0.16030572022189704
+          ],
+          "positive_fraction": 0.7535,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        },
+        "sortino_rf_proxy": {
+          "observed": 0.08512610082798466,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.1517562734284246,
+            0.4984770160249289
+          ],
+          "positive_fraction": 0.745,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        }
+      },
+      "us_bond - mixed_bonds": {
+        "sharpe_rf_proxy": {
+          "observed": 0.022633298423406223,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.08596860086560268,
+            0.14793194084906355
+          ],
+          "positive_fraction": 0.6615,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        },
+        "sortino_rf_proxy": {
+          "observed": 0.0458957563593656,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.17989334601282272,
+            0.5266988365059876
+          ],
+          "positive_fraction": 0.65,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        }
+      }
+    },
+    "12": {
+      "us_bond - kr_bond": {
+        "sharpe_rf_proxy": {
+          "observed": 0.06084930356452978,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.11627972846036197,
+            0.2987669115004867
+          ],
+          "positive_fraction": 0.748,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        },
+        "sortino_rf_proxy": {
+          "observed": 0.13102185718735027,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.2557225553477805,
+            0.8827868793026159
+          ],
+          "positive_fraction": 0.7395,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        }
+      },
+      "mixed_bonds - kr_bond": {
+        "sharpe_rf_proxy": {
+          "observed": 0.038216005141123555,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.050659424698236796,
+            0.15543765816686433
+          ],
+          "positive_fraction": 0.7935,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        },
+        "sortino_rf_proxy": {
+          "observed": 0.08512610082798466,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.11346299887947127,
+            0.44090561927801564
+          ],
+          "positive_fraction": 0.796,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        }
+      },
+      "us_bond - mixed_bonds": {
+        "sharpe_rf_proxy": {
+          "observed": 0.022633298423406223,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.06573282192516545,
+            0.1447227896909648
+          ],
+          "positive_fraction": 0.693,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        },
+        "sortino_rf_proxy": {
+          "observed": 0.0458957563593656,
+          "valid_replicates": 2000,
+          "invalid_replicates": 0,
+          "percentile_95": [
+            -0.13981137366957017,
+            0.45907513654974247
+          ],
+          "positive_fraction": 0.6695,
+          "status": "EXPLORATORY_POINTWISE_INTERVAL"
+        }
+      }
+    }
+  },
+  "limitations": [
+    "resampled observations are synthetic statistical replicates, not collected market data",
+    "conditional on realized annual-rebalance net paths; strategy not rerun on resampled assets",
+    "same indices across portfolios and RF preserve contemporaneous pairing",
+    "circular wrap joins sample end to start; stationarity/dependence approximation",
+    "3/6/12 blocks not fitted or chosen to maximize significance",
+    "pointwise exploratory intervals; no multiple-testing adjustment, p-value or posterior probability",
+    "positive_fraction is a replicate share, not probability of future outperformance",
+    "latest-vintage proxies; Korean official long TR unresolved; no untouched holdout"
+  ]
+}

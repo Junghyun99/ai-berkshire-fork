@@ -1,0 +1,5 @@
+# Optional independent research validation; core tools remain stdlib-only.
+numpy==2.3.5
+pandas==2.2.3
+xlrd==2.0.1
+# Issuer PDF extraction also needs the system pdftotext executable (Poppler).

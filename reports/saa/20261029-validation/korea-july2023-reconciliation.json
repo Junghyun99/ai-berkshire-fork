@@ -1,0 +1,14 @@
+{
+  "official_source": "https://www.samsungfund.com/excel_standar.do?fId=2ETF01&gijunYMD=20261027",
+  "official_month_end_close": 34635.0,
+  "previous_month_end_close": 33960.0,
+  "exdate": "2023-07-28",
+  "dividend": 75,
+  "exdate_source": "Yahoo events; amount and record date confirmed by issuer July factsheet",
+  "computed_month_return_exdate_reinvestment": 0.022094733568084113,
+  "original_month_return": 0.015312046430888016,
+  "difference_percentage_points": 0.6782687137196097,
+  "classification": "spot reconciliation, not full replacement panel",
+  "official_nav_tr_percent": 2.25,
+  "nav_source": "https://m.samsungfund.com/sheet/20230808/2ETF01_20230731.pdf"
+}

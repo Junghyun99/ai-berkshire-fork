@@ -1,0 +1,46 @@
+{
+  "main": "85403609398c220cf1c2a013020e5b97376d470d",
+  "research_head": "3d6e741c48ee87b2b9edbb4c91e3bce025e3022e",
+  "tested_tree": "8636ce1651a112b75c5dd6f037c80b7e06f9050a",
+  "unit_tests": {
+    "count": 180,
+    "seconds": 0.184,
+    "resource_warnings": 0,
+    "command": "python3 -W always::ResourceWarning -m unittest discover -s tools/tests -v"
+  },
+  "source_gate": {
+    "expected_block": "069500.KS,148070.KS",
+    "no_performance_output": true
+  },
+  "reproductions": [
+    {
+      "expected": "reports/saa/20261029-korea-rebuild/results-summary.json",
+      "expected_sha256": "39a8da82e4264f2f9a70a0bc7b9d1c1520d653db6b9ae501de4d520fb3f044af",
+      "reproduced_sha256": "39a8da82e4264f2f9a70a0bc7b9d1c1520d653db6b9ae501de4d520fb3f044af",
+      "json_exact_match": true
+    },
+    {
+      "expected": "reports/saa/20261030-matched-universes/results-summary.json",
+      "expected_sha256": "bdacb9ba7c3ddbe7f1cb09237530a5f2a652703922ac7babf09cd388d038571f",
+      "reproduced_sha256": "bdacb9ba7c3ddbe7f1cb09237530a5f2a652703922ac7babf09cd388d038571f",
+      "json_exact_match": true
+    },
+    {
+      "expected": "reports/saa/20261030-defensive-mix/results-summary.json",
+      "expected_sha256": "f614170295ce4f8338367d714b344d863652f2b89bf9da487508a21252c68994",
+      "reproduced_sha256": "f614170295ce4f8338367d714b344d863652f2b89bf9da487508a21252c68994",
+      "json_exact_match": true
+    },
+    {
+      "expected": "reports/saa/20261030-defense-uncertainty/results-summary.json",
+      "expected_sha256": "ce784f0b3115abb5962affc0a136d518862bd5b18c442d15eed765695905ead6",
+      "reproduced_sha256": "ce784f0b3115abb5962affc0a136d518862bd5b18c442d15eed765695905ead6",
+      "json_exact_match": true
+    }
+  ],
+  "main_file_close_fixes_preserved": true,
+  "policy_and_skills_unchanged": true,
+  "check_runs_at_research_head": 0,
+  "ci": "no .github workflows in integrated tree; no remote CI pass claimed",
+  "tested_commit": "fdff24dc873d9a6f4f5ca2d42c24b6abd8b84d36"
+}

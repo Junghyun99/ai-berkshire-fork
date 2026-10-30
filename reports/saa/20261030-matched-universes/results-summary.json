@@ -1,0 +1,343 @@
+{
+  "status": "PROVISIONAL_MATCHED_PERIOD_RESEARCH_PROXY",
+  "input_start": "2011-11",
+  "input_end": "2026-09",
+  "input_months": 179,
+  "oos_start": "2017-01",
+  "oos_end": "2026-09",
+  "oos_months": 117,
+  "settings": {
+    "lookback": 60,
+    "signal_lag": 2,
+    "rebalance": 12,
+    "cost_bps": 10,
+    "seed": 17,
+    "random_candidates": 2500
+  },
+  "input_hashes": {
+    "monthly_returns.csv": "67473443e3d1d5779f682a6e302c1d5f82cb5ac950ed4c0ccd69ef6b84a60f87",
+    "rates.csv": "e32b26fcfe3944f02d4182589a644e8ecc3388f129997971d0cf997f479d02c8"
+  },
+  "qa_sha256": "bf9a147e5ce201ec98cbbd80ef77e2aac83a861e2553330f0b1d705a4ebe4d3e",
+  "reference_check": {
+    "metric_count": 120,
+    "max_metric_difference": 1.3322676295501878e-15,
+    "monthly_paths_turnover_targets_match": true
+  },
+  "universes": {
+    "five_asset": {
+      "status": "RESEARCH_ONLY",
+      "assets": [
+        "KR_EQUITY",
+        "US_SP500",
+        "US_NASDAQ100",
+        "KR_TREASURY10Y",
+        "US_TREASURY7_10Y"
+      ],
+      "oos_start": "2017-01",
+      "oos_end": "2026-09",
+      "signal_lag_months": 2,
+      "lookback_months": 60,
+      "rebalance_months": 12,
+      "round_trip_cost_bps_per_unit_turnover": 10,
+      "candidate_grid_count": 2596,
+      "strategies": {
+        "equal": {
+          "cagr": 0.13287362736478636,
+          "mdd": -0.1700032610629585,
+          "volatility": 0.11732351095536424,
+          "sharpe_rf0": 1.1267423953036932,
+          "sortino_mar0": 1.974925024216743,
+          "total_turnover": 1.1645194349195225,
+          "months": 117,
+          "sharpe_rf_proxy": 0.9467551142861659,
+          "sortino_rf_proxy": 1.596190102684198
+        },
+        "minvar": {
+          "cagr": 0.022727244107139333,
+          "mdd": -0.14278790325653967,
+          "volatility": 0.058146267051209,
+          "sharpe_rf0": 0.41561959988702524,
+          "sortino_mar0": 0.6461997277183006,
+          "total_turnover": 1.9524497148526132,
+          "months": 117,
+          "sharpe_rf_proxy": 0.048960409112295385,
+          "sortino_rf_proxy": 0.06990931006300023
+        },
+        "shrink_minvar": {
+          "cagr": 0.04443641547710597,
+          "mdd": -0.13725278451565004,
+          "volatility": 0.05996162332583768,
+          "sharpe_rf0": 0.7561134164711222,
+          "sortino_mar0": 1.2338764398904554,
+          "total_turnover": 2.0083981518735516,
+          "months": 117,
+          "sharpe_rf_proxy": 0.40256384174620685,
+          "sortino_rf_proxy": 0.6057161608206849
+        },
+        "max_sharpe": {
+          "cagr": 0.10225859599200815,
+          "mdd": -0.2473451356208205,
+          "volatility": 0.11721459990487118,
+          "sharpe_rf0": 0.8922335197448206,
+          "sortino_mar0": 1.4645780332023746,
+          "total_turnover": 7.974985795226603,
+          "months": 117,
+          "sharpe_rf_proxy": 0.7124269452414707,
+          "sortino_rf_proxy": 1.1199366063885192
+        },
+        "risk_parity": {
+          "cagr": 0.07440602064003432,
+          "mdd": -0.13096540215071095,
+          "volatility": 0.07709273567156757,
+          "sharpe_rf0": 0.9719313252244716,
+          "sortino_mar0": 1.6473962830712396,
+          "total_turnover": 1.6989865846506629,
+          "months": 117,
+          "sharpe_rf_proxy": 0.6977814330661978,
+          "sortino_rf_proxy": 1.1120226310950923
+        }
+      },
+      "limitations": [
+        "historical return mean is not forward CMA",
+        "candidate-grid approximate solutions, not exact global optimum",
+        "RF proxy metrics optional; legacy RF=0/MAR=0 metrics retained; no taxes or account restrictions",
+        "signal lag is an assumption, not a point-in-time vintage guarantee",
+        "no leverage/ETF daily-reset or cashflow simulation"
+      ]
+    },
+    "without_kr_bonds": {
+      "status": "RESEARCH_ONLY",
+      "assets": [
+        "KR_EQUITY",
+        "US_SP500",
+        "US_NASDAQ100",
+        "US_TREASURY7_10Y"
+      ],
+      "oos_start": "2017-01",
+      "oos_end": "2026-09",
+      "signal_lag_months": 2,
+      "lookback_months": 60,
+      "rebalance_months": 12,
+      "round_trip_cost_bps_per_unit_turnover": 10,
+      "candidate_grid_count": 2559,
+      "strategies": {
+        "equal": {
+          "cagr": 0.16301216555713682,
+          "mdd": -0.18948940507922496,
+          "volatility": 0.1400692941825557,
+          "sharpe_rf0": 1.1537916157248478,
+          "sortino_mar0": 2.056343505648863,
+          "total_turnover": 1.158615538114307,
+          "months": 117,
+          "sharpe_rf_proxy": 1.0029067088361985,
+          "sortino_rf_proxy": 1.7288987932378481
+        },
+        "minvar": {
+          "cagr": 0.06794817621261129,
+          "mdd": -0.16967139829356004,
+          "volatility": 0.0904067700381433,
+          "sharpe_rf0": 0.7742322363120107,
+          "sortino_mar0": 1.2313390375529047,
+          "total_turnover": 1.7151904078887026,
+          "months": 117,
+          "sharpe_rf_proxy": 0.5385041285581821,
+          "sortino_rf_proxy": 0.814815672544578
+        },
+        "shrink_minvar": {
+          "cagr": 0.08452279207178992,
+          "mdd": -0.16221612231992733,
+          "volatility": 0.09223640606331032,
+          "sharpe_rf0": 0.9287219677623632,
+          "sortino_mar0": 1.4803632404868547,
+          "total_turnover": 1.5051761405293476,
+          "months": 117,
+          "sharpe_rf_proxy": 0.6975720645885619,
+          "sortino_rf_proxy": 1.0599964978931655
+        },
+        "max_sharpe": {
+          "cagr": 0.16828355248030702,
+          "mdd": -0.2466419438344425,
+          "volatility": 0.1436450631593461,
+          "sharpe_rf0": 1.1610398311187646,
+          "sortino_mar0": 2.009330765917191,
+          "total_turnover": 6.635135110848124,
+          "months": 117,
+          "sharpe_rf_proxy": 1.0133120494144519,
+          "sortino_rf_proxy": 1.695409300532347
+        },
+        "risk_parity": {
+          "cagr": 0.11345108514335389,
+          "mdd": -0.15989431693553569,
+          "volatility": 0.10633161304117551,
+          "sharpe_rf0": 1.0680165425842745,
+          "sortino_mar0": 1.8037157988342656,
+          "total_turnover": 1.2938634783255456,
+          "months": 117,
+          "sharpe_rf_proxy": 0.8684805316724801,
+          "sortino_rf_proxy": 1.4060582152287504
+        }
+      },
+      "limitations": [
+        "historical return mean is not forward CMA",
+        "candidate-grid approximate solutions, not exact global optimum",
+        "RF proxy metrics optional; legacy RF=0/MAR=0 metrics retained; no taxes or account restrictions",
+        "signal lag is an assumption, not a point-in-time vintage guarantee",
+        "no leverage/ETF daily-reset or cashflow simulation"
+      ]
+    },
+    "without_nasdaq": {
+      "status": "RESEARCH_ONLY",
+      "assets": [
+        "KR_EQUITY",
+        "US_SP500",
+        "KR_TREASURY10Y",
+        "US_TREASURY7_10Y"
+      ],
+      "oos_start": "2017-01",
+      "oos_end": "2026-09",
+      "signal_lag_months": 2,
+      "lookback_months": 60,
+      "rebalance_months": 12,
+      "round_trip_cost_bps_per_unit_turnover": 10,
+      "candidate_grid_count": 2559,
+      "strategies": {
+        "equal": {
+          "cagr": 0.10518690815188969,
+          "mdd": -0.1429495396419328,
+          "volatility": 0.10963477036687408,
+          "sharpe_rf0": 0.9698730853848886,
+          "sortino_mar0": 1.7249659206412569,
+          "total_turnover": 1.0369843379710697,
+          "months": 117,
+          "sharpe_rf_proxy": 0.7769373156507426,
+          "sortino_rf_proxy": 1.3242243310515536
+        },
+        "minvar": {
+          "cagr": 0.029280552021982098,
+          "mdd": -0.1381179276985096,
+          "volatility": 0.05994765687425495,
+          "sharpe_rf0": 0.5117412084045325,
+          "sortino_mar0": 0.7867090367511304,
+          "total_turnover": 1.5664419509424743,
+          "months": 117,
+          "sharpe_rf_proxy": 0.15662370929658467,
+          "sortino_rf_proxy": 0.2226700351167899
+        },
+        "shrink_minvar": {
+          "cagr": 0.031525788871815896,
+          "mdd": -0.12726102004428763,
+          "volatility": 0.05831430049432829,
+          "sharpe_rf0": 0.5618837552301444,
+          "sortino_mar0": 0.8769785391402771,
+          "total_turnover": 1.5729146287278657,
+          "months": 117,
+          "sharpe_rf_proxy": 0.19724943124616143,
+          "sortino_rf_proxy": 0.2836062296903159
+        },
+        "max_sharpe": {
+          "cagr": 0.09104593324684096,
+          "mdd": -0.13249624904385737,
+          "volatility": 0.09381096078357336,
+          "sharpe_rf0": 0.9787157096607882,
+          "sortino_mar0": 1.6467052064755139,
+          "total_turnover": 3.823063979413283,
+          "months": 117,
+          "sharpe_rf_proxy": 0.7551155256409395,
+          "sortino_rf_proxy": 1.1992280772764903
+        },
+        "risk_parity": {
+          "cagr": 0.06622485722866789,
+          "mdd": -0.12630927557867022,
+          "volatility": 0.07514287248613245,
+          "sharpe_rf0": 0.8929607840674266,
+          "sortino_mar0": 1.4678227518882623,
+          "total_turnover": 1.2960285812606998,
+          "months": 117,
+          "sharpe_rf_proxy": 0.6111746913164154,
+          "sortino_rf_proxy": 0.9437889457335568
+        }
+      },
+      "limitations": [
+        "historical return mean is not forward CMA",
+        "candidate-grid approximate solutions, not exact global optimum",
+        "RF proxy metrics optional; legacy RF=0/MAR=0 metrics retained; no taxes or account restrictions",
+        "signal lag is an assumption, not a point-in-time vintage guarantee",
+        "no leverage/ETF daily-reset or cashflow simulation"
+      ]
+    }
+  },
+  "difference_vs_five_asset": {
+    "without_kr_bonds": {
+      "equal": {
+        "cagr": 0.03013853819235046,
+        "mdd": -0.01948614401626647,
+        "sharpe_rf_proxy": 0.0561515945500326,
+        "sortino_rf_proxy": 0.1327086905536501
+      },
+      "minvar": {
+        "cagr": 0.045220932105471956,
+        "mdd": -0.026883495037020366,
+        "sharpe_rf_proxy": 0.4895437194458867,
+        "sortino_rf_proxy": 0.7449063624815777
+      },
+      "shrink_minvar": {
+        "cagr": 0.04008637659468395,
+        "mdd": -0.024963337804277286,
+        "sharpe_rf_proxy": 0.29500822284235506,
+        "sortino_rf_proxy": 0.4542803370724806
+      },
+      "max_sharpe": {
+        "cagr": 0.06602495648829887,
+        "mdd": 0.0007031917863780102,
+        "sharpe_rf_proxy": 0.3008851041729812,
+        "sortino_rf_proxy": 0.5754726941438277
+      },
+      "risk_parity": {
+        "cagr": 0.03904506450331957,
+        "mdd": -0.028928914784824733,
+        "sharpe_rf_proxy": 0.1706990986062823,
+        "sortino_rf_proxy": 0.29403558413365816
+      }
+    },
+    "without_nasdaq": {
+      "equal": {
+        "cagr": -0.02768671921289667,
+        "mdd": 0.02705372142102569,
+        "sharpe_rf_proxy": -0.16981779863542323,
+        "sortino_rf_proxy": -0.27196577163264446
+      },
+      "minvar": {
+        "cagr": 0.006553307914842765,
+        "mdd": 0.0046699755580300595,
+        "sharpe_rf_proxy": 0.1076633001842893,
+        "sortino_rf_proxy": 0.15276072505378968
+      },
+      "shrink_minvar": {
+        "cagr": -0.012910626605290076,
+        "mdd": 0.009991764471362408,
+        "sharpe_rf_proxy": -0.20531441050004542,
+        "sortino_rf_proxy": -0.322109931130369
+      },
+      "max_sharpe": {
+        "cagr": -0.01121266274516719,
+        "mdd": 0.11484888657696313,
+        "sharpe_rf_proxy": 0.04268858039946888,
+        "sortino_rf_proxy": 0.07929147088797106
+      },
+      "risk_parity": {
+        "cagr": -0.008181163411366432,
+        "mdd": 0.004656126572040731,
+        "sharpe_rf_proxy": -0.08660674174978233,
+        "sortino_rf_proxy": -0.1682336853615355
+      }
+    }
+  },
+  "limits": [
+    "latest-vintage proxies; not official TR certification",
+    "secondary Korean bond price proxy remains unverified",
+    "asset removal also changes allocations; not a causal diversification estimate",
+    "shared period selected after prior results; not an untouched holdout",
+    "monthly MDD; initial purchase costs excluded; RF is an estimated cash proxy"
+  ]
+}
