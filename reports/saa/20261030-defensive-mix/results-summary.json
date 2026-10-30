@@ -1,0 +1,1038 @@
+{
+  "status": "PROVISIONAL_RESEARCH_PROXY",
+  "input_hashes": {
+    "monthly_returns.csv": "67473443e3d1d5779f682a6e302c1d5f82cb5ac950ed4c0ccd69ef6b84a60f87",
+    "rates.csv": "e32b26fcfe3944f02d4182589a644e8ecc3388f129997971d0cf997f479d02c8"
+  },
+  "qa_sha256": "bf9a147e5ce201ec98cbbd80ef77e2aac83a861e2553330f0b1d705a4ebe4d3e",
+  "assets": [
+    "KR_EQUITY",
+    "US_SP500",
+    "KR_TREASURY10Y",
+    "US_TREASURY7_10Y"
+  ],
+  "targets": {
+    "kr_bond": [
+      0.3,
+      0.3,
+      0.4,
+      0.0
+    ],
+    "us_bond": [
+      0.3,
+      0.3,
+      0.0,
+      0.4
+    ],
+    "mixed_bonds": [
+      0.3,
+      0.3,
+      0.2,
+      0.2
+    ]
+  },
+  "oos_start": "2017-01",
+  "oos_end": "2026-09",
+  "oos_months": 117,
+  "reference_check": {
+    "metric_count": 360,
+    "max_difference": 1.9984014443252818e-15,
+    "monthly_paths_match": true
+  },
+  "comparisons": [
+    {
+      "scenario": "kr_bond",
+      "rebalance_months": 3,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.11483505175172959,
+        "mdd": -0.15956128478644593,
+        "volatility": 0.12155780235443514,
+        "sharpe_rf0": 0.9577705041826269,
+        "sortino_mar0": 1.7161154911694614,
+        "total_turnover": 1.9429594130155614,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7836755309640328,
+        "sortino_rf_proxy": 1.3502598973457578
+      }
+    },
+    {
+      "scenario": "kr_bond",
+      "rebalance_months": 3,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.11461290233188559,
+        "mdd": -0.15964848929624798,
+        "volatility": 0.12154484683357016,
+        "sharpe_rf0": 0.9562090959624059,
+        "sortino_mar0": 1.7121273285297962,
+        "total_turnover": 1.9429594130155614,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7820926185159828,
+        "sortino_rf_proxy": 1.3466253314541867
+      }
+    },
+    {
+      "scenario": "kr_bond",
+      "rebalance_months": 3,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.11416867881586112,
+        "mdd": -0.15982288190438143,
+        "volatility": 0.12151927083652728,
+        "sharpe_rf0": 0.9530826529396799,
+        "sortino_mar0": 1.704159912027939,
+        "total_turnover": 1.9429594130155614,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7789236258304003,
+        "sortino_rf_proxy": 1.3393646855312986
+      }
+    },
+    {
+      "scenario": "kr_bond",
+      "rebalance_months": 6,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.12008229374808033,
+        "mdd": -0.15929290038160882,
+        "volatility": 0.12561534436407326,
+        "sharpe_rf0": 0.968082416704285,
+        "sortino_mar0": 1.7901935962398634,
+        "total_turnover": 1.6125891376445627,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7996942888582883,
+        "sortino_rf_proxy": 1.4221512555987015
+      }
+    },
+    {
+      "scenario": "kr_bond",
+      "rebalance_months": 6,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.11989704036696347,
+        "mdd": -0.15941060797957052,
+        "volatility": 0.1256280198287875,
+        "sharpe_rf0": 0.9666712575040736,
+        "sortino_mar0": 1.786430211183835,
+        "total_turnover": 1.6125891376445627,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7982970676621907,
+        "sortino_rf_proxy": 1.4188021682334473
+      }
+    },
+    {
+      "scenario": "kr_bond",
+      "rebalance_months": 6,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.1195265410208659,
+        "mdd": -0.15964600027147346,
+        "volatility": 0.12565387842069492,
+        "sharpe_rf0": 0.9638458991071561,
+        "sortino_mar0": 1.7789095882963115,
+        "total_turnover": 1.6125891376445627,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7955002533571959,
+        "sortino_rf_proxy": 1.4121103299786755
+      }
+    },
+    {
+      "scenario": "kr_bond",
+      "rebalance_months": 12,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.11970047723197519,
+        "mdd": -0.15781395810017462,
+        "volatility": 0.1296166664448328,
+        "sharpe_rf0": 0.9397390550359267,
+        "sortino_mar0": 1.6702784510283328,
+        "total_turnover": 1.1348915830573183,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7764433800192219,
+        "sortino_rf_proxy": 1.3318343644035873
+      }
+    },
+    {
+      "scenario": "kr_bond",
+      "rebalance_months": 12,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.11957014241351072,
+        "mdd": -0.15794318495272253,
+        "volatility": 0.12960011100847724,
+        "sharpe_rf0": 0.9389372370536393,
+        "sortino_mar0": 1.6683950513381967,
+        "total_turnover": 1.1348915830573183,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7756192054882832,
+        "sortino_rf_proxy": 1.330059190771176
+      }
+    },
+    {
+      "scenario": "kr_bond",
+      "rebalance_months": 12,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.11930945687178474,
+        "mdd": -0.15820163865781744,
+        "volatility": 0.12956742631160384,
+        "sharpe_rf0": 0.9373299032799327,
+        "sortino_mar0": 1.6646274161491856,
+        "total_turnover": 1.1348915830573183,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7739676702319865,
+        "sortino_rf_proxy": 1.3265085206508416
+      }
+    },
+    {
+      "scenario": "us_bond",
+      "rebalance_months": 3,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.12236655950606701,
+        "mdd": -0.1593483574374066,
+        "volatility": 0.12001746507665807,
+        "sharpe_rf0": 1.0251915276208527,
+        "sortino_mar0": 1.8750619015964438,
+        "total_turnover": 2.110280883479157,
+        "months": 117,
+        "sharpe_rf_proxy": 0.848727924939475,
+        "sortino_rf_proxy": 1.4888025075670253
+      }
+    },
+    {
+      "scenario": "us_bond",
+      "rebalance_months": 3,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.12212365060031494,
+        "mdd": -0.15955358179706658,
+        "volatility": 0.12000774633619013,
+        "sharpe_rf0": 1.0234489136698808,
+        "sortino_mar0": 1.8702453857564185,
+        "total_turnover": 2.110280883479157,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8469690775293205,
+        "sortino_rf_proxy": 1.4844785091128954
+      }
+    },
+    {
+      "scenario": "us_bond",
+      "rebalance_months": 3,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.12163792315713362,
+        "mdd": -0.15996403051638697,
+        "volatility": 0.11998870378703684,
+        "sharpe_rf0": 1.0199594817709168,
+        "sortino_mar0": 1.8606309182684575,
+        "total_turnover": 2.110280883479157,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8434477340027622,
+        "sortino_rf_proxy": 1.4758468613768583
+      }
+    },
+    {
+      "scenario": "us_bond",
+      "rebalance_months": 6,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.1250698777349979,
+        "mdd": -0.1593483574374066,
+        "volatility": 0.12296925889546896,
+        "sharpe_rf0": 1.0229029479098597,
+        "sortino_mar0": 1.9146542035520038,
+        "total_turnover": 1.6740034585849846,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8507411271435634,
+        "sortino_rf_proxy": 1.526959167561287
+      }
+    },
+    {
+      "scenario": "us_bond",
+      "rebalance_months": 6,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.12487671455399307,
+        "mdd": -0.1596295415885669,
+        "volatility": 0.1229831516980421,
+        "sharpe_rf0": 1.0213961069436943,
+        "sortino_mar0": 1.9102748049803937,
+        "total_turnover": 1.6740034585849846,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8492512335913482,
+        "sortino_rf_proxy": 1.5231188638683402
+      }
+    },
+    {
+      "scenario": "us_bond",
+      "rebalance_months": 6,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.12449040655185417,
+        "mdd": -0.1601919098908875,
+        "volatility": 0.12301141884618108,
+        "sharpe_rf0": 1.0183794595187319,
+        "sortino_mar0": 1.9015315280234746,
+        "total_turnover": 1.6740034585849846,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8462691371180873,
+        "sortino_rf_proxy": 1.5154518646692796
+      }
+    },
+    {
+      "scenario": "us_bond",
+      "rebalance_months": 12,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.12554892557447062,
+        "mdd": -0.17017463972192803,
+        "volatility": 0.12595794688118195,
+        "sharpe_rf0": 1.0052627285974738,
+        "sortino_mar0": 1.8249801851148881,
+        "total_turnover": 1.076906957940347,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8372385822725839,
+        "sortino_rf_proxy": 1.462816706580743
+      }
+    },
+    {
+      "scenario": "us_bond",
+      "rebalance_months": 12,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.12542460423477175,
+        "mdd": -0.17017463972192803,
+        "volatility": 0.12593749047492223,
+        "sharpe_rf0": 1.004521261869858,
+        "sortino_mar0": 1.8231373926575785,
+        "total_turnover": 1.076906957940347,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8364685090528129,
+        "sortino_rf_proxy": 1.4610810479585261
+      }
+    },
+    {
+      "scenario": "us_bond",
+      "rebalance_months": 12,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.12517594826153067,
+        "mdd": -0.17017463972192792,
+        "volatility": 0.12589696431673997,
+        "sharpe_rf0": 1.003034525021984,
+        "sortino_mar0": 1.819451227224077,
+        "total_turnover": 1.076906957940347,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8349250387442971,
+        "sortino_rf_proxy": 1.4576094795908803
+      }
+    },
+    {
+      "scenario": "mixed_bonds",
+      "rebalance_months": 3,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.11892297987840417,
+        "mdd": -0.1474798963702567,
+        "volatility": 0.11916295802987699,
+        "sharpe_rf0": 1.0055856649624197,
+        "sortino_mar0": 1.8355667855787368,
+        "total_turnover": 2.0592676161252466,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8279674203763828,
+        "sortino_rf_proxy": 1.450810014870559
+      }
+    },
+    {
+      "scenario": "mixed_bonds",
+      "rebalance_months": 3,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.11868667009995315,
+        "mdd": -0.1476292336190007,
+        "volatility": 0.11915099892522647,
+        "sharpe_rf0": 1.0038898915646715,
+        "sortino_mar0": 1.830980524639022,
+        "total_turnover": 2.0592676161252466,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8262511084305317,
+        "sortino_rf_proxy": 1.4466654524649518
+      }
+    },
+    {
+      "scenario": "mixed_bonds",
+      "rebalance_months": 3,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.1182141376215966,
+        "mdd": -0.1479278525307146,
+        "volatility": 0.119127448774299,
+        "sharpe_rf0": 1.0004942321873334,
+        "sortino_mar0": 1.821822407802142,
+        "total_turnover": 2.0592676161252466,
+        "months": 117,
+        "sharpe_rf_proxy": 0.822814896322868,
+        "sortino_rf_proxy": 1.4383894947841198
+      }
+    },
+    {
+      "scenario": "mixed_bonds",
+      "rebalance_months": 6,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.12281454218463028,
+        "mdd": -0.14998267597281512,
+        "volatility": 0.12270747184429852,
+        "sharpe_rf0": 1.0081803785736942,
+        "sortino_mar0": 1.8922174840206918,
+        "total_turnover": 1.6481803627202738,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8357667360930756,
+        "sortino_rf_proxy": 1.5058277724819893
+      }
+    },
+    {
+      "scenario": "mixed_bonds",
+      "rebalance_months": 6,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.12262473932764362,
+        "mdd": -0.1501086596318708,
+        "volatility": 0.12272140837130568,
+        "sharpe_rf0": 1.0066927908171373,
+        "sortino_mar0": 1.8879871136871604,
+        "total_turnover": 1.6481803627202738,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8342957616385532,
+        "sortino_rf_proxy": 1.5020959358690873
+      }
+    },
+    {
+      "scenario": "mixed_bonds",
+      "rebalance_months": 6,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.12224514776995954,
+        "mdd": -0.15036059989879969,
+        "volatility": 0.12274977514182525,
+        "sharpe_rf0": 1.003714591582707,
+        "sortino_mar0": 1.879537446805473,
+        "total_turnover": 1.6481803627202738,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8313514665419705,
+        "sortino_rf_proxy": 1.4946426446793484
+      }
+    },
+    {
+      "scenario": "mixed_bonds",
+      "rebalance_months": 12,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.1226840985808384,
+        "mdd": -0.1506458283461758,
+        "volatility": 0.12633847896912262,
+        "sharpe_rf0": 0.9821349173050106,
+        "sortino_mar0": 1.772604314787721,
+        "total_turnover": 1.1024679808513478,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8146370564999332,
+        "sortino_rf_proxy": 1.4169645462462044
+      }
+    },
+    {
+      "scenario": "mixed_bonds",
+      "rebalance_months": 12,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.12255715020066682,
+        "mdd": -0.15076690112373636,
+        "volatility": 0.12631975505797438,
+        "sharpe_rf0": 0.9813593506730068,
+        "sortino_mar0": 1.7707169491877195,
+        "total_turnover": 1.1024679808513478,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8138352106294072,
+        "sortino_rf_proxy": 1.4151852915991612
+      }
+    },
+    {
+      "scenario": "mixed_bonds",
+      "rebalance_months": 12,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.12230323901175155,
+        "mdd": -0.15100904667885728,
+        "volatility": 0.1262827153031741,
+        "sharpe_rf0": 0.9798043613172992,
+        "sortino_mar0": 1.766941685792224,
+        "total_turnover": 1.1024679808513478,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8122281717514542,
+        "sortino_rf_proxy": 1.4116260984543203
+      }
+    },
+    {
+      "scenario": "us_bond_no_bond_fx",
+      "rebalance_months": 3,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.11593802731264424,
+        "mdd": -0.1721770365096008,
+        "volatility": 0.1214186316607199,
+        "sharpe_rf0": 0.9668009999285462,
+        "sortino_mar0": 1.7656442798919707,
+        "total_turnover": 2.00263047367782,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7922330280703728,
+        "sortino_rf_proxy": 1.3891809717639751
+      }
+    },
+    {
+      "scenario": "us_bond_no_bond_fx",
+      "rebalance_months": 3,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.11570882920752212,
+        "mdd": -0.1722669810811076,
+        "volatility": 0.12140670069844005,
+        "sharpe_rf0": 0.9651807482734345,
+        "sortino_mar0": 1.761359830107932,
+        "total_turnover": 2.00263047367782,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7905932160269054,
+        "sortino_rf_proxy": 1.3852963391927913
+      }
+    },
+    {
+      "scenario": "us_bond_no_bond_fx",
+      "rebalance_months": 3,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.11525051297359501,
+        "mdd": -0.1724468520842386,
+        "volatility": 0.12138319839246306,
+        "sharpe_rf0": 0.961936439506097,
+        "sortino_mar0": 1.7528022720452643,
+        "total_turnover": 2.00263047367782,
+        "months": 117,
+        "sharpe_rf_proxy": 0.787310285626821,
+        "sortino_rf_proxy": 1.3775377592354752
+      }
+    },
+    {
+      "scenario": "us_bond_no_bond_fx",
+      "rebalance_months": 6,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.11975417935042731,
+        "mdd": -0.17271752474655278,
+        "volatility": 0.1251096943739678,
+        "sharpe_rf0": 0.9690263225051442,
+        "sortino_mar0": 1.8183076735407728,
+        "total_turnover": 1.60236490102714,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7996916399347954,
+        "sortino_rf_proxy": 1.4408618437932839
+      }
+    },
+    {
+      "scenario": "us_bond_no_bond_fx",
+      "rebalance_months": 6,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.11957015495342405,
+        "mdd": -0.17282949417538396,
+        "volatility": 0.12512324460326696,
+        "sharpe_rf0": 0.9676119239464073,
+        "sortino_mar0": 1.8144596719751758,
+        "total_turnover": 1.60236490102714,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7982930006956177,
+        "sortino_rf_proxy": 1.437450213503152
+      }
+    },
+    {
+      "scenario": "us_bond_no_bond_fx",
+      "rebalance_months": 6,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.11920211656107749,
+        "mdd": -0.1730534121105166,
+        "volatility": 0.1251508246164132,
+        "sharpe_rf0": 0.9647803487922022,
+        "sortino_mar0": 1.8067707515354203,
+        "total_turnover": 1.60236490102714,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7954935811921418,
+        "sortino_rf_proxy": 1.4306337221305114
+      }
+    },
+    {
+      "scenario": "us_bond_no_bond_fx",
+      "rebalance_months": 12,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.11903652140635956,
+        "mdd": -0.17279944559953087,
+        "volatility": 0.12865734490416525,
+        "sharpe_rf0": 0.9410345186004144,
+        "sortino_mar0": 1.6948042398957075,
+        "total_turnover": 1.080183383162272,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7763319605714717,
+        "sortino_rf_proxy": 1.3478509930394689
+      }
+    },
+    {
+      "scenario": "us_bond_no_bond_fx",
+      "rebalance_months": 12,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.11891254300894682,
+        "mdd": -0.17292835961091146,
+        "volatility": 0.12864131259876402,
+        "sharpe_rf0": 0.9402678376893656,
+        "sortino_mar0": 1.6929654536819156,
+        "total_turnover": 1.080183383162272,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7755432023817415,
+        "sortino_rf_proxy": 1.3461202938970032
+      }
+    },
+    {
+      "scenario": "us_bond_no_bond_fx",
+      "rebalance_months": 12,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.11866457099570771,
+        "mdd": -0.17318618763367322,
+        "volatility": 0.12860964174045575,
+        "sharpe_rf0": 0.9387310283884464,
+        "sortino_mar0": 1.6892864301352457,
+        "total_turnover": 1.080183383162272,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7739627213223703,
+        "sortino_rf_proxy": 1.3426581289163955
+      }
+    },
+    {
+      "scenario": "mixed_bonds_no_bond_fx",
+      "rebalance_months": 3,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.115442641000987,
+        "mdd": -0.1658774007606162,
+        "volatility": 0.12114647854982342,
+        "sharpe_rf0": 0.9650669662482786,
+        "sortino_mar0": 1.7496679975005744,
+        "total_turnover": 1.977911432112655,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7902521410744601,
+        "sortino_rf_proxy": 1.3765228038023385
+      }
+    },
+    {
+      "scenario": "mixed_bonds_no_bond_fx",
+      "rebalance_months": 3,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.11521637237230453,
+        "mdd": -0.16596621775342635,
+        "volatility": 0.12113403275753354,
+        "sharpe_rf0": 0.9634676477158439,
+        "sortino_mar0": 1.7454997077770207,
+        "total_turnover": 1.977911432112655,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7886321308770622,
+        "sortino_rf_proxy": 1.3727323251807981
+      }
+    },
+    {
+      "scenario": "mixed_bonds_no_bond_fx",
+      "rebalance_months": 3,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.11476391364301652,
+        "mdd": -0.16614383433886803,
+        "volatility": 0.12110948745804531,
+        "sharpe_rf0": 0.9602652788577893,
+        "sortino_mar0": 1.7371731791147662,
+        "total_turnover": 1.977911432112655,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7853888589254879,
+        "sortino_rf_proxy": 1.3651610418538849
+      }
+    },
+    {
+      "scenario": "mixed_bonds_no_bond_fx",
+      "rebalance_months": 6,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.11996434799786271,
+        "mdd": -0.1657347171395115,
+        "volatility": 0.12503000063703748,
+        "sharpe_rf0": 0.9711203970069053,
+        "sortino_mar0": 1.8131506079165165,
+        "total_turnover": 1.6144390607303056,
+        "months": 117,
+        "sharpe_rf_proxy": 0.801818556373108,
+        "sortino_rf_proxy": 1.4384636025534536
+      }
+    },
+    {
+      "scenario": "mixed_bonds_no_bond_fx",
+      "rebalance_months": 6,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.11977890202370323,
+        "mdd": -0.16584957802331124,
+        "volatility": 0.12504300820940634,
+        "sharpe_rf0": 0.9696985139072491,
+        "sortino_mar0": 1.8093007523891247,
+        "total_turnover": 1.6144390607303056,
+        "months": 117,
+        "sharpe_rf_proxy": 0.8004114010602589,
+        "sortino_rf_proxy": 1.4350465957562704
+      }
+    },
+    {
+      "scenario": "mixed_bonds_no_bond_fx",
+      "rebalance_months": 6,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.11940801987219096,
+        "mdd": -0.1660792778831225,
+        "volatility": 0.12506951714404474,
+        "sharpe_rf0": 0.9668518177244011,
+        "sortino_mar0": 1.801607919898992,
+        "total_turnover": 1.6144390607303056,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7975948173693082,
+        "sortino_rf_proxy": 1.4282195083655296
+      }
+    },
+    {
+      "scenario": "mixed_bonds_no_bond_fx",
+      "rebalance_months": 12,
+      "cost_bps": 0,
+      "metrics": {
+        "cagr": 0.11942371991617029,
+        "mdd": -0.16443460633830043,
+        "volatility": 0.12884021522571992,
+        "sharpe_rf0": 0.9426312829636707,
+        "sortino_mar0": 1.6890662741712905,
+        "total_turnover": 1.107227531183404,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7782634727670013,
+        "sortino_rf_proxy": 1.3451794904845846
+      }
+    },
+    {
+      "scenario": "mixed_bonds_no_bond_fx",
+      "rebalance_months": 12,
+      "cost_bps": 10,
+      "metrics": {
+        "cagr": 0.11929659358138323,
+        "mdd": -0.16456381903430917,
+        "volatility": 0.12882386057688217,
+        "sharpe_rf0": 0.9418461184994258,
+        "sortino_mar0": 1.6871955092350135,
+        "total_turnover": 1.107227531183404,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7774559100750058,
+        "sortino_rf_proxy": 1.3434177748762206
+      }
+    },
+    {
+      "scenario": "mixed_bonds_no_bond_fx",
+      "rebalance_months": 12,
+      "cost_bps": 30,
+      "metrics": {
+        "cagr": 0.119042325518665,
+        "mdd": -0.16482224442632665,
+        "volatility": 0.12879156066512876,
+        "sharpe_rf0": 0.9402722025175347,
+        "sortino_mar0": 1.6834528493550553,
+        "total_turnover": 1.107227531183404,
+        "months": 117,
+        "sharpe_rf_proxy": 0.775837696355842,
+        "sortino_rf_proxy": 1.339893812209609
+      }
+    }
+  ],
+  "subperiods": {
+    "kr_bond": {
+      "2017-01:2019-12": {
+        "cagr": 0.07695071602779291,
+        "mdd": -0.060424039941324725,
+        "volatility": 0.06270336558579627,
+        "sharpe_rf0": 1.2164880464283048,
+        "sortino_mar0": 1.9793405698842044,
+        "total_turnover": 0.18408103596687925,
+        "months": 36,
+        "sharpe_rf_proxy": 0.9613157402028636,
+        "sortino_rf_proxy": 1.4917468754108454
+      },
+      "2020-01:2021-12": {
+        "cagr": 0.13374378420780753,
+        "mdd": -0.10128238853679361,
+        "volatility": 0.10758435046058157,
+        "sharpe_rf0": 1.2246379351125578,
+        "sortino_mar0": 2.050432879033364,
+        "total_turnover": 0.21010059469485248,
+        "months": 24,
+        "sharpe_rf_proxy": 1.1366694759298275,
+        "sortino_rf_proxy": 1.8666869052834212
+      },
+      "2022-01:2022-12": {
+        "cagr": -0.14906395990681054,
+        "mdd": -0.1579431849527222,
+        "volatility": 0.13949259158783833,
+        "sharpe_rf0": -1.085387359259208,
+        "sortino_mar0": -1.299389988557874,
+        "total_turnover": 0.1534421684976625,
+        "months": 12,
+        "sharpe_rf_proxy": -1.2158649061864488,
+        "sortino_rf_proxy": -1.407963239728952
+      },
+      "2023-01:2026-09": {
+        "cagr": 0.23423048364819943,
+        "mdd": -0.13221283770463177,
+        "volatility": 0.16577229281777825,
+        "sharpe_rf0": 1.3601117573454142,
+        "sortino_mar0": 2.730070503668214,
+        "total_turnover": 0.5872677838979241,
+        "months": 45,
+        "sharpe_rf_proxy": 1.1593765553271547,
+        "sortino_rf_proxy": 2.2470184998510594
+      }
+    },
+    "us_bond": {
+      "2017-01:2019-12": {
+        "cagr": 0.07480715954735118,
+        "mdd": -0.06488340017621308,
+        "volatility": 0.0635792996492958,
+        "sharpe_rf0": 1.1688685547843864,
+        "sortino_mar0": 2.0761362655672038,
+        "total_turnover": 0.20661568829759852,
+        "months": 36,
+        "sharpe_rf_proxy": 0.9183844918802898,
+        "sortino_rf_proxy": 1.5374900258892648
+      },
+      "2020-01:2021-12": {
+        "cagr": 0.15424140801621022,
+        "mdd": -0.06126399981841224,
+        "volatility": 0.09381272514460356,
+        "sharpe_rf0": 1.5830243307484502,
+        "sortino_mar0": 3.0009498405180186,
+        "total_turnover": 0.18559696392224745,
+        "months": 24,
+        "sharpe_rf_proxy": 1.4832161001474427,
+        "sortino_rf_proxy": 2.738299514239655
+      },
+      "2022-01:2022-12": {
+        "cagr": -0.15247014294685968,
+        "mdd": -0.15247014294685968,
+        "volatility": 0.1159688777819299,
+        "sharpe_rf0": -1.3630772718424373,
+        "sortino_mar0": -1.534454454149254,
+        "total_turnover": 0.13196218440889212,
+        "months": 12,
+        "sharpe_rf_proxy": -1.5134473259775443,
+        "sortino_rf_proxy": -1.6449867877013653
+      },
+      "2023-01:2026-09": {
+        "cagr": 0.24248741505356808,
+        "mdd": -0.17017463972192792,
+        "volatility": 0.16622577158793608,
+        "sharpe_rf0": 1.398184320569574,
+        "sortino_mar0": 2.709522400462979,
+        "total_turnover": 0.5527321213116088,
+        "months": 45,
+        "sharpe_rf_proxy": 1.1979885008527746,
+        "sortino_rf_proxy": 2.245804496932771
+      }
+    },
+    "mixed_bonds": {
+      "2017-01:2019-12": {
+        "cagr": 0.07595310448151094,
+        "mdd": -0.06209171157980198,
+        "volatility": 0.06158442413939339,
+        "sharpe_rf0": 1.2222606240905713,
+        "sortino_mar0": 2.0781745908013387,
+        "total_turnover": 0.19228976521198363,
+        "months": 36,
+        "sharpe_rf_proxy": 0.9631184117133917,
+        "sortino_rf_proxy": 1.5504550130634527
+      },
+      "2020-01:2021-12": {
+        "cagr": 0.14400997483218658,
+        "mdd": -0.08105847238386887,
+        "volatility": 0.09921029656067396,
+        "sharpe_rf0": 1.4112476048157188,
+        "sortino_mar0": 2.5117542509837714,
+        "total_turnover": 0.19770087527923497,
+        "months": 24,
+        "sharpe_rf_proxy": 1.3161968858720623,
+        "sortino_rf_proxy": 2.28953200220887
+      },
+      "2022-01:2022-12": {
+        "cagr": -0.15076690112373636,
+        "mdd": -0.15076690112373636,
+        "volatility": 0.12418830852557583,
+        "sharpe_rf0": -1.2498867037688424,
+        "sortino_mar0": -1.4431758864849817,
+        "total_turnover": 0.1425468686693899,
+        "months": 12,
+        "sharpe_rf_proxy": -1.3939022214476253,
+        "sortino_rf_proxy": -1.5545159984892196
+      },
+      "2023-01:2026-09": {
+        "cagr": 0.23842843075188713,
+        "mdd": -0.15001259369646192,
+        "volatility": 0.16482806360722682,
+        "sharpe_rf0": 1.3881835730846275,
+        "sortino_mar0": 2.7443401321243774,
+        "total_turnover": 0.5699304716907392,
+        "months": 45,
+        "sharpe_rf_proxy": 1.1862650321211299,
+        "sortino_rf_proxy": 2.2681777951089
+      }
+    },
+    "us_bond_no_bond_fx": {
+      "2017-01:2019-12": {
+        "cagr": 0.07867862361481137,
+        "mdd": -0.06542601253682079,
+        "volatility": 0.06361421979279187,
+        "sharpe_rf0": 1.225324084709245,
+        "sortino_mar0": 1.9628254811181656,
+        "total_turnover": 0.16177777032576873,
+        "months": 36,
+        "sharpe_rf_proxy": 0.9739978958425608,
+        "sortino_rf_proxy": 1.4945076491984197
+      },
+      "2020-01:2021-12": {
+        "cagr": 0.14878883386629593,
+        "mdd": -0.07331531715180128,
+        "volatility": 0.09674411926180007,
+        "sharpe_rf0": 1.4880855624362066,
+        "sortino_mar0": 2.8913482241973387,
+        "total_turnover": 0.17934067170442736,
+        "months": 24,
+        "sharpe_rf_proxy": 1.3907231323747142,
+        "sortino_rf_proxy": 2.6302035365771035
+      },
+      "2022-01:2022-12": {
+        "cagr": -0.17292835961091158,
+        "mdd": -0.17292835961091158,
+        "volatility": 0.13598770554970985,
+        "sharpe_rf0": -1.3224481195367632,
+        "sortino_mar0": -1.4801254559088202,
+        "total_turnover": 0.15584371975443884,
+        "months": 12,
+        "sharpe_rf_proxy": -1.4559971697767913,
+        "sortino_rf_proxy": -1.5791585967128041
+      },
+      "2023-01:2026-09": {
+        "cagr": 0.23144976817004537,
+        "mdd": -0.13730536136259264,
+        "volatility": 0.16671598802146084,
+        "sharpe_rf0": 1.339442166104259,
+        "sortino_mar0": 2.71767236396175,
+        "total_turnover": 0.5832212213776371,
+        "months": 45,
+        "sharpe_rf_proxy": 1.1396346732864657,
+        "sortino_rf_proxy": 2.230371149502288
+      }
+    },
+    "mixed_bonds_no_bond_fx": {
+      "2017-01:2019-12": {
+        "cagr": 0.07785913598122196,
+        "mdd": -0.06219609138494209,
+        "volatility": 0.06268981638781741,
+        "sharpe_rf0": 1.2302755539074874,
+        "sortino_mar0": 1.98524776535483,
+        "total_turnover": 0.17296890869824028,
+        "months": 36,
+        "sharpe_rf_proxy": 0.9751505481854801,
+        "sortino_rf_proxy": 1.5045853947751822
+      },
+      "2020-01:2021-12": {
+        "cagr": 0.1413044932721763,
+        "mdd": -0.08723672062929522,
+        "volatility": 0.10164111688264829,
+        "sharpe_rf0": 1.35615776212071,
+        "sortino_mar0": 2.430312768628031,
+        "total_turnover": 0.19453151634435606,
+        "months": 24,
+        "sharpe_rf_proxy": 1.2631998941807108,
+        "sortino_rf_proxy": 2.2128094525400597
+      },
+      "2022-01:2022-12": {
+        "cagr": -0.16099617248446718,
+        "mdd": -0.16456381903430917,
+        "volatility": 0.13743917221735977,
+        "sharpe_rf0": -1.2046763631097146,
+        "sortino_mar0": -1.3941387010296584,
+        "total_turnover": 0.1546410334713221,
+        "months": 12,
+        "sharpe_rf_proxy": -1.3370009557371076,
+        "sortino_rf_proxy": -1.497839273589338
+      },
+      "2023-01:2026-09": {
+        "cagr": 0.23288717605187426,
+        "mdd": -0.13330424585279466,
+        "volatility": 0.16607674498860298,
+        "sharpe_rf0": 1.3511812096422375,
+        "sortino_mar0": 2.7289156979121607,
+        "total_turnover": 0.5850860726694855,
+        "months": 45,
+        "sharpe_rf_proxy": 1.1507030360522246,
+        "sortino_rf_proxy": 2.243552465994418
+      }
+    }
+  },
+  "us_bond_fx_attribution": {
+    "kr_bond": {
+      "mean_monthly_contribution": {
+        "local_bond": 0.0,
+        "fx": 0.0,
+        "interaction": 0.0
+      },
+      "max_identity_error": 0.0,
+      "scope": "monthly arithmetic gross-return contribution, not additive CAGR attribution",
+      "equity_weight_min": 0.551141876490161,
+      "equity_weight_max": 0.7287093584985567
+    },
+    "us_bond": {
+      "mean_monthly_contribution": {
+        "local_bond": 0.000314234423319193,
+        "fx": 0.0005157438352719759,
+        "interaction": -6.069147683830797e-05
+      },
+      "max_identity_error": 4.85722573273506e-17,
+      "scope": "monthly arithmetic gross-return contribution, not additive CAGR attribution",
+      "equity_weight_min": 0.5164423727806341,
+      "equity_weight_max": 0.7097543589360654
+    },
+    "mixed_bonds": {
+      "mean_monthly_contribution": {
+        "local_bond": 0.00015712693280170345,
+        "fx": 0.00025134806199197555,
+        "interaction": -3.061260637378795e-05
+      },
+      "max_identity_error": 2.42861286636753e-17,
+      "scope": "monthly arithmetic gross-return contribution, not additive CAGR attribution",
+      "equity_weight_min": 0.533228208692225,
+      "equity_weight_max": 0.7183395213377105
+    }
+  },
+  "limitations": [
+    "60% equity target only at rebalance; weights drift between dates",
+    "no-bond-FX is counterfactual, not a tradable hedged portfolio; equity FX unchanged",
+    "Korean bond official long TR unresolved; latest-vintage proxies",
+    "no untouched holdout; subperiods descriptive; no causal or significance claim",
+    "RF estimated cash proxy; monthly MDD; taxes/accounts/cashflows absent; initial cost excluded"
+  ]
+}
