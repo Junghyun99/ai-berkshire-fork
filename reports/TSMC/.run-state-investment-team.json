@@ -27,16 +27,28 @@
       "sha": "a352c34f4e2942c5"
     },
     "view-buffett": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-31 11:02:06",
+      "error": "",
+      "note": "",
+      "sha": "b2af4c6cc787c1f5"
     },
     "view-munger": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-31 11:02:06",
+      "error": "",
+      "note": "",
+      "sha": "0230caf51b588983"
     },
     "view-lilu": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-31 11:01:55",
+      "error": "",
+      "note": "",
+      "sha": "d24b1243d2bc3421"
     },
     "rebuttal": {
       "status": "대기",
@@ -80,6 +92,9 @@
     "2026-10-31 00:51:27 done context",
     "2026-10-31 00:51:27 put factsheet",
     "2026-10-31 00:51:27 done factsheet",
-    "2026-10-31 00:57:28 done view-duan"
+    "2026-10-31 00:57:28 done view-duan",
+    "2026-10-31 11:01:55 done view-lilu",
+    "2026-10-31 11:02:06 done view-buffett",
+    "2026-10-31 11:02:06 done view-munger"
   ]
 }
