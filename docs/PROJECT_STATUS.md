@@ -1,5 +1,10 @@
 # AI Berkshire — Project Status / Work Handoff
 
+## 데이터 감사 갱신 — 2026-11-01
+
+#64 병합 및 #52 Codex 주 경로 검증 종료. #53의 [자산별 출처·기간 및 D01–D12 대응표](../reports/saa/20261031-data-audit/README.md)를 작성했다. 원본 8개·보완 16개 파일 해시와 가공 입력 일치를 확인했고 219개 테스트가 통과했다. 공통 입력 179개월, 전 1,254행 available_at 누락이다. 한국 국채 공식 장기 TR 접근 제약과 source gate는 유지하며 #53 전체는 미완료다. 새 시계열이 없어 백테스트를 반복하지 않았다. 다음은 #54 가용시점·빈티지 계약 보완이다. 이번 보고서는 PR 병합 전 작업 브랜치 기준이다.
+
+
 ## 정책 Skill 연동 검증 — 2026-10-31
 
 #59/#63은 main에 병합됐다. #52의 [연동 검증 계약](../methodology/fund-management/policy-workflow-validation.md)과 [중간 보고서](../reports/policies/workflow-20261031/README.md)를 추가했다. canonical Skill의 오래된 도구 설명을 갱신하고 CLI 통합 9개를 포함한 전체 219개 테스트를 실행했다. 이후 사용자 승인 D-016에 따라 Codex/Work를 주 검증 환경으로 전환해 실제 Codex 합성 사례 실행 및 산출물 대조를 수행했다. CLI 3회 모두 예상된 BLOCKED/exit 2, 원문·미정값·승인 경계 보존을 확인했다. Claude 호환성은 별도 미검증이며 #52는 PR #64 병합 전까지 미결로 유지한다. 이번 후속 변경은 PR 병합 전 브랜치 기준이다.
