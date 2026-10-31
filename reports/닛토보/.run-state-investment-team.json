@@ -1,0 +1,80 @@
+{
+  "company": "닛토보",
+  "ticker": "3110.T",
+  "skill": "investment-team",
+  "started": "2026-10-31 11:01:49",
+  "steps": {
+    "context": {
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-31 11:01:49",
+      "error": "",
+      "note": ""
+    },
+    "factsheet": {
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-31 11:02:20",
+      "error": "",
+      "note": ""
+    },
+    "view-duan": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-buffett": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-munger": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-lilu": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "rebuttal": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "final": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "plan": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "readme": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "check": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "ledger": {
+      "status": "대기",
+      "attempts": 0
+    }
+  },
+  "blobs": {
+    "lessons": {
+      "saved": "2026-10-31 11:01:49",
+      "text": "과거 판단: (이 종목의 과거 판단 기록 없음 — 비교 생략)\n과거 교훈: (해당 교훈 없음) — lessons --ticker 3110.T --tag 반도체/반도체소재/유리섬유 --market JP → NO_DATA\n"
+    },
+    "factsheet": {
+      "saved": "2026-10-31 11:02:19",
+      "text": "# 팩트시트: Nitto Boseki Co., Ltd. (3110.T)\n\n생성: 2026-10-31 11:01 — **현재 시점 스냅샷**(과거 시점 분석에는 쓰지 말 것) · 주가 통화 JPY · 재무 통화 JPY\n\n## 시세·밸류에이션\n| 항목 | 값 | 출처 | 기준일 |\n|---|---|---|---|\n| 현재가 | 2,814.50 JPY | Yahoo chart | 2026-10-30 |\n| 52주 최고 | 6,580.00 JPY | Yahoo chart | 2026-10-30 |\n| 52주 최저 | 1,586.00 JPY | Yahoo chart | 2026-10-30 |\n| 발행주식수 | 188,615,060주 | Yahoo timeseries | 2026-06-30 |\n| 시가총액 | 512.33B JPY | Yahoo timeseries | 2026-10-30 |\n| PER(TTM) | 11.53배 | Yahoo timeseries | 2026-10-30 |\n| PBR | 2.89배 | Yahoo timeseries | 2026-10-30 |\n\n## 연간 재무 (재무 통화 JPY, 출처 Yahoo timeseries)\n| 회계연도 | 매출 | 영업이익 | 지배순이익 | 희석EPS | 자본 | 영업CF | CapEx | FCF | 영업이익률 | 순이익률 | ROE | 영업CF/순이익 |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| 2024-03-31 | 93.25B JPY | 8.39B JPY | 7.30B JPY | 14.79 JPY | 118.19B JPY | 5.06B JPY | 데이터 없음 | 5.06B JPY | 9.0% | 7.8% | 6.2% | 0.69 |\n| 2025-03-31 | 109.03B JPY | 16.45B JPY | 12.84B JPY | 70.52 JPY | 129.73B JPY | 19.12B JPY | 데이터 없음 | 19.12B JPY | 15.1% | 11.8% | 9.9% | 1.49 |\n| 2026-03-31 | 118.23B JPY | 20.82B JPY | 41.77B JPY | 229.47 JPY | 173.59B JPY | 17.30B JPY | 데이터 없음 | 17.30B JPY | 17.6% | 35.3% | 24.1% | 0.41 |\n\n## 교차 검증 (기준 = 1차 출처, ≤1% ✅ / 1~5% ⚠️ / >5% ❌)\n| 항목 | 기간 | 기준(출처) | 비교(출처) | 편차 | 판정 |\n|---|---|---|---|---|---|\n| 시가총액 검산(주가×주식수) | 2026-10-30 | 512.33B JPY (Yahoo 시총) | 530.86B JPY (주가×발행주식수) | 3.62% | ⚠️ |\n\n## 경고\n- ⚠️ 이 시장은 자동 1차 출처 교차 검증이 없다. financial-data 규범대로 연차보고서(HKEX/cninfo 등)와 수동 대조할 것.\n\n## 사용 규칙\n- 보고서와 Agent 분석의 정확한 수치는 이 표가 기준이다. 다른 출처 값이 다르면 **불일치로 표기**하고, 두 값을 맞춘 숫자를 지어내지 않는다.\n- `데이터 없음` 칸은 추정으로 채우지 않는다. 필요하면 다른 출처에서 가져와 출처를 붙인다.\n- ❌ 판정 항목은 원본 공시로 확인하기 전까지 결론의 근거로 쓰지 않는다.\n"
+    }
+  },
+  "files": {},
+  "log": [
+    "2026-10-31 11:01:49 start",
+    "2026-10-31 11:01:49 put lessons",
+    "2026-10-31 11:01:49 done context",
+    "2026-10-31 11:02:19 put factsheet",
+    "2026-10-31 11:02:20 done factsheet"
+  ]
+}
