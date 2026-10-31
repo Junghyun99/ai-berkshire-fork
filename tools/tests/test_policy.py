@@ -115,30 +115,31 @@ class TestInvestmentPolicy(unittest.TestCase):
         draft["status"] = "draft"
         with tempfile.TemporaryDirectory() as d:
             with self.assertRaises(ValueError):
-                register(draft, {}, d)
+                register(draft, {}, d, research_only=True)
 
     def test_registry_immutable_archive(self):
         draft = copy.deepcopy(self.p)
         draft.update(status="draft", approved_by=None, approved_at=None)
-        event = {"event_type": "POLICY_APPROVED", "actor_type": "user",
+        event = {"event_id": "fixture-1", "event_type": "POLICY_APPROVED", "actor_type": "user",
                  "actor_id": "user1", "policy_id": "example", "version": "1.0",
                  "approved_at": "2026-10-28T10:00:00+09:00",
                  "document_hash": digest(draft)}
         with tempfile.TemporaryDirectory() as d:
-            self.assertEqual(register(draft, event, d)["status"], "active")
+            self.assertEqual(register(draft, event, d, research_only=True)["status"], "research_active")
+            event["event_id"] = "fixture-2"
             with self.assertRaises(FileExistsError):
-                register(draft, event, d)
+                register(draft, event, d, research_only=True)
 
     def test_tampered_document(self):
         draft = copy.deepcopy(self.p)
         draft["status"] = "draft"
-        event = {"event_type": "POLICY_APPROVED", "actor_type": "user",
+        event = {"event_id": "fixture-1", "event_type": "POLICY_APPROVED", "actor_type": "user",
                  "actor_id": "user1", "policy_id": "example", "version": "1.0",
                  "approved_at": "2026-10-28T10:00:00+09:00",
                  "document_hash": "invalid"}
         with tempfile.TemporaryDirectory() as d:
             with self.assertRaises(ValueError):
-                register(draft, event, d)
+                register(draft, event, d, research_only=True)
 
 
 if __name__ == "__main__":

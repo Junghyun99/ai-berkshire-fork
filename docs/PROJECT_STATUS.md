@@ -1,5 +1,9 @@
 # AI Berkshire — Project Status / Work Handoff
 
+## 정책 등록 일관성 보완 — 2026-10-31
+
+#51 후속으로 [연구용 등록 계약](../methodology/fund-management/policy-registry-integrity.md)과 [검증 보고서](../reports/policies/registry-20261031/README.md)를 추가했다. 명시적 연구 모드, research_active 상태, 단일 기준 원장·프로세스 잠금·중복 방지·복구·감사를 구현했다. 전체 210개 테스트 통과. 선행 #59 및 이번 후속 PR은 병합 전 작업 브랜치 기준이다. 실제 사용자 인증·운용 승격은 미구현/차단이며 Skill 런타임 검증은 #52에 남는다. IPS DRAFT 유지.
+
 ## 정책 게이트 보완 — 2026-10-30
 
 #49 통합은 #58을 통해 main에 반영됐다. #50 후속으로 [G01~G12 구현 추적표](../methodology/fund-management/policy-gate-implementation.md)와 [검증 보고서](../reports/policies/validation-20261030/README.md)를 추가했다. 정책 입력 계약의 누락·모순 검사 및 gate별 결과를 보완했고 196개 테스트가 통과했다. 이번 보완은 해당 PR 병합 전까지 작업 브랜치 변경이다. 실제 승인/자료 진위 인증은 아니며 #51/#52와 정책 DRAFT 경계는 유지한다.
