@@ -1,0 +1,61 @@
+{
+  "result": "BLOCKED",
+  "errors": [
+    "G09: policy not active"
+  ],
+  "gates": {
+    "G01": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G02": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G03": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G04": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G05": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G06": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G07": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G08": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G09": {
+      "status": "FAIL",
+      "reasons": [
+        "G09: policy not active"
+      ]
+    },
+    "G10": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G11": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G12": {
+      "status": "PASS",
+      "reasons": []
+    }
+  },
+  "scope": "mechanical_contract_only",
+  "approval_granted": false,
+  "external_evidence_authenticated": false
+}

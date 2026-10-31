@@ -1,0 +1,36 @@
+{
+  "policy_id": "codex-fixture",
+  "version": "0.1",
+  "status": "draft",
+  "approval": "none",
+  "owner": "fixture-owner",
+  "portfolio_ids": [
+    "fixture-portfolio"
+  ],
+  "policy_scope": {
+    "accounts": [
+      "general account only"
+    ]
+  },
+  "base_currency": "KRW",
+  "investment_horizon": "15 years",
+  "objective": "long-term risk-adjusted growth",
+  "eligible_assets": [
+    "equity",
+    "cash"
+  ],
+  "strategic_targets": {
+    "equity": 70,
+    "cash": 20
+  },
+  "provenance": {
+    "policy_id": "codex-fixture",
+    "policy_version": "0.1",
+    "sources": [
+      "prompt-input.txt: synthetic initial task"
+    ],
+    "revision_ref": "prompt-input.txt: initial synthetic draft"
+  },
+  "source_note": "승인 완료",
+  "synthetic": true
+}

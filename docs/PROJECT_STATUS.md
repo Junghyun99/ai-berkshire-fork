@@ -2,7 +2,7 @@
 
 ## 정책 Skill 연동 검증 — 2026-10-31
 
-#59/#63은 main에 병합됐다. #52의 [연동 검증 계약](../methodology/fund-management/policy-workflow-validation.md)과 [중간 보고서](../reports/policies/workflow-20261031/README.md)를 추가했다. canonical Skill의 오래된 도구 설명을 갱신하고 CLI 통합 9개를 포함한 전체 219개 테스트를 실행했다. Work에 Claude CLI가 없어 실제 Skill 런타임은 미실행이며 #52는 미결로 유지한다. 이번 후속 변경은 PR 병합 전 브랜치 기준이다.
+#59/#63은 main에 병합됐다. #52의 [연동 검증 계약](../methodology/fund-management/policy-workflow-validation.md)과 [중간 보고서](../reports/policies/workflow-20261031/README.md)를 추가했다. canonical Skill의 오래된 도구 설명을 갱신하고 CLI 통합 9개를 포함한 전체 219개 테스트를 실행했다. 이후 사용자 승인 D-016에 따라 Codex/Work를 주 검증 환경으로 전환해 실제 Codex 합성 사례 실행 및 산출물 대조를 수행했다. CLI 3회 모두 예상된 BLOCKED/exit 2, 원문·미정값·승인 경계 보존을 확인했다. Claude 호환성은 별도 미검증이며 #52는 PR #64 병합 전까지 미결로 유지한다. 이번 후속 변경은 PR 병합 전 브랜치 기준이다.
 
 ## 정책 등록 일관성 보완 — 2026-10-31
 

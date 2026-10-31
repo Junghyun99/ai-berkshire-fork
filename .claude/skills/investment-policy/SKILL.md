@@ -113,6 +113,8 @@ $ARGUMENTS 를 바탕으로 투자정책서(IPS)를 작성·검토·개정한다
 
 ## 연동 및 테스트 참고
 
+주 실행 검증 환경은 Codex/Work다(D-016). Codex에서는 이 파일과 필수 참조를 명시적으로 읽고 동일 도구를 호출한다. Claude 자동 로딩 여부는 별도 검증 항목이며 Codex 결과로 보증하지 않는다.
+
 현재 도구의 입력 계약은 `methodology/fund-management/policy-gate-implementation.md`, 등록 경계는 `methodology/fund-management/policy-registry-integrity.md`, 시나리오는 `methodology/fund-management/policy-workflow-validation.md`를 참조한다.
 
 - Markdown IPS를 Validator가 직접 읽는 것으로 가정하지 않는다. 사용자 확인값을 JSON으로 옮길 때 출처를 유지하고 미정 값은 누락/TBD로 남긴다. 검사 통과를 위해 승인자·승인시각·사람 검토·자료 출처를 생성하거나 draft를 active로 바꾸지 않는다.
