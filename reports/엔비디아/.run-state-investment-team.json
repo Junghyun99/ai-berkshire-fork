@@ -19,8 +19,12 @@
       "note": ""
     },
     "view-duan": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-31 16:23:36",
+      "error": "",
+      "note": "",
+      "sha": "63087e55deeaf9ab"
     },
     "view-buffett": {
       "status": "대기",
@@ -75,6 +79,7 @@
     "2026-10-31 16:17:20 put lessons",
     "2026-10-31 16:17:20 done context",
     "2026-10-31 16:17:20 put factsheet",
-    "2026-10-31 16:17:20 done factsheet"
+    "2026-10-31 16:17:20 done factsheet",
+    "2026-10-31 16:23:36 done view-duan"
   ]
 }
