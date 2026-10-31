@@ -1,5 +1,9 @@
 # AI Berkshire — Project Status / Work Handoff
 
+## 정책 Skill 연동 검증 — 2026-10-31
+
+#59/#63은 main에 병합됐다. #52의 [연동 검증 계약](../methodology/fund-management/policy-workflow-validation.md)과 [중간 보고서](../reports/policies/workflow-20261031/README.md)를 추가했다. canonical Skill의 오래된 도구 설명을 갱신하고 CLI 통합 9개를 포함한 전체 219개 테스트를 실행했다. Work에 Claude CLI가 없어 실제 Skill 런타임은 미실행이며 #52는 미결로 유지한다. 이번 후속 변경은 PR 병합 전 브랜치 기준이다.
+
 ## 정책 등록 일관성 보완 — 2026-10-31
 
 #51 후속으로 [연구용 등록 계약](../methodology/fund-management/policy-registry-integrity.md)과 [검증 보고서](../reports/policies/registry-20261031/README.md)를 추가했다. 명시적 연구 모드, research_active 상태, 단일 기준 원장·프로세스 잠금·중복 방지·복구·감사를 구현했다. 전체 210개 테스트 통과. 선행 #59 및 이번 후속 PR은 병합 전 작업 브랜치 기준이다. 실제 사용자 인증·운용 승격은 미구현/차단이며 Skill 런타임 검증은 #52에 남는다. IPS DRAFT 유지.
