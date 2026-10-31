@@ -1,5 +1,17 @@
 # AI Berkshire — Project Status / Work Handoff
 
+## 정책 Skill 연동 검증 — 2026-10-31
+
+#59/#63은 main에 병합됐다. #52의 [연동 검증 계약](../methodology/fund-management/policy-workflow-validation.md)과 [중간 보고서](../reports/policies/workflow-20261031/README.md)를 추가했다. canonical Skill의 오래된 도구 설명을 갱신하고 CLI 통합 9개를 포함한 전체 219개 테스트를 실행했다. 이후 사용자 승인 D-016에 따라 Codex/Work를 주 검증 환경으로 전환해 실제 Codex 합성 사례 실행 및 산출물 대조를 수행했다. CLI 3회 모두 예상된 BLOCKED/exit 2, 원문·미정값·승인 경계 보존을 확인했다. Claude 호환성은 별도 미검증이며 #52는 PR #64 병합 전까지 미결로 유지한다. 이번 후속 변경은 PR 병합 전 브랜치 기준이다.
+
+## 정책 등록 일관성 보완 — 2026-10-31
+
+#51 후속으로 [연구용 등록 계약](../methodology/fund-management/policy-registry-integrity.md)과 [검증 보고서](../reports/policies/registry-20261031/README.md)를 추가했다. 명시적 연구 모드, research_active 상태, 단일 기준 원장·프로세스 잠금·중복 방지·복구·감사를 구현했다. 전체 210개 테스트 통과. 선행 #59 및 이번 후속 PR은 병합 전 작업 브랜치 기준이다. 실제 사용자 인증·운용 승격은 미구현/차단이며 Skill 런타임 검증은 #52에 남는다. IPS DRAFT 유지.
+
+## 정책 게이트 보완 — 2026-10-30
+
+#49 통합은 #58을 통해 main에 반영됐다. #50 후속으로 [G01~G12 구현 추적표](../methodology/fund-management/policy-gate-implementation.md)와 [검증 보고서](../reports/policies/validation-20261030/README.md)를 추가했다. 정책 입력 계약의 누락·모순 검사 및 gate별 결과를 보완했고 196개 테스트가 통과했다. 이번 보완은 해당 PR 병합 전까지 작업 브랜치 변경이다. 실제 승인/자료 진위 인증은 아니며 #51/#52와 정책 DRAFT 경계는 유지한다.
+
 ## 최신 통합 검증 — 2026-10-30
 
 [통합 검증 보고서](../reports/integration/20261030-phase2/README.md): main #41과 #42~48 누적 연구를 결합해 문서 충돌 해결, 180개 테스트·경고 0건, 결과 JSON 4종 해시 동일 재현, 초기 소스 차단 유지 확인. 통합 PR의 실제 병합 상태는 GitHub에서 확인한다. 아래 미병합 표기는 각 기록 시점의 상태다. 자료·정책 미결 #50~56은 유지하며 #49 통합 추적과 구분한다.

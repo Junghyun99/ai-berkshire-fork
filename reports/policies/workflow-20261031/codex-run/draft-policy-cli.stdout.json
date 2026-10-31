@@ -1,0 +1,185 @@
+{
+  "result": "BLOCKED",
+  "errors": [
+    "G09: policy not active",
+    "G05: asset lists invalid",
+    "G06: allocation must total 100",
+    "G06: bands must match targets",
+    "G07: risk weight denominator required",
+    "G09: owner approval rule missing",
+    "G03: structured cashflow required",
+    "G12: documented human feasibility review required",
+    "G01: UNKNOWN missing/invalid approved_by",
+    "G01: approver must match owner in single-owner model",
+    "G03: UNKNOWN cash_flow_needs must be explicit event list",
+    "G04: UNKNOWN missing/invalid risk_capacity",
+    "G04: UNKNOWN missing/invalid risk_willingness",
+    "G04: UNKNOWN structured risk_limits required",
+    "G04: UNKNOWN missing/invalid measurement_method",
+    "G04: UNKNOWN/invalid single_name_max_pct",
+    "G04: UNKNOWN/invalid sector_max_pct",
+    "G04: UNKNOWN/invalid liquidity_min_pct",
+    "G04: UNKNOWN/invalid gross_leverage_max",
+    "G05: UNKNOWN structured asset_rules required",
+    "G05: UNKNOWN explicit boolean leverage_allowed required",
+    "G05: UNKNOWN explicit boolean derivatives_allowed required",
+    "G05: invalid/duplicate asset lists",
+    "G07: risk limit currency mismatch/missing",
+    "G07: UNKNOWN/invalid risk limit as_of",
+    "G08: UNKNOWN structured benchmark required",
+    "G08: UNKNOWN missing/invalid name",
+    "G08: UNKNOWN missing/invalid evaluation_period",
+    "G08: UNKNOWN missing/invalid return_basis",
+    "G08: benchmark currency mismatch/missing",
+    "G09: UNKNOWN structured approval_rules required",
+    "G09: UNKNOWN missing/invalid review_frequency",
+    "G09: UNKNOWN missing/invalid amendment_rule",
+    "G09: UNKNOWN structured rebalance_policy required",
+    "G09: UNKNOWN missing/invalid frequency",
+    "G09: UNKNOWN/invalid approval or validity dates",
+    "G10: UNKNOWN missing/invalid approval_ref",
+    "G11: UNKNOWN structured validation_sources required",
+    "G11: UNKNOWN structured prices required",
+    "G11: UNKNOWN missing/invalid evidence_ref",
+    "G11: UNKNOWN/unavailable prices",
+    "G11: UNKNOWN/invalid source as_of: prices",
+    "G11: UNKNOWN structured fx required",
+    "G11: UNKNOWN missing/invalid evidence_ref",
+    "G11: UNKNOWN/unavailable fx",
+    "G11: UNKNOWN/invalid source as_of: fx",
+    "G11: UNKNOWN structured holdings required",
+    "G11: UNKNOWN missing/invalid evidence_ref",
+    "G11: UNKNOWN/unavailable holdings",
+    "G11: UNKNOWN/invalid source as_of: holdings",
+    "G12: UNKNOWN structured feasibility_review required",
+    "G12: UNKNOWN missing/invalid reviewer",
+    "G12: UNKNOWN missing/invalid reason",
+    "G12: UNKNOWN missing/invalid evidence_ref",
+    "G12: UNKNOWN explicit human review record required",
+    "G12: UNKNOWN/unresolved feasibility conflicts",
+    "G12: review policy/version mismatch",
+    "G12: UNKNOWN/invalid review date"
+  ],
+  "gates": {
+    "G01": {
+      "status": "FAIL",
+      "reasons": [
+        "G01: UNKNOWN missing/invalid approved_by",
+        "G01: approver must match owner in single-owner model"
+      ]
+    },
+    "G02": {
+      "status": "PASS",
+      "reasons": []
+    },
+    "G03": {
+      "status": "FAIL",
+      "reasons": [
+        "G03: structured cashflow required",
+        "G03: UNKNOWN cash_flow_needs must be explicit event list"
+      ]
+    },
+    "G04": {
+      "status": "UNKNOWN",
+      "reasons": [
+        "G04: UNKNOWN missing/invalid risk_capacity",
+        "G04: UNKNOWN missing/invalid risk_willingness",
+        "G04: UNKNOWN structured risk_limits required",
+        "G04: UNKNOWN missing/invalid measurement_method",
+        "G04: UNKNOWN/invalid single_name_max_pct",
+        "G04: UNKNOWN/invalid sector_max_pct",
+        "G04: UNKNOWN/invalid liquidity_min_pct",
+        "G04: UNKNOWN/invalid gross_leverage_max"
+      ]
+    },
+    "G05": {
+      "status": "FAIL",
+      "reasons": [
+        "G05: asset lists invalid",
+        "G05: UNKNOWN structured asset_rules required",
+        "G05: UNKNOWN explicit boolean leverage_allowed required",
+        "G05: UNKNOWN explicit boolean derivatives_allowed required",
+        "G05: invalid/duplicate asset lists"
+      ]
+    },
+    "G06": {
+      "status": "FAIL",
+      "reasons": [
+        "G06: allocation must total 100",
+        "G06: bands must match targets"
+      ]
+    },
+    "G07": {
+      "status": "FAIL",
+      "reasons": [
+        "G07: risk weight denominator required",
+        "G07: risk limit currency mismatch/missing",
+        "G07: UNKNOWN/invalid risk limit as_of"
+      ]
+    },
+    "G08": {
+      "status": "FAIL",
+      "reasons": [
+        "G08: UNKNOWN structured benchmark required",
+        "G08: UNKNOWN missing/invalid name",
+        "G08: UNKNOWN missing/invalid evaluation_period",
+        "G08: UNKNOWN missing/invalid return_basis",
+        "G08: benchmark currency mismatch/missing"
+      ]
+    },
+    "G09": {
+      "status": "FAIL",
+      "reasons": [
+        "G09: policy not active",
+        "G09: owner approval rule missing",
+        "G09: UNKNOWN structured approval_rules required",
+        "G09: UNKNOWN missing/invalid review_frequency",
+        "G09: UNKNOWN missing/invalid amendment_rule",
+        "G09: UNKNOWN structured rebalance_policy required",
+        "G09: UNKNOWN missing/invalid frequency",
+        "G09: UNKNOWN/invalid approval or validity dates"
+      ]
+    },
+    "G10": {
+      "status": "UNKNOWN",
+      "reasons": [
+        "G10: UNKNOWN missing/invalid approval_ref"
+      ]
+    },
+    "G11": {
+      "status": "UNKNOWN",
+      "reasons": [
+        "G11: UNKNOWN structured validation_sources required",
+        "G11: UNKNOWN structured prices required",
+        "G11: UNKNOWN missing/invalid evidence_ref",
+        "G11: UNKNOWN/unavailable prices",
+        "G11: UNKNOWN/invalid source as_of: prices",
+        "G11: UNKNOWN structured fx required",
+        "G11: UNKNOWN missing/invalid evidence_ref",
+        "G11: UNKNOWN/unavailable fx",
+        "G11: UNKNOWN/invalid source as_of: fx",
+        "G11: UNKNOWN structured holdings required",
+        "G11: UNKNOWN missing/invalid evidence_ref",
+        "G11: UNKNOWN/unavailable holdings",
+        "G11: UNKNOWN/invalid source as_of: holdings"
+      ]
+    },
+    "G12": {
+      "status": "FAIL",
+      "reasons": [
+        "G12: documented human feasibility review required",
+        "G12: UNKNOWN structured feasibility_review required",
+        "G12: UNKNOWN missing/invalid reviewer",
+        "G12: UNKNOWN missing/invalid reason",
+        "G12: UNKNOWN missing/invalid evidence_ref",
+        "G12: UNKNOWN explicit human review record required",
+        "G12: UNKNOWN/unresolved feasibility conflicts",
+        "G12: review policy/version mismatch",
+        "G12: UNKNOWN/invalid review date"
+      ]
+    }
+  },
+  "scope": "mechanical_contract_only",
+  "approval_granted": false,
+  "external_evidence_authenticated": false
+}

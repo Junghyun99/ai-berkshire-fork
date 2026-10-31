@@ -2,6 +2,7 @@
 import argparse
 import json
 from decimal import Decimal, InvalidOperation
+from policy_gates import supplemental_checks, names
 
 
 def num(value):
@@ -16,22 +17,14 @@ def num(value):
     return v
 
 
-def check_policy(p):
+def check_policy(p, as_of=None):
     errors = []
     if not isinstance(p, dict):
         return ["G00: policy object required"]
-    required = ("policy_id", "version", "owner", "base_currency", "investment_horizon",
-                "objective", "benchmark", "eligible_assets", "prohibited_assets",
-                "strategic_targets", "allocation_bands", "risk_limits", "rebalance_policy",
-                "approval_rules", "risk_capacity", "risk_willingness", "cash_flow_needs",
-                "approved_by", "approved_at", "effective_at")
-    for key in required:
-        if p.get(key) is None or p.get(key) in ("", "TBD"):
-            errors.append("G01: missing " + key)
     if p.get("status") != "active":
         errors.append("G09: policy not active")
     allowed, banned = p.get("eligible_assets"), p.get("prohibited_assets")
-    if not isinstance(allowed, list) or not allowed or not isinstance(banned, list):
+    if not names(allowed) or not names(banned, empty=True):
         errors.append("G05: asset lists invalid")
     elif set(allowed) & set(banned):
         errors.append("G05: allowed/prohibited assets overlap")
@@ -67,12 +60,25 @@ def check_policy(p):
     review = p.get("feasibility_review")
     if not isinstance(review, dict) or review.get("result") != "pass" or not review.get("reviewer") or not review.get("reason"):
         errors.append("G12: documented human feasibility review required")
+    errors.extend(supplemental_checks(p, as_of=as_of))
     return errors
+
+
+def evaluate_policy(p, as_of=None):
+    errors = check_policy(p, as_of=as_of)
+    gates = {}
+    for i in range(1, 13):
+        key = f"G{i:02d}"
+        reasons = [e for e in errors if e.startswith(key + ":") or e.startswith("G00:")]
+        gates[key] = {"status": "UNKNOWN" if reasons and all("UNKNOWN" in e for e in reasons) else "FAIL" if reasons else "PASS", "reasons": reasons}
+    return {"result": "BLOCKED" if errors else "PASS", "errors": errors, "gates": gates,
+            "scope": "mechanical_contract_only", "approval_granted": False,
+            "external_evidence_authenticated": False}
 
 
 def check_proposal(policy, portfolio, proposal):
     errors = check_policy(policy)
-    if not isinstance(portfolio, dict) or not isinstance(proposal, dict):
+    if not isinstance(policy, dict) or not isinstance(portfolio, dict) or not isinstance(proposal, dict):
         return errors + ["P00: portfolio/proposal object required"]
     for key in ("snapshot_id", "policy_id", "policy_version", "net_asset_value", "base_currency"):
         if portfolio.get(key) is None:
@@ -116,7 +122,8 @@ def main():
     with open(a.policy, encoding="utf-8") as f:
         p = json.load(f)
     if a.kind == "policy":
-        errors = check_policy(p)
+        report = evaluate_policy(p)
+        errors = report["errors"]
     else:
         if not a.portfolio or not a.proposal:
             ap.error("proposal requires --portfolio and --proposal")
@@ -125,7 +132,9 @@ def main():
         with open(a.proposal, encoding="utf-8") as f:
             proposal = json.load(f)
         errors = check_proposal(p, portfolio, proposal)
-    print(json.dumps({"result": "BLOCKED" if errors else "PASS", "errors": errors}, ensure_ascii=False, indent=2))
+    if a.kind == "proposal":
+        report = {"result": "BLOCKED" if errors else "PASS", "errors": errors, "scope": "mechanical_contract_only", "approval_granted": False}
+    print(json.dumps(report, ensure_ascii=False, indent=2))
     return 2 if errors else 0
 
 

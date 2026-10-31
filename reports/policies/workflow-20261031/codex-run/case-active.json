@@ -1,0 +1,112 @@
+{
+  "allocation_bands": {
+    "cash": {
+      "max": 40,
+      "min": 20
+    },
+    "equity": {
+      "max": 80,
+      "min": 60
+    }
+  },
+  "approval_authenticated": false,
+  "approval_rules": {
+    "amendment_rule": "new-version-owner-approval",
+    "owner_approval_required": true,
+    "review_frequency": "annual"
+  },
+  "approved_at": "2026-10-28T10:00:00+09:00",
+  "approved_by": "user1",
+  "asset_rules": {
+    "derivatives_allowed": false,
+    "leverage_allowed": false
+  },
+  "base_currency": "KRW",
+  "benchmark": {
+    "currency": "KRW",
+    "evaluation_period": "annual",
+    "name": "test-index",
+    "return_basis": "total_return"
+  },
+  "cash_flow_needs": [],
+  "effective_at": "2026-10-28",
+  "eligible_assets": [
+    "equity",
+    "cash"
+  ],
+  "expiry_rule": "until_superseded",
+  "feasibility_review": {
+    "actor_type": "user",
+    "evidence_ref": "fixture:review",
+    "policy_id": "example",
+    "policy_version": "1.0",
+    "reason": "cash flow and risk reviewed",
+    "result": "pass",
+    "reviewed_at": "2026-10-27",
+    "reviewer": "user1",
+    "unresolved_conflicts": []
+  },
+  "investment_horizon": "10y",
+  "objective": "long-term growth",
+  "operational_use_allowed": false,
+  "owner": "user1",
+  "policy_id": "example",
+  "policy_scope": {
+    "accounts": [
+      "test-account"
+    ]
+  },
+  "portfolio_ids": [
+    "test-portfolio"
+  ],
+  "prohibited_assets": [
+    "derivatives"
+  ],
+  "provenance": {
+    "approval_ref": "fixture:approval",
+    "policy_id": "example",
+    "policy_version": "1.0",
+    "revision_ref": "fixture:initial",
+    "sources": [
+      "fixture:source"
+    ]
+  },
+  "rebalance_policy": {
+    "frequency": "annual"
+  },
+  "risk_capacity": "moderate",
+  "risk_limits": {
+    "as_of": "2026-10-28",
+    "currency": "KRW",
+    "gross_leverage_max": 1,
+    "liquidity_min_pct": 10,
+    "measurement_method": "fixture:whole-portfolio",
+    "sector_max_pct": 25,
+    "single_name_max_pct": 5,
+    "weight_basis": "total_portfolio"
+  },
+  "risk_willingness": "moderate",
+  "status": "research_active",
+  "strategic_targets": {
+    "cash": 30,
+    "equity": 70
+  },
+  "validation_sources": {
+    "fx": {
+      "as_of": "2026-10-28",
+      "evidence_ref": "fixture:fx",
+      "status": "available"
+    },
+    "holdings": {
+      "as_of": "2026-10-28",
+      "evidence_ref": "fixture:holdings",
+      "status": "available"
+    },
+    "prices": {
+      "as_of": "2026-10-28",
+      "evidence_ref": "fixture:prices",
+      "status": "available"
+    }
+  },
+  "version": "1.0"
+}
