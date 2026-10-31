@@ -1,0 +1,80 @@
+{
+  "company": "넷플릭스",
+  "ticker": "NFLX",
+  "skill": "investment-team",
+  "started": "2026-10-31 16:14:35",
+  "steps": {
+    "context": {
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-31 16:14:35",
+      "error": "",
+      "note": ""
+    },
+    "factsheet": {
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-10-31 16:14:36",
+      "error": "",
+      "note": ""
+    },
+    "view-duan": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-buffett": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-munger": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-lilu": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "rebuttal": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "final": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "plan": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "readme": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "check": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "ledger": {
+      "status": "대기",
+      "attempts": 0
+    }
+  },
+  "blobs": {
+    "lessons": {
+      "saved": "2026-10-31 16:14:35",
+      "text": "과거 판단: 넷플릭스 (NFLX) — 최근 순\n\n[2026-10-31 | investment-checklist | 매수 ★★★ | 내재가치 75~95 USD]\n  반증 조건: 분기 매출 성장률 YoY 8% 미만, 연간 영업이익률 가이던스 하향, 가격 인상 후 회사 공시 이탈률·회원 지표 악화 확인\n  리포트: reports/다중회사비교-checklist-20261031.md\n  결과: 미정산\n\nNO_DATA: 조건에 맞는 교훈이 없습니다(회고가 아직 없거나 종목·태그·시장이 일치하지 않음).\n  쓸 수 있는 데이터가 없습니다. 값을 추정하거나 지어내지 말고 '데이터 없음'으로 기록하세요.\n"
+    },
+    "factsheet": {
+      "saved": "2026-10-31 16:14:36",
+      "text": "# 팩트시트: Netflix, Inc. (NFLX)\n\n생성: 2026-10-31 16:14 — **현재 시점 스냅샷**(과거 시점 분석에는 쓰지 말 것) · 주가 통화 USD · 재무 통화 USD\n\n## 시세·밸류에이션\n| 항목 | 값 | 출처 | 기준일 |\n|---|---|---|---|\n| 현재가 | 62.08 USD | Yahoo chart | 2026-10-30 |\n| 52주 최고 | 116.73 USD | Yahoo chart | 2026-10-30 |\n| 52주 최저 | 61.39 USD | Yahoo chart | 2026-10-30 |\n| 발행주식수 | 4,163,939,676주 | Yahoo timeseries | 2026-09-30 |\n| 시가총액 | 258.50B USD | Yahoo timeseries | 2026-10-30 |\n| PER(TTM) | 17.94배 | Yahoo timeseries | 2026-10-30 |\n| PBR | 8.83배 | Yahoo timeseries | 2026-10-30 |\n\n## 연간 재무 (재무 통화 USD, 출처 Yahoo timeseries)\n| 회계연도 | 매출 | 영업이익 | 지배순이익 | 희석EPS | 자본 | 영업CF | CapEx | FCF | 영업이익률 | 순이익률 | ROE | 영업CF/순이익 |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| 2023-12-31 | 33.72B USD | 6.95B USD | 5.41B USD | 1.20 USD | 20.59B USD | 7.27B USD | -348.6M USD | 6.93B USD | 20.6% | 16.0% | 26.3% | 1.35 |\n| 2024-12-31 | 39.00B USD | 10.42B USD | 8.71B USD | 1.98 USD | 24.74B USD | 7.36B USD | -439.5M USD | 6.92B USD | 26.7% | 22.3% | 35.2% | 0.85 |\n| 2025-12-31 | 45.18B USD | 13.33B USD | 10.98B USD | 2.53 USD | 26.62B USD | 10.15B USD | -688.2M USD | 9.46B USD | 29.5% | 24.3% | 41.3% | 0.92 |\n\n## 교차 검증 (기준 = 1차 출처, ≤1% ✅ / 1~5% ⚠️ / >5% ❌)\n| 항목 | 기간 | 기준(출처) | 비교(출처) | 편차 | 판정 |\n|---|---|---|---|---|---|\n| 시가총액 검산(주가×주식수) | 2026-10-30 | 258.50B USD (Yahoo 시총) | 258.50B USD (주가×발행주식수) | 0.00% | ✅ |\n| 매출 | 2025-12-31 | 45.18B USD (SEC EDGAR) | 45.18B USD (Yahoo) | 0.00% | ✅ |\n| 영업이익 | 2025-12-31 | 13.33B USD (SEC EDGAR) | 13.33B USD (Yahoo) | 0.00% | ✅ |\n| 지배순이익 | 2025-12-31 | 10.98B USD (SEC EDGAR) | 10.98B USD (Yahoo) | 0.00% | ✅ |\n| 영업CF | 2025-12-31 | 10.15B USD (SEC EDGAR) | 10.15B USD (Yahoo) | 0.00% | ✅ |\n| 자본 | 2025-12-31 | 26.62B USD (SEC EDGAR) | 26.62B USD (Yahoo) | 0.00% | ✅ |\n\n## 사용 규칙\n- 보고서와 Agent 분석의 정확한 수치는 이 표가 기준이다. 다른 출처 값이 다르면 **불일치로 표기**하고, 두 값을 맞춘 숫자를 지어내지 않는다.\n- `데이터 없음` 칸은 추정으로 채우지 않는다. 필요하면 다른 출처에서 가져와 출처를 붙인다.\n- ❌ 판정 항목은 원본 공시로 확인하기 전까지 결론의 근거로 쓰지 않는다.\n"
+    }
+  },
+  "files": {},
+  "log": [
+    "2026-10-31 16:14:35 start",
+    "2026-10-31 16:14:35 put lessons",
+    "2026-10-31 16:14:35 done context",
+    "2026-10-31 16:14:36 put factsheet",
+    "2026-10-31 16:14:36 done factsheet"
+  ]
+}
