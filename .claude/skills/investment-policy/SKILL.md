@@ -34,7 +34,7 @@ $ARGUMENTS 를 바탕으로 투자정책서(IPS)를 작성·검토·개정한다
 
 - 사용자 입력의 `policy_id`, `portfolio_id`, 계좌 범위, 기존 정책 파일을 식별한다.
 - 변경 요청이면 현재 정책과 이전 검토 이력을 읽는다. 기존 파일을 찾지 못하면 경로와 한계를 기록한다.
-- 문서의 `ACTIVE` 문자열만으로 승인 효력을 추정하지 않는다. **Phase 1-5의 결정론적 정책 Registry/Validator가 아직 미구현**이므로 이번 Skill에서 ACTIVE를 인증할 수 없다.
+- 문서의 `ACTIVE` 문자열만으로 승인 효력을 추정하지 않는다. 결정론적 Validator와 연구용 Registry는 구현되어 있지만 **실제 사용자 인증과 운용 승격은 미구현/차단**되어 있다. 이번 Skill에서 ACTIVE를 인증할 수 없다.
 - 개인정보, 계좌번호, 비밀번호, API 키 등의 상세 내용은 수집·보관하지 않는다.
 
 ### 1. 인터뷰: 이미 제공된 정보는 반복 질문하지 않는다
@@ -76,7 +76,7 @@ $ARGUMENTS 를 바탕으로 투자정책서(IPS)를 작성·검토·개정한다
 - **0–3점 합계가 높아도 검증 게이트 위반을 덮지 못한다.**
 - 소스/기준일 불명, 정량 계산 불가능, 사용자 목표와 제약의 충돌은 `UNKNOWN`/검토 필요로 남긴다.
 - 정성적 실현 가능성(G12)은 **사람의 판단이 필요**하다고 표시한다.
-- 본 단계의 판정은 **AI 예비 진단**일 뿐, Phase 1-5에서 구현할 결정론적 검증의 `PASS`를 대신하지 않는다.
+- 본 단계의 판정은 **AI 예비 진단**일 뿐, 현재 결정론적 검증의 `PASS`를 대신하지 않는다.
 
 ### 4. 정책 검토 및 변경 제안
 
@@ -113,6 +113,16 @@ $ARGUMENTS 를 바탕으로 투자정책서(IPS)를 작성·검토·개정한다
 
 ## 연동 및 테스트 참고
 
-Phase 1-5에서 `tools/policy_validator.py` 및 `tools/policy_registry.py`가 구현되면 **검증 결과 확인·승인 요청**까지만 연결한다. Registry가 승인자 이벤트를 기록·검증해야 ACTIVE 전환 가능하다. 이를 구현하기 전에는 아무리 완전한 IPS라도 Skill 출력만으로 ACTIVE가 될 수 없다.
+주 실행 검증 환경은 Codex/Work다(D-016). Codex에서는 이 파일과 필수 참조를 명시적으로 읽고 동일 도구를 호출한다. Claude 자동 로딩 여부는 별도 검증 항목이며 Codex 결과로 보증하지 않는다.
+
+현재 도구의 입력 계약은 `methodology/fund-management/policy-gate-implementation.md`, 등록 경계는 `methodology/fund-management/policy-registry-integrity.md`, 시나리오는 `methodology/fund-management/policy-workflow-validation.md`를 참조한다.
+
+- Markdown IPS를 Validator가 직접 읽는 것으로 가정하지 않는다. 사용자 확인값을 JSON으로 옮길 때 출처를 유지하고 미정 값은 누락/TBD로 남긴다. 검사 통과를 위해 승인자·승인시각·사람 검토·자료 출처를 생성하거나 draft를 active로 바꾸지 않는다.
+- JSON이 준비되면 `python3 ~/ai-berkshire/tools/policy_validator.py policy --policy <정책.json>`으로 검사하고 종료 코드(0/2), `result`, `errors`, `gates`, `scope`, `approval_granted`를 기록한다. PASS는 기계적 계약 통과이며 사람의 승인이나 외부 자료 인증이 아니다.
+- 결과에 **자료/정책 보완 필요**(누락 필드·자료·배분 모순 등)와 **사용자 결정/승인 필요**(한도 선택·G12 판단·승인 기록 등)를 별도 항목으로 적는다. 둘은 동시에 해당할 수 있다. G01/G09 같은 게이트에도 여러 원인이 있으므로 번호만으로 분류하지 말고 실제 오류를 인용한다. `approval_granted=false`는 어떤 경우에도 유지한다.
+- 일반 Skill 실행에서는 Registry 등록을 호출하지 않는다. 합성 통합 테스트만 별도 임시 디렉터리에서 `--research-only`와 고유 `event_id`를 사용한다. 반환된 `research_active`는 운용 정책이 아니며 제안 검증에서도 차단되어야 한다. 실제 사용자 정책이나 승인 이벤트를 합성하지 않는다.
+- 기존 연구 Registry의 상태 조회는 `show`/`audit`로 수행한다. 사본 불일치가 있으면 원인·복구 필요를 보고한다. `active.json` 파일명만으로 ACTIVE를 추정하지 않는다.
+- 제안의 기계적 검사에는 `python3 ~/ai-berkshire/tools/policy_validator.py proposal --policy <정책.json> --portfolio <스냅샷.json> --proposal <제안.json>`을 사용한다. 정책 버전·스냅샷 불일치나 DRAFT 차단을 우회하지 않는다.
+- Python 계약 테스트, Work CLI 실행, 실제 Claude Skill 실행의 결과를 구분한다. CLI 통과를 Skill 런타임 검증 완료로 기록하지 않는다.
 
 확인할 대표 사례: 미확정 투자기간, 목표 비중 합계 오류, 종목 비중 분모 누락, 정책 리스크 한도와 `position_plan.py` 10% 기본값 충돌, 무단 ACTIVE 선언, 기존 보고서 라벨 유지.

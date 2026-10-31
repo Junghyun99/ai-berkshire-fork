@@ -1,0 +1,26 @@
+{
+  "scope": "final artifact integrity only; no identity authentication",
+  "files": {
+    "reports/policies/workflow-20261031/codex-run/execution.json": "d550ef66cbb71aa98f1ecc33f32750b18789668d5a9cc89d6bdca89cb1b76bdd",
+    "reports/policies/workflow-20261031/codex-run/research-policy-cli.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/policies/workflow-20261031/codex-run/draft-policy-cli.stdout.json": "5146c04a4a2204bad1c1ff7deb860135f86178fb79b8e20076727a58a1b478ff",
+    "reports/policies/workflow-20261031/codex-run/verification-notes.txt": "4f1a8812c7855bcac95745e759564607694e52f0907c3e56fc2472c22d7ef100",
+    "reports/policies/workflow-20261031/codex-run/policy-input.json": "ae3b3d1eb1c8608f16a7f74ab0bb08335de3142f8d5a206dac9a1da5044733e4",
+    "reports/policies/workflow-20261031/codex-run/case-proposal.json": "71e8a09f5e946bc7bb1e0f23aa848c7fa12d5ab8b22803e0d44f0afc99527b22",
+    "reports/policies/workflow-20261031/codex-run/artifact-sha256.json": "050ce89eed51fb3351f0f15e8ea0831d2df829999caff0b362157d90248fdfc8",
+    "reports/policies/workflow-20261031/codex-run/proposal-cli.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/policies/workflow-20261031/codex-run/README.md": "429a6412449ac3cf2070aa0a66bd30b9a9a06c8c7619712edc290b158280ae9f",
+    "reports/policies/workflow-20261031/codex-run/status-proposal-ko.md": "c7e2f9ab73c62f860423d2c28df4f8603c3fe7c64cec3b863b9fff01624e0cc5",
+    "reports/policies/workflow-20261031/codex-run/research-policy-cli.stdout.json": "4da396787c4f4947fc3463fdd49b7e3c070f8a3ac4fd9290af75f31ecd6eb577",
+    "reports/policies/workflow-20261031/codex-run/prompt-input.txt": "5ed4d793fc67fab472abdc29d8bf52bec01bd2cb21b1ce3bf7784b5e0344ba82",
+    "reports/policies/workflow-20261031/codex-run/draft-ko.md": "02c762ce8a11e355a88d527a6deacb55339d9850caea0e2823d201753edcc4f1",
+    "reports/policies/workflow-20261031/codex-run/draft-policy-cli.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/policies/workflow-20261031/codex-run/case-portfolio.json": "eb0d76b741d0bcf055e230e45244f19e89814c2ed8aa2c05847e3f1d6581c851",
+    "reports/policies/workflow-20261031/codex-run/review-ko.md": "96a7e48cd4ba5056115cf63830573d389a87227e117fa9b423fa00ae237c8315",
+    "reports/policies/workflow-20261031/codex-run/case-active.json": "01acae7e29652356abb0e56a965255378278453ce63b98a702255205307dcf90",
+    "reports/policies/workflow-20261031/codex-run/proposal-cli.stdout.json": "5d7bed91a7a3ac3f35a76ad362f2413a27ef11c55f18ec4c358df2c0f5e6880d",
+    "tools/policy_validator.py": "61aca41a148580ad099d1855d635cd9a163a828b2f386fd68b7559d0918a0a2c",
+    "tools/policy_gates.py": "ba1f4102a0e4a1d69aeeffaa5d4207f1b1939b6526c3904af3b726090c518984",
+    ".claude/skills/investment-policy/SKILL.md": "47d2e0d5bacbc3d3c5605f9a543f24231a46849447b3ecfda042088c588aa329"
+  }
+}
