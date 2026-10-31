@@ -1,0 +1,7 @@
+{
+  "snapshot_id": "fixture-s1",
+  "policy_id": "example",
+  "policy_version": "1.0",
+  "net_asset_value": 1000,
+  "base_currency": "KRW"
+}
