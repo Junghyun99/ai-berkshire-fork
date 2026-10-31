@@ -1,15 +1,12 @@
-"""Local append-only IPS version registry (stdlib). No order execution.
-
-MVP: single-writer filesystem; does not authenticate human identity or guarantee
-transactional consistency under concurrent processes. Do not use as a live
-order authorization service.
-"""
+"""Research-only IPS registry. Human authentication and operational activation unavailable."""
 import argparse
+import copy
 import hashlib
 import json
 from pathlib import Path
 
 from policy_validator import check_policy
+from policy_registry_store import persist, inspect_registry
 
 
 def digest(value):
@@ -17,7 +14,10 @@ def digest(value):
     return hashlib.sha256(encoded).hexdigest()
 
 
-def register(draft, event, directory):
+def register(draft, event, directory, *, research_only=False):
+    if research_only is not True:
+        raise ValueError("authenticated approval unavailable; explicit research_only=True required")
+    draft, event = copy.deepcopy(draft), copy.deepcopy(event)
     if not isinstance(draft, dict) or not isinstance(event, dict):
         raise ValueError("draft and approval event must be objects")
     if draft.get("status") != "draft":
@@ -40,29 +40,26 @@ def register(draft, event, directory):
     version = policy["version"]
     if not isinstance(version, str) or not version or not all(c.isalnum() or c in "._-" for c in version):
         raise ValueError("unsafe version")
-    root = Path(directory)
-    root.mkdir(parents=True, exist_ok=True)
-    archive = root / ("policy-" + version + ".json")
-    # Exclusive write prevents overwriting a previously archived version.
-    with archive.open("x", encoding="utf-8") as f:
-        json.dump(policy, f, ensure_ascii=False, indent=2)
-    with (root / "events.jsonl").open("a", encoding="utf-8") as f:
-        f.write(json.dumps(event, ensure_ascii=False) + "\n")
-    tmp = root / "active.json.tmp"
-    tmp.write_text(json.dumps(policy, ensure_ascii=False, indent=2), encoding="utf-8")
-    tmp.replace(root / "active.json")
-    return policy
+    policy.update(status="research_active", approval_authenticated=False,
+                  operational_use_allowed=False)
+    return persist(draft, event, policy, directory)
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("action", choices=("register", "show"))
+    ap.add_argument("action", choices=("register", "show", "audit", "recover"))
     ap.add_argument("--registry", required=True)
     ap.add_argument("--policy")
     ap.add_argument("--approval-event")
+    ap.add_argument("--research-only", action="store_true")
     args = ap.parse_args()
-    if args.action == "show":
-        print((Path(args.registry) / "active.json").read_text(encoding="utf-8"))
+    if args.action in ("show", "audit", "recover"):
+        result = inspect_registry(args.registry, repair=args.action == "recover")
+        if args.action == "show":
+            if result["projection_errors"]:
+                raise ValueError("projection mismatch; audit and recover first")
+            result = result["current"]
+        print(json.dumps(result, ensure_ascii=False, indent=2))
         return
     if not args.policy or not args.approval_event:
         ap.error("register requires --policy and --approval-event")
@@ -70,8 +67,8 @@ def main():
         draft = json.load(f)
     with open(args.approval_event, encoding="utf-8") as f:
         event = json.load(f)
-    result = register(draft, event, args.registry)
-    print(json.dumps({"registered": True, "version": result["version"]}, ensure_ascii=False))
+    result = register(draft, event, args.registry, research_only=args.research_only)
+    print(json.dumps({"registered": True, "mode": "research_only", "approval_authenticated": False, "version": result["version"]}, ensure_ascii=False))
 
 
 if __name__ == "__main__":
