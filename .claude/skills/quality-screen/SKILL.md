@@ -85,6 +85,17 @@ $ARGUMENTS 에 대해 부실 배제 지표 스크리닝을 실행하여, 일류 
 
 ### 2단계: 병렬 데이터 수집
 
+**한국 상장사는 먼저 `tools/quality_screen_kr.py`로 계산한다.** DART 사업보고서 원본으로 7지표·면제 A/B(C는 사업모델 확인 필요)를 같은 정의로 한꺼번에 계산하고, ⑦ 희석 20% 초과 종목의 증자·분할·합병 공시 제목을 함께 출력한다(`DART_API_KEY` 필요, 외화 표시 재무 환산에 `FRED_API_KEY`).
+
+```bash
+python3 tools/quality_screen_kr.py --index KPI200 --json out.json             # 지수 일괄
+python3 tools/quality_screen_kr.py 005930 000660 --overrides ov.json           # 개별 종목 + 수작업 판단
+```
+
+도구 결과는 출발점이다. ⑦ 비희석 사유(액면분할·무상증자·합병), 일회성 이익으로 왜곡된 지표, 지분법 지주사 구조, 상장 10년 미만 여부는 사람이 확인해 `--overrides` JSON(`dilution_ok`·`cell_override`·`verdict_override`·`listed_under10`·`costco_type`)으로 반영하고, 보고서에 근거를 적는다. 금융업은 DART가 2020년 이전 재무를 주지 않아 ROE가 5년 평균이 된다. 예시: `스크리닝/KOSPI200-후보풀/overrides-20261031.json`.
+
+그 밖의 시장(미국·홍콩·중국 등)이나 도구가 데이터를 못 찾은 종목은 아래처럼 수집한다.
+
 기업별로 독립 백그라운드 Agent를 띄워 WebSearch로 아래 데이터를 수집한다:
 
 1. **ROE**: 최근 10년(또는 상장 이후) 연도별 ROE, 평균 계산
