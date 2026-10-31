@@ -67,8 +67,9 @@
       "sha": "352be32ce540de56"
     },
     "plan": {
-      "status": "대기",
-      "attempts": 0
+      "status": "실패",
+      "attempts": 1,
+      "error": "리스크 Agent 3개 rate limit(429), 15:50 UTC 리셋"
     },
     "readme": {
       "status": "대기",
@@ -110,6 +111,7 @@
     "2026-10-31 11:10:13 done view-buffett",
     "2026-10-31 11:14:07 done rebuttal",
     "2026-10-31 11:14:07 done final",
-    "2026-10-31 11:14:08 put plan-baseline"
+    "2026-10-31 11:14:08 put plan-baseline",
+    "2026-10-31 16:12:20 fail plan: 리스크 Agent 3개 rate limit(429), 15:50 UTC 리셋"
   ]
 }
