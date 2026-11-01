@@ -1,0 +1,58 @@
+{
+  "runtime": "Codex Work; local Python CLI, not Claude runtime",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "git_commit": "3fc1819725e0a93232a2a202a80356bd946e925c",
+  "executions": [
+    {
+      "command": [
+        "python3",
+        "tools/policy_validator.py",
+        "policy",
+        "--policy",
+        "/workspace/scratch/3cd465906075/policy-workflow52/reports/policies/workflow-20261031/codex-run/policy-input.json"
+      ],
+      "cwd": "/workspace/scratch/3cd465906075/policy-workflow52",
+      "started_at_utc": "2026-10-31T01:15:17.382635+00:00",
+      "exit_code": 2,
+      "stdout_file": "draft-policy-cli.stdout.json",
+      "stderr_file": "draft-policy-cli.stderr.txt"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/policy_validator.py",
+        "policy",
+        "--policy",
+        "/workspace/scratch/3cd465906075/policy-workflow52/reports/policies/workflow-20261031/codex-run/case-active.json"
+      ],
+      "cwd": "/workspace/scratch/3cd465906075/policy-workflow52",
+      "started_at_utc": "2026-10-31T01:15:17.407407+00:00",
+      "exit_code": 2,
+      "stdout_file": "research-policy-cli.stdout.json",
+      "stderr_file": "research-policy-cli.stderr.txt"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/policy_validator.py",
+        "proposal",
+        "--policy",
+        "/workspace/scratch/3cd465906075/policy-workflow52/reports/policies/workflow-20261031/codex-run/case-active.json",
+        "--portfolio",
+        "/workspace/scratch/3cd465906075/policy-workflow52/reports/policies/workflow-20261031/codex-run/case-portfolio.json",
+        "--proposal",
+        "/workspace/scratch/3cd465906075/policy-workflow52/reports/policies/workflow-20261031/codex-run/case-proposal.json"
+      ],
+      "cwd": "/workspace/scratch/3cd465906075/policy-workflow52",
+      "started_at_utc": "2026-10-31T01:15:17.431361+00:00",
+      "exit_code": 2,
+      "stdout_file": "proposal-cli.stdout.json",
+      "stderr_file": "proposal-cli.stderr.txt"
+    }
+  ],
+  "allocation_arithmetic": {
+    "method": "decimal.Decimal",
+    "sum_pct": "90",
+    "gap_percentage_points": "10"
+  }
+}

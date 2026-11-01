@@ -1,0 +1,10 @@
+{
+  "result": "BLOCKED",
+  "errors": [
+    "G09: policy not active",
+    "P03: policy version mismatch",
+    "P04: snapshot mismatch"
+  ],
+  "scope": "mechanical_contract_only",
+  "approval_granted": false
+}

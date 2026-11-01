@@ -56,3 +56,9 @@ Before modifying this repository from Work or another agent runtime, read:
 **Mandatory safety boundaries:** PR merge does not equal investment-policy approval; policy validators and the local registry are incomplete MVPs. Never infer successful tests from committed test files. Never invent actual financial data, backtest results, active policies, broker actions, or authenticated human approvals.
 
 **Stacked research PRs:** #37 → #38 → #39. Verify each current PR state in GitHub before merging, retargeting, or editing. Use one PR per coherent change and include exact test results, citations, as-of timestamps, and unresolved limitations. Preserve existing `.claude/skills`, report labels, and Python interfaces.
+
+## Codex/Work 정책 Skill 실행 (2026-10-31 사용자 승인)
+
+정책 Skill의 주 실행 검증 환경은 Codex/Work다. `.claude/skills/investment-policy/SKILL.md`를 명시적으로 읽고 해당 참조·도구 계약에 따라 실행한다. Claude 전용 자동 로딩이 Codex에서 제공된다고 가정하지 않는다. 별도 복제 Skill이나 제거된 upstream 호환 계층을 재생성하지 않는다.
+
+검증 기록에는 합성 입력, 실제 Codex 산출물, CLI 출력/종료 코드와 확인된 실행 환경을 남긴다. Claude 자동 로딩·런타임 호환성은 별도 미검증이며 Codex 결과로 대체 인증하지 않는다. 상세 기준은 `methodology/fund-management/policy-workflow-validation.md`, 사용자 결정은 D-016을 참조한다.
