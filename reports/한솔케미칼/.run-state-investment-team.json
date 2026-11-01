@@ -67,16 +67,28 @@
       "sha": "fb481d7ea8393267"
     },
     "plan": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-01 00:15:52",
+      "error": "",
+      "note": "",
+      "sha": "c7e63d2811416545"
     },
     "readme": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-01 00:16:11",
+      "error": "",
+      "note": "",
+      "sha": "1a65b1dd640eb218"
     },
     "check": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-01 00:17:57",
+      "error": "",
+      "note": "",
+      "sha": "127b261eebab8272"
     },
     "ledger": {
       "status": "대기",
@@ -110,6 +122,9 @@
     "2026-11-01 00:07:31 done view-buffett",
     "2026-11-01 00:09:44 done rebuttal",
     "2026-11-01 00:11:32 done final",
-    "2026-11-01 00:11:52 put plan-baseline"
+    "2026-11-01 00:11:52 put plan-baseline",
+    "2026-11-01 00:15:52 done plan",
+    "2026-11-01 00:16:11 done readme",
+    "2026-11-01 00:17:57 done check"
   ]
 }
