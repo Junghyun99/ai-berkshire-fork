@@ -141,6 +141,18 @@ class RunStateTest(unittest.TestCase):
         self.assertFalse(os.path.exists(rs.state_path("테스트", "investment-team")))
         self.assertEqual(self.cmd("status")[0], 3)
 
+    def test_ledger_step_accepts_record_dated_after_start(self):
+        st = self.state()
+        st["steps"]["ledger"]["status"] = "대기"
+        rs._save(st)
+        start = st["started"][:10]
+        older = [{"id": "2000-01-01-005930-investment-team"}, {"id": "2999-01-01-000660-investment-team"}]
+        with mock.patch.object(rs.dl, "_read", return_value=older):
+            self.assertEqual(self.cmd("done", "--step", "ledger")[0], 1)
+        later = [{"id": "2999-01-01-005930-investment-team"}]
+        with mock.patch.object(rs.dl, "_read", return_value=later):
+            self.assertEqual(self.cmd("done", "--step", "ledger")[0], 0, start)
+
     def test_unknown_step_is_refused(self):
         code, out = self.cmd("done", "--step", "view-graham")
         self.assertNotEqual(code, 0)
