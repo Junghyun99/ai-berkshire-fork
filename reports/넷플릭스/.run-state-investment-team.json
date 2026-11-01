@@ -51,8 +51,12 @@
       "sha": "fec479c990b70db0"
     },
     "rebuttal": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-01 00:04:21",
+      "error": "",
+      "note": "",
+      "sha": "f92db03ea877e875"
     },
     "final": {
       "status": "대기",
@@ -95,6 +99,7 @@
     "2026-10-31 16:19:16 done view-duan",
     "2026-10-31 16:19:56 done view-lilu",
     "2026-10-31 16:20:27 done view-munger",
-    "2026-10-31 16:22:34 done view-buffett"
+    "2026-10-31 16:22:34 done view-buffett",
+    "2026-11-01 00:04:21 done rebuttal"
   ]
 }
