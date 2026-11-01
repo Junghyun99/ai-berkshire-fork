@@ -1,5 +1,10 @@
 # AI Berkshire — Project Status / Work Handoff
 
+## Phase 2-4 계산 코어 — 2026-11-01
+
+[집계 후 현금흐름 계산 코어](../research/phase2-4-cashflow-core.md)를 추가했다. 명시적 TWR/Dietz/MWR와 입력 차단·CLI를 구현하고 신규26개 포함 전체258개 테스트가 통과했다. 기존 엔진과 정책/성과 데이터는 보존했다. #73→#74에 의존하는 PR 단계이며 원장·이전/FX/계좌 제약·실제 snapshot·가용시점 연결은 미구현이다. 다음은 계좌 이벤트 정규화와 이전 대조다. 정책 DRAFT 및 #53~56 미결 유지.
+
+
 ## Phase 2-4 현금흐름 계약 — 2026-11-01
 
 [현금흐름·TWR/MWR 설계](../research/phase2-4-cashflow-performance-contract.md)를 추가했다. 통합/계좌별 흐름, 이전 중 자산, 평가·FX·비용 시각, 정확 TWR·명시적 근사·MWR 해의 모호성 및 차단 규칙을 정의했다. 합성 산술 예시 8개 검증은 실제 엔진 테스트와 구분한다. 기존 Python 엔진·정책·성과 데이터는 변경하지 않았다.
