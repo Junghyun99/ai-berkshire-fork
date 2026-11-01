@@ -1,0 +1,125 @@
+{
+  "scope": "snapshot integrity and coverage only; not official certification",
+  "manifest_files_verified": {
+    "original": 8,
+    "supplement": 16
+  },
+  "original_observed_coverage": {
+    "NASDAQXNDX": {
+      "first": "1999-03-04",
+      "last": "2026-10-27",
+      "observations": 6956,
+      "nulls": 258
+    },
+    "DEXKOUS": {
+      "first": "1981-04-13",
+      "last": "2026-10-23",
+      "observations": 11381,
+      "nulls": 499
+    },
+    "DGS3MO": {
+      "first": "1981-09-01",
+      "last": "2026-10-26",
+      "observations": 11287,
+      "nulls": 493
+    },
+    "IR3TIB01KRM156N": {
+      "first": "1991-01-01",
+      "last": "2026-09-01",
+      "observations": 429,
+      "nulls": 0
+    },
+    "SPY": {
+      "first": "2004-01-02",
+      "last": "2026-09-30",
+      "observations": 5722,
+      "nulls": 0
+    },
+    "IEF": {
+      "first": "2004-01-02",
+      "last": "2026-09-30",
+      "observations": 5722,
+      "nulls": 0
+    },
+    "069500.KS": {
+      "first": "2007-01-29",
+      "last": "2026-10-01",
+      "observations": 4278,
+      "nulls": 578
+    },
+    "148070.KS": {
+      "first": "2011-10-20",
+      "last": "2026-10-01",
+      "observations": 3640,
+      "nulls": 31
+    }
+  },
+  "processed_coverage": {
+    "US_SP500": {
+      "first": "2004-02",
+      "last": "2026-09",
+      "count": 272,
+      "contiguous": true,
+      "return_types": [
+        "vendor_adjusted_ETF_proxy"
+      ]
+    },
+    "US_NASDAQ100": {
+      "first": "1999-04",
+      "last": "2026-09",
+      "count": 330,
+      "contiguous": true,
+      "return_types": [
+        "official_TR_index"
+      ]
+    },
+    "US_TREASURY7_10Y": {
+      "first": "2004-02",
+      "last": "2026-09",
+      "count": 272,
+      "contiguous": true,
+      "return_types": [
+        "vendor_adjusted_ETF_proxy"
+      ]
+    },
+    "KR_EQUITY": {
+      "first": "2010-01",
+      "last": "2026-09",
+      "count": 201,
+      "contiguous": true,
+      "return_types": [
+        "calculated_adjusted_price_TR_proxy"
+      ]
+    },
+    "KR_TREASURY10Y": {
+      "first": "2011-11",
+      "last": "2026-09",
+      "count": 179,
+      "contiguous": true,
+      "return_types": [
+        "secondary_adjusted_price_TR_proxy"
+      ]
+    }
+  },
+  "common": {
+    "first": "2011-11",
+    "last": "2026-09",
+    "count": 179
+  },
+  "quality": [
+    "research_proxy"
+  ],
+  "available_at_missing": 1254,
+  "processed_rows": 1254,
+  "original_source_gate": "BLOCKED_SOURCE_RECONCILIATION: 069500.KS,148070.KS",
+  "strict_data_gate": "D08: unverified or unsourced data",
+  "official_bond_TR": false,
+  "processed_hashes": {
+    "monthly_returns.csv": "67473443e3d1d5779f682a6e302c1d5f82cb5ac950ed4c0ccd69ef6b84a60f87",
+    "rates.csv": "e32b26fcfe3944f02d4182589a644e8ecc3388f129997971d0cf997f479d02c8"
+  },
+  "input_manifest_hashes": {
+    "original": "72832989a68af3bb3277f80858fe537798531b10249f77c3a301461757bff389",
+    "supplement": "022250cba102c73a759418002f96a373397f74b8472a25d36f78456b0bde3ad4"
+  }
+}
