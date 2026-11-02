@@ -1,0 +1,21 @@
+[
+  {
+    "url": "https://www.kiwoometf.com/service/etf/KO02010200M?gcode=148070",
+    "attempted_at": "2026-10-31T11:57:39.351468+00:00",
+    "error_type": "HTTPError",
+    "error": "HTTP Error 503: Service Unavailable"
+  },
+  {
+    "url": "https://www.kosef.co.kr/service/etf/KO02010200M?gcode=148070",
+    "attempted_at": "2026-10-31T11:57:39.352377+00:00",
+    "error_type": "HTTPError",
+    "error": "HTTP Error 503: Service Unavailable"
+  },
+  {
+    "url": "https://www.bond.co.kr/conts/10051",
+    "attempted_at": "2026-10-31T11:57:39.352969+00:00",
+    "status": 200,
+    "bytes": 83191,
+    "sha256": "f9c523e6a88ba68dc892b7e0a1e07a0e6c6502feba96f4c1c14a504900f49b6c"
+  }
+]
