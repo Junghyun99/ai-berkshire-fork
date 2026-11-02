@@ -76,6 +76,16 @@ class LedgerTest(_LedgerBase):
         self.assertIn("이미 기록된 판단", out)
         self.assertEqual(len(dl._read(dl.LEDGER)), 1)
 
+    def test_market_of_taiwan_and_benchmark(self):
+        for sym in ("2330.TW", "3661.TWO"):
+            self.assertEqual(dl.market_of(sym), "TW")
+        self.assertEqual(dl.BENCHMARKS["TW"], "0050.TW")
+        with mock.patch.object(dl, "resolve_symbol", return_value=("2330.TW", "TWD", 2370.0)):
+            code, out = self.add(date_=date.today().isoformat(), ticker="2330.TW")
+        self.assertEqual(code, 0, out)
+        row = dl._read(dl.LEDGER)[0]
+        self.assertEqual((row["시장"], row["통화"], row["벤치마크"]), ("TW", "TWD", "0050.TW"))
+
     def test_add_rejects_bad_verdict_and_future_date(self):
         self.assertNotEqual(self.add(verdict="강력매수")[0], 0)
         future = (date.today() + timedelta(days=3)).isoformat()

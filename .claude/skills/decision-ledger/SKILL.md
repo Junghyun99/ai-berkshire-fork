@@ -111,7 +111,7 @@ python3 tools/decision_ledger.py show {티커}
 같은 종목 기록이 없어도, 같은 산업·테마·시장의 교훈은 쓸 수 있다(TradingAgents reflector 의 교훈 주입):
 
 ```bash
-python3 tools/decision_ledger.py lessons --ticker {티커} --tag {산업·테마 태그} --market {KOSPI|KOSDAQ|US|HK|CN|JP}
+python3 tools/decision_ledger.py lessons --ticker {티커} --tag {산업·테마 태그} --market {KOSPI|KOSDAQ|US|HK|CN|JP|TW}
 ```
 
 - 태그는 회고 때 붙인 자유 문자열이다(예: `메모리`, `사이클`, `플랫폼`, `규제`). 대소문자 무시·부분 일치로 찾으므로 산업명과 테마를 2~3개 넣는다.
@@ -127,7 +127,7 @@ python3 tools/decision_ledger.py settle
 
 - 기간이 다 거래되지 않은 구간은 건드리지 않는다(조기 정산 금지).
 - 알파 = 종목 수익률 − 벤치마크 수익률. 둘 다 수정종가(배당·분할 반영).
-  - 벤치마크: KOSPI 069500.KS, KOSDAQ 229200.KS, 미국 SPY, 홍콩 2800.HK, 중국 510300.SS, 일본 1306.T
+  - 벤치마크: KOSPI 069500.KS, KOSDAQ 229200.KS, 미국 SPY, 홍콩 2800.HK, 중국 510300.SS, 일본 1306.T, 대만 0050.TW
 - 방향 적중: 매수는 알파 > 0, 회피는 알파 < 0. 관망은 채점하지 않는다.
 - 내재가치 위치: 평가일 종가가 기록한 범위의 하단 미만 / 범위 안 / 상단 초과.
 - 출력 첫 줄이 `UNAVAILABLE`이거나 실패 건이 있으면 **수익률을 추정해 채우지 않는다**. 다음 정산 때 다시 시도한다.

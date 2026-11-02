@@ -130,16 +130,40 @@ class RunStateTest(unittest.TestCase):
             st["steps"][k]["status"] = "끝남"
         st["steps"]["ledger"]["status"] = "대기"
         rs._save(st)
-        rid = f"{st['started'][:10]}-005930-investment-team"
+        start = st["started"][:10]
+        row = {"id": f"{start}-005930-investment-team", "티커": "005930", "스킬": "investment-team",
+               "기록일": start}
         with mock.patch.object(rs.dl, "_read", return_value=[]):
             code, out = self.cmd("done", "--step", "ledger")
         self.assertEqual(code, 1)
-        self.assertIn(rid, out)
-        with mock.patch.object(rs.dl, "_read", return_value=[{"id": rid}]):
+        self.assertIn(f"005930 investment-team 기록(기록일 {start} 이후)", out)
+        with mock.patch.object(rs.dl, "_read", return_value=[row]):
             self.assertEqual(self.cmd("done", "--step", "ledger")[0], 0)
         self.assertEqual(self.cmd("finish")[0], 0)
         self.assertFalse(os.path.exists(rs.state_path("테스트", "investment-team")))
         self.assertEqual(self.cmd("status")[0], 3)
+
+    def test_ledger_row_written_after_midnight_still_counts(self):
+        # 실행이 자정을 넘기면 원장 id 의 날짜(리포트 작성일)가 시작일보다 하루 늦다.
+        st = self.state()
+        st["started"] = "2026-10-31 16:16:00"
+        rs._save(st)
+        rows = [
+            # 이전 실행의 기록(시작일 이전) — 이번 실행으로 치지 않는다
+            {"id": "2026-10-28-005930-investment-team", "티커": "005930", "스킬": "investment-team",
+             "기록일": "2026-10-28"},
+            # 다른 종목·다른 스킬 — 치지 않는다
+            {"id": "2026-11-01-000660-investment-team", "티커": "000660", "스킬": "investment-team",
+             "기록일": "2026-11-01"},
+            {"id": "2026-11-01-005930-investment-research", "티커": "005930", "스킬": "investment-research",
+             "기록일": "2026-11-01"},
+        ]
+        with mock.patch.object(rs.dl, "_read", return_value=rows):
+            self.assertEqual(self.cmd("done", "--step", "ledger")[0], 1)
+        rows.append({"id": "2026-11-01-005930-investment-team", "티커": "005930", "스킬": "investment-team",
+                     "기록일": "2026-11-01"})
+        with mock.patch.object(rs.dl, "_read", return_value=rows):
+            self.assertEqual(self.cmd("done", "--step", "ledger")[0], 0)
 
     def test_unknown_step_is_refused(self):
         code, out = self.cmd("done", "--step", "view-graham")
