@@ -133,8 +133,12 @@ def validate(state: dict, step: tuple, path: str) -> str:
         key = kind.split(":", 1)[1]
         return "" if state.get("blobs", {}).get(key) else f"put --key {key} 로 입력을 먼저 저장하세요."
     if kind == "ledger":
-        rid = f"{state['started'][:10]}-{state['ticker']}-{state['skill']}"
-        return "" if any(r["id"] == rid for r in dl._read(dl.LEDGER)) else f"원장에 {rid} 가 없습니다(add --from-report)."
+        # 원장 id 날짜는 리포트 작성일이라, 자정을 넘겨 끝난 실행은 시작일 이후 날짜로 기록된다.
+        start = state["started"][:10]
+        rid = f"{start}-{state['ticker']}-{state['skill']}"
+        tail = f"-{state['ticker']}-{state['skill']}"
+        ok = any(r["id"].endswith(tail) and r["id"][:10] >= start for r in dl._read(dl.LEDGER))
+        return "" if ok else f"원장에 {rid}(또는 시작일 이후 같은 종목·스킬 기록) 가 없습니다(add --from-report)."
     if not path or not os.path.exists(path):
         return f"산출물이 없습니다: {path or '(경로 미지정 — --file 로 지정)'}"
     with open(path, encoding="utf-8") as f:
