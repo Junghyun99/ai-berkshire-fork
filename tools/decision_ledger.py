@@ -50,6 +50,7 @@
 import argparse
 import calendar
 import csv
+import io
 import os
 import re
 import sys
@@ -97,20 +98,41 @@ def _read(path: str) -> list:
 
 
 def _write(path: str, fields: list, rows: list) -> None:
-    """임시 파일에 쓴 뒤 교체(중간에 죽어도 원장이 깨지지 않게)."""
+    """임시 파일에 쓴 뒤 교체(중간에 죽어도 원장이 깨지지 않게). 줄바꿈은 LF로 고정."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     tmp = f"{path}.{os.getpid()}.tmp"
     with open(tmp, "w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=fields)
+        w = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
     os.replace(tmp, path)
 
 
 def _append(path: str, fields: list, row: dict) -> None:
-    rows = _read(path)
-    rows.append(row)
-    _write(path, fields, rows)
+    """기존 행의 바이트는 그대로 두고 맨 끝에 한 행만 덧붙인다.
+
+    파일 전체를 다시 쓰면 줄바꿈(CRLF/LF)이 바뀌어 기존 행까지 diff 에 잡히고, 같은 원장에
+    행을 추가한 브랜치끼리 병합 충돌이 난다. 머리글이 fields 와 다르면(열 추가 등) 전체를 다시 쓴다.
+    """
+    if not os.path.exists(path):
+        _write(path, fields, [row])
+        return
+    with open(path, "rb") as f:
+        old = f.read()
+    header = old.split(b"\n", 1)[0].rstrip(b"\r").decode("utf-8-sig")
+    if next(csv.reader([header]), []) != fields:
+        rows = _read(path)
+        rows.append(row)
+        _write(path, fields, rows)
+        return
+    buf = io.StringIO()
+    csv.DictWriter(buf, fieldnames=fields, lineterminator="\n").writerow(row)
+    if old and not old.endswith(b"\n"):
+        old += b"\n"
+    tmp = f"{path}.{os.getpid()}.tmp"
+    with open(tmp, "wb") as f:
+        f.write(old + buf.getvalue().encode("utf-8"))
+    os.replace(tmp, path)
 
 
 # ---------------------------------------------------------------------------
