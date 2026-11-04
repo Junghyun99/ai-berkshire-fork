@@ -1,0 +1,80 @@
+{
+  "company": "알파벳",
+  "ticker": "GOOGL",
+  "skill": "investment-team",
+  "started": "2026-11-04 07:19:57",
+  "steps": {
+    "context": {
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-04 07:19:57",
+      "error": "",
+      "note": ""
+    },
+    "factsheet": {
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-04 07:19:59",
+      "error": "",
+      "note": ""
+    },
+    "view-duan": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-buffett": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-munger": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-lilu": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "rebuttal": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "final": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "plan": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "readme": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "check": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "ledger": {
+      "status": "대기",
+      "attempts": 0
+    }
+  },
+  "blobs": {
+    "lessons": {
+      "saved": "2026-11-04 07:19:57",
+      "text": "과거 판단: 알파벳 (GOOGL) — 최근 순\n\n[2026-10-31 | investment-checklist | 관망 ★★★ | 내재가치 220~290 USD]\n  반증 조건: 2027 CapEx 가이던스 3,000억$ 초과 + 연간 FCF 마이너스 확정(회피 쪽), Search 매출 성장 YoY 한 자릿수 진입(회피 쪽), 분기 FCF 플러스 복귀와 자사주 매입 재개 또는 주가 220$ 이하(매수 쪽)\n  리포트: reports/다중회사비교-checklist-20261031.md\n  결과: 미정산\n\nNO_DATA: 조건에 맞는 교훈이 없습니다(회고가 아직 없거나 종목·태그·시장이 일치하지 않음).\n  쓸 수 있는 데이터가 없습니다. 값을 추정하거나 지어내지 말고 '데이터 없음'으로 기록하세요.\n"
+    },
+    "factsheet": {
+      "saved": "2026-11-04 07:19:59",
+      "text": "# 팩트시트: Alphabet Inc. (GOOGL)\n\n생성: 2026-11-04 07:19 — **현재 시점 스냅샷**(과거 시점 분석에는 쓰지 말 것) · 주가 통화 USD · 재무 통화 USD\n\n## 시세·밸류에이션\n| 항목 | 값 | 출처 | 기준일 |\n|---|---|---|---|\n| 현재가 | 280.03 USD | Yahoo chart | 2026-11-03 |\n| 52주 최고 | 408.61 USD | Yahoo chart | 2026-11-03 |\n| 52주 최저 | 270.70 USD | Yahoo chart | 2026-11-03 |\n| 발행주식수 | 12,294,000,000주 | Yahoo timeseries | 2026-09-30 |\n| 시가총액 | 3,432.87B USD | Yahoo timeseries | 2026-11-03 |\n| PER(TTM) | 14.57배 | Yahoo timeseries | 2026-11-02 |\n| PBR | 5.20배 | Yahoo timeseries | 2026-11-02 |\n\n## 연간 재무 (재무 통화 USD, 출처 Yahoo timeseries)\n| 회계연도 | 매출 | 영업이익 | 지배순이익 | 희석EPS | 자본 | 영업CF | CapEx | FCF | 영업이익률 | 순이익률 | ROE | 영업CF/순이익 |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| 2023-12-31 | 307.39B USD | 84.29B USD | 73.80B USD | 5.80 USD | 283.38B USD | 101.75B USD | -32.25B USD | 69.50B USD | 27.4% | 24.0% | 26.0% | 1.38 |\n| 2024-12-31 | 350.02B USD | 112.39B USD | 100.12B USD | 8.04 USD | 325.08B USD | 125.30B USD | -52.53B USD | 72.76B USD | 32.1% | 28.6% | 30.8% | 1.25 |\n| 2025-12-31 | 402.84B USD | 129.04B USD | 132.17B USD | 10.81 USD | 415.26B USD | 164.71B USD | -91.45B USD | 73.27B USD | 32.0% | 32.8% | 31.8% | 1.25 |\n\n## 교차 검증 (기준 = 1차 출처, ≤1% ✅ / 1~5% ⚠️ / >5% ❌)\n| 항목 | 기간 | 기준(출처) | 비교(출처) | 편차 | 판정 |\n|---|---|---|---|---|---|\n| 시가총액 검산(주가×주식수) | 2026-11-03 | 3,432.87B USD (Yahoo 시총) | 3,442.69B USD (주가×발행주식수) | 0.29% | ✅ |\n| 매출 | 2025-12-31 | 402.84B USD (SEC EDGAR) | 402.84B USD (Yahoo) | 0.00% | ✅ |\n| 영업이익 | 2025-12-31 | 129.04B USD (SEC EDGAR) | 129.04B USD (Yahoo) | 0.00% | ✅ |\n| 지배순이익 | 2025-12-31 | 132.17B USD (SEC EDGAR) | 132.17B USD (Yahoo) | 0.00% | ✅ |\n| 영업CF | 2025-12-31 | 164.71B USD (SEC EDGAR) | 164.71B USD (Yahoo) | 0.00% | ✅ |\n| 자본 | 2025-12-31 | 415.26B USD (SEC EDGAR) | 415.26B USD (Yahoo) | 0.00% | ✅ |\n\n## 사용 규칙\n- 보고서와 Agent 분석의 정확한 수치는 이 표가 기준이다. 다른 출처 값이 다르면 **불일치로 표기**하고, 두 값을 맞춘 숫자를 지어내지 않는다.\n- `데이터 없음` 칸은 추정으로 채우지 않는다. 필요하면 다른 출처에서 가져와 출처를 붙인다.\n- ❌ 판정 항목은 원본 공시로 확인하기 전까지 결론의 근거로 쓰지 않는다.\n"
+    }
+  },
+  "files": {},
+  "log": [
+    "2026-11-04 07:19:57 start",
+    "2026-11-04 07:19:57 put lessons",
+    "2026-11-04 07:19:57 done context",
+    "2026-11-04 07:19:59 put factsheet",
+    "2026-11-04 07:19:59 done factsheet"
+  ]
+}
