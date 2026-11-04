@@ -1,0 +1,80 @@
+{
+  "company": "인튜이트",
+  "ticker": "INTU",
+  "skill": "investment-team",
+  "started": "2026-11-04 07:48:42",
+  "steps": {
+    "context": {
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-04 07:48:42",
+      "error": "",
+      "note": ""
+    },
+    "factsheet": {
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-04 07:48:44",
+      "error": "",
+      "note": ""
+    },
+    "view-duan": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-buffett": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-munger": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "view-lilu": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "rebuttal": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "final": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "plan": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "readme": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "check": {
+      "status": "대기",
+      "attempts": 0
+    },
+    "ledger": {
+      "status": "대기",
+      "attempts": 0
+    }
+  },
+  "blobs": {
+    "lessons": {
+      "saved": "2026-11-04 07:48:42",
+      "text": "과거 판단: 인튜이트 (INTU) — 최근 순\n\n[2026-10-31 | investment-checklist | 관망 ★★★ | 내재가치 340~420 USD]\n  반증 조건: 2027 신고 시즌 TurboTax 판매량 2년 연속 감소(관망→회피), QBO 온라인 회계 성장 15% 미만(회피 쪽), 주가 290$ 이하에서 QBO 20%대 성장 유지 확인(매수 쪽)\n  리포트: reports/다중회사비교-checklist-20261031.md\n  결과: 미정산\n\nNO_DATA: 조건에 맞는 교훈이 없습니다(회고가 아직 없거나 종목·태그·시장이 일치하지 않음).\n  쓸 수 있는 데이터가 없습니다. 값을 추정하거나 지어내지 말고 '데이터 없음'으로 기록하세요.\n"
+    },
+    "factsheet": {
+      "saved": "2026-11-04 07:48:44",
+      "text": "# 팩트시트: Intuit Inc. (INTU)\n\n생성: 2026-11-04 07:48 — **현재 시점 스냅샷**(과거 시점 분석에는 쓰지 말 것) · 주가 통화 USD · 재무 통화 USD\n\n## 시세·밸류에이션\n| 항목 | 값 | 출처 | 기준일 |\n|---|---|---|---|\n| 현재가 | 344.72 USD | Yahoo chart | 2026-11-03 |\n| 52주 최고 | 682.27 USD | Yahoo chart | 2026-11-03 |\n| 52주 최저 | 252.84 USD | Yahoo chart | 2026-11-03 |\n| 발행주식수 | 268,384,000주 | Yahoo timeseries | 2026-07-31 |\n| 시가총액 | 94.09B USD | Yahoo timeseries | 2026-11-02 |\n| PER(TTM) | 21.39배 | Yahoo timeseries | 2026-11-02 |\n| PBR | 4.95배 | Yahoo timeseries | 2026-11-02 |\n\n## 연간 재무 (재무 통화 USD, 출처 Yahoo timeseries)\n| 회계연도 | 매출 | 영업이익 | 지배순이익 | 희석EPS | 자본 | 영업CF | CapEx | FCF | 영업이익률 | 순이익률 | ROE | 영업CF/순이익 |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|\n| 2024-07-31 | 16.29B USD | 3.85B USD | 2.96B USD | 10.43 USD | 18.44B USD | 4.88B USD | -250.0M USD | 4.63B USD | 23.7% | 18.2% | 16.1% | 1.65 |\n| 2025-07-31 | 18.83B USD | 4.94B USD | 3.87B USD | 13.67 USD | 19.71B USD | 6.21B USD | -124.0M USD | 6.08B USD | 26.2% | 20.5% | 19.6% | 1.60 |\n| 2026-07-31 | 21.45B USD | 6.18B USD | 4.57B USD | 16.46 USD | 18.99B USD | 8.84B USD | -221.0M USD | 8.62B USD | 28.8% | 21.3% | 24.0% | 1.94 |\n\n## 교차 검증 (기준 = 1차 출처, ≤1% ✅ / 1~5% ⚠️ / >5% ❌)\n| 항목 | 기간 | 기준(출처) | 비교(출처) | 편차 | 판정 |\n|---|---|---|---|---|---|\n| 시가총액 검산(주가×주식수) | 2026-11-03 | 94.09B USD (Yahoo 시총) | 92.52B USD (주가×발행주식수) | 1.68% | ⚠️ |\n| 매출 | 2026-07-31 | 21.45B USD (SEC EDGAR) | 21.45B USD (Yahoo) | 0.00% | ✅ |\n| 영업이익 | 2026-07-31 | 5.88B USD (SEC EDGAR) | 6.18B USD (Yahoo) | 4.98% | ⚠️ |\n| 지배순이익 | 2026-07-31 | 4.57B USD (SEC EDGAR) | 4.57B USD (Yahoo) | 0.00% | ✅ |\n| 영업CF | 2026-07-31 | 8.84B USD (SEC EDGAR) | 8.84B USD (Yahoo) | 0.00% | ✅ |\n| 자본 | 2026-07-31 | 18.99B USD (SEC EDGAR) | 18.99B USD (Yahoo) | 0.00% | ✅ |\n\n## 사용 규칙\n- 보고서와 Agent 분석의 정확한 수치는 이 표가 기준이다. 다른 출처 값이 다르면 **불일치로 표기**하고, 두 값을 맞춘 숫자를 지어내지 않는다.\n- `데이터 없음` 칸은 추정으로 채우지 않는다. 필요하면 다른 출처에서 가져와 출처를 붙인다.\n- ❌ 판정 항목은 원본 공시로 확인하기 전까지 결론의 근거로 쓰지 않는다.\n"
+    }
+  },
+  "files": {},
+  "log": [
+    "2026-11-04 07:48:42 start",
+    "2026-11-04 07:48:42 put lessons",
+    "2026-11-04 07:48:42 done context",
+    "2026-11-04 07:48:44 put factsheet",
+    "2026-11-04 07:48:44 done factsheet"
+  ]
+}
