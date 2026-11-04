@@ -82,6 +82,7 @@ BENCHMARKS = {
     "HK": "2800.HK",         # Tracker Fund (항셍)
     "CN": "510300.SS",       # CSI300 ETF
     "JP": "1306.T",          # TOPIX ETF
+    "TW": "0050.TW",         # 元大台灣50(대만 50)
 }
 _YAHOO = "https://query1.finance.yahoo.com/v8/finance/chart/"
 
@@ -151,6 +152,8 @@ def market_of(symbol: str) -> str:
         return "CN"
     if s.endswith(".T"):
         return "JP"
+    if s.endswith((".TW", ".TWO")):
+        return "TW"
     return "US"
 
 
@@ -724,7 +727,7 @@ def main():
     pl = sub.add_parser("lessons", help="교훈 모음(같은 종목·태그·시장 우선)")
     pl.add_argument("--ticker", default="", help="이 종목의 교훈을 맨 앞에")
     pl.add_argument("--tag", action="append", default=[], help="산업·테마 태그(여러 번 지정 가능)")
-    pl.add_argument("--market", default="", help="KOSPI / KOSDAQ / US / HK / CN / JP")
+    pl.add_argument("--market", default="", help="KOSPI / KOSDAQ / US / HK / CN / JP / TW")
     pl.add_argument("--limit", type=int, default=10, help="최대 건수(0이면 전부)")
     pl.add_argument("--write", action="store_true", help="reports/decision-lessons.md 를 다시 만든다")
 
