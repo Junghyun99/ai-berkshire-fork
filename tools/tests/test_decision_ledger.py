@@ -65,6 +65,39 @@ class _LedgerBase(unittest.TestCase):
 
 
 class LedgerTest(_LedgerBase):
+    def test_append_keeps_existing_bytes_and_uses_lf(self):
+        # 기존 행의 줄바꿈(CRLF 섞임)을 건드리지 않고 LF 한 행만 덧붙인다 — 병합 충돌 방지.
+        header = ",".join(dl.LEDGER_FIELDS)
+        old = (header + "\r\n" + "a" + "," * (len(dl.LEDGER_FIELDS) - 1) + "\n").encode("utf-8")
+        with open(dl.LEDGER, "wb") as f:
+            f.write(old)
+        dl._append(dl.LEDGER, dl.LEDGER_FIELDS, {"id": "b"})
+        with open(dl.LEDGER, "rb") as f:
+            data = f.read()
+        self.assertTrue(data.startswith(old))
+        self.assertEqual(data[len(old):], ("b" + "," * (len(dl.LEDGER_FIELDS) - 1) + "\n").encode("utf-8"))
+        self.assertEqual([r["id"] for r in dl._read(dl.LEDGER)], ["a", "b"])
+
+    def test_append_without_trailing_newline_and_new_file(self):
+        dl._append(dl.LEDGER, dl.LEDGER_FIELDS, {"id": "a"})
+        with open(dl.LEDGER, "rb") as f:
+            self.assertNotIn(b"\r\n", f.read())
+        with open(dl.LEDGER, "rb") as f:
+            data = f.read().rstrip(b"\n")
+        with open(dl.LEDGER, "wb") as f:
+            f.write(data)
+        dl._append(dl.LEDGER, dl.LEDGER_FIELDS, {"id": "b"})
+        self.assertEqual([r["id"] for r in dl._read(dl.LEDGER)], ["a", "b"])
+
+    def test_append_rewrites_when_header_differs(self):
+        # 열이 추가된 경우 등 머리글이 다르면 새 머리글로 전체를 다시 쓴다.
+        old_fields = dl.LEDGER_FIELDS[:-1]
+        dl._write(dl.LEDGER, old_fields, [{"id": "a"}])
+        dl._append(dl.LEDGER, dl.LEDGER_FIELDS, {"id": "b"})
+        with open(dl.LEDGER, encoding="utf-8") as f:
+            self.assertEqual(f.readline().rstrip("\n"), ",".join(dl.LEDGER_FIELDS))
+        self.assertEqual([r["id"] for r in dl._read(dl.LEDGER)], ["a", "b"])
+
     def test_add_records_market_benchmark_and_rejects_duplicate(self):
         # 오늘 작성한 리포트면 참고용 기록시점가(현재가)를 남긴다.
         code, out = self.add("--iv-low", "70000", "--iv-high", "90000", date_=date.today().isoformat())
