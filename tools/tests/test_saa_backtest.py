@@ -44,6 +44,20 @@ class TestSAABacktest(unittest.TestCase):
         b = performance([.01] * 12, [0.] * 11 + [1.], 100)
         self.assertLess(b["cagr"], a["cagr"])
 
+    def test_initial_cost_charges_first_purchase_once(self):
+        args = dict(grid_count=50, cost_bps=10, include_series=True)
+        legacy = backtest(self.months, self.assets, self.panel, **args)
+        charged = backtest(self.months, self.assets, self.panel, include_initial_cost=True, **args)
+        for name, base in legacy["strategies"].items():
+            result = charged["strategies"][name]
+            self.assertEqual(base["turnover"][0], 0)
+            self.assertAlmostEqual(result["turnover"][0], 1)
+            self.assertEqual(result["turnover"][1:], base["turnover"][1:])
+            self.assertEqual(result["gross_returns"], base["gross_returns"])
+            years = base["months"] / 12
+            expected_wealth = (1 + base["cagr"]) ** years * 0.999
+            self.assertAlmostEqual((1 + result["cagr"]) ** years, expected_wealth)
+
     def test_insufficient_data(self):
         with self.assertRaises(ValueError):
             backtest(self.months[:24], self.assets, self.panel[:24], lookback=24)
