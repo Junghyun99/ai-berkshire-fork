@@ -104,7 +104,7 @@ def performance(returns, turnover, cost_bps, risk_free=None):
     return result
 
 
-def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed=17, grid_count=2500, risk_free=None, signal_lag=0, include_series=False):
+def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed=17, grid_count=2500, risk_free=None, signal_lag=0, include_series=False, *, include_initial_cost=False):
     if not isinstance(signal_lag, int) or signal_lag < 0:
         raise ValueError("signal_lag must be a nonnegative integer")
     if len(months) != len(panel) or any(len(row) != len(assets) for row in panel):
@@ -124,8 +124,9 @@ def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed
             for s in strategies:
                 target = model_weights(train, s, grid, train_rf)
                 prior = current.get(s, [0.] * len(assets))
-                # Turnover approximates buys/sells. First investment excluded.
-                change = 0 if s not in current else sum(abs(a - b) for a, b in zip(target, prior))
+                change = sum(abs(a - b) for a, b in zip(target, prior))
+                if s not in current and not include_initial_cost:
+                    change = 0
                 current[s] = target[:]
                 records[s]["turnover"].append(change)
                 records[s]["weights"].append({"month": months[t], "target": dict(zip(assets, target))})
@@ -142,6 +143,7 @@ def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed
                 raise ValueError("portfolio loss >=100%")
             current[s] = [x * (1 + r) / total for x, r in zip(w, panel[t])]
     return {"status": "RESEARCH_ONLY", "assets": assets, "oos_start": months[lookback + signal_lag],
+            "include_initial_cost": include_initial_cost,
             "oos_end": months[-1], "signal_lag_months": signal_lag, "lookback_months": lookback, "rebalance_months": rebalance,
             "round_trip_cost_bps_per_unit_turnover": cost_bps, "candidate_grid_count": len(grid),
             "strategies": {s: {**performance(v["returns"], v["turnover"], cost_bps, risk_free[lookback + signal_lag:] if risk_free is not None else None),
@@ -160,12 +162,15 @@ def main():
     p.add_argument("--lookback", type=int, default=60)
     p.add_argument("--rebalance", type=int, default=12)
     p.add_argument("--cost-bps", type=float, default=10.)
+    p.add_argument("--include-initial-cost", action="store_true",
+                   help="Charge transaction costs on the first allocation from cash.")
     p.add_argument("--grid-count", type=int, default=2500)
     p.add_argument("--min-months", type=int, default=84)
     args = p.parse_args()
     try:
         m, a, panel = load_panel(args.input, max(args.min_months, args.lookback + 1))
-        result = backtest(m, a, panel, args.lookback, args.rebalance, args.cost_bps, grid_count=args.grid_count)
+        result = backtest(m, a, panel, args.lookback, args.rebalance, args.cost_bps, grid_count=args.grid_count,
+                          include_initial_cost=args.include_initial_cost)
         print(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False))
     except (ValueError, OSError, TypeError) as exc:
         print(json.dumps({"status": "BLOCKED", "reason": str(exc)}, ensure_ascii=False))
