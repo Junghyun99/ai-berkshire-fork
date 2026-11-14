@@ -7,6 +7,10 @@ import argparse
 import json
 import math
 import random
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+from saa_availability import instant, key, select
 from saa_data_quality import load_panel
 
 
@@ -104,7 +108,47 @@ def performance(returns, turnover, cost_bps, risk_free=None):
     return result
 
 
-def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed=17, grid_count=2500, risk_free=None, signal_lag=0, include_series=False, *, include_initial_cost=False):
+def vintage_training_window(manifest, month, training_months, assets, use_rf):
+    """Use evidenced monthly KRW return vintages, never the realized panel for training."""
+    if not isinstance(manifest, dict):
+        raise ValueError("training vintages must be an object")
+    decisions = manifest.get("decision_times")
+    observations = manifest.get("observations")
+    if not isinstance(decisions, dict) or not isinstance(observations, dict):
+        raise ValueError("decision_times and observations mappings required")
+    cutoff = decisions.get(month)
+    start = datetime.strptime(month, "%Y-%m").replace(tzinfo=ZoneInfo("Asia/Seoul"))
+    if instant(cutoff) > start:
+        raise ValueError("decision is after the start of the KRW return month")
+    series = list(assets)
+    if use_rf:
+        rf_id = manifest.get("rf_series_id")
+        if not isinstance(rf_id, str) or not rf_id.strip() or rf_id in assets:
+            raise ValueError("distinct monthly RF series required")
+        series.append(rf_id)
+    required = []
+    for period in training_months:
+        dates = observations.get(period)
+        if not isinstance(dates, dict):
+            raise ValueError("missing observations for " + period)
+        for name in series:
+            stamp = dates.get(name)
+            instant(stamp)
+            if stamp[:7] != period:
+                raise ValueError("observation month mismatch")
+            required.append({"series_id": name, "observation_at": stamp})
+    selection = select(manifest.get("records"), cutoff, required)
+    selected = {key(row): row["value"] for row in selection["selected"]}
+    values = [selected[key(row)] for row in required]
+    if any(value <= -1 for value in values):
+        raise ValueError("invalid monthly return in training vintages")
+    rows = [values[i:i + len(series)] for i in range(0, len(values), len(series))]
+    train = [row[:len(assets)] for row in rows]
+    rates = [row[-1] for row in rows] if use_rf else None
+    return train, rates, selection
+
+
+def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed=17, grid_count=2500, risk_free=None, signal_lag=0, include_series=False, *, include_initial_cost=False, training_vintages=None):
     if not isinstance(signal_lag, int) or signal_lag < 0:
         raise ValueError("signal_lag must be a nonnegative integer")
     if len(months) != len(panel) or any(len(row) != len(assets) for row in panel):
@@ -116,11 +160,16 @@ def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed
     grid = candidates(len(assets), seed, grid_count)
     strategies = ("equal", "minvar", "shrink_minvar", "max_sharpe", "risk_parity")
     records = {s: {"returns": [], "turnover": [], "weights": []} for s in strategies}
+    vintage_audit = {}
     current = {}
     for t in range(lookback + signal_lag, len(months)):
         if (t - lookback - signal_lag) % rebalance == 0:
             train = panel[t - signal_lag - lookback:t - signal_lag]  # Exclude lag months.
             train_rf = risk_free[t - signal_lag - lookback:t - signal_lag] if risk_free is not None else None
+            if training_vintages is not None:
+                train, train_rf, vintage_audit[months[t]] = vintage_training_window(
+                    training_vintages, months[t], months[t - signal_lag - lookback:t - signal_lag],
+                    assets, risk_free is not None)
             for s in strategies:
                 target = model_weights(train, s, grid, train_rf)
                 prior = current.get(s, [0.] * len(assets))
@@ -143,6 +192,7 @@ def backtest(months, assets, panel, lookback=60, rebalance=12, cost_bps=10, seed
                 raise ValueError("portfolio loss >=100%")
             current[s] = [x * (1 + r) / total for x, r in zip(w, panel[t])]
     return {"status": "RESEARCH_ONLY", "assets": assets, "oos_start": months[lookback + signal_lag],
+            **({"training_vintage_audit": vintage_audit} if training_vintages is not None else {}),
             "include_initial_cost": include_initial_cost,
             "oos_end": months[-1], "signal_lag_months": signal_lag, "lookback_months": lookback, "rebalance_months": rebalance,
             "round_trip_cost_bps_per_unit_turnover": cost_bps, "candidate_grid_count": len(grid),
@@ -164,13 +214,26 @@ def main():
     p.add_argument("--cost-bps", type=float, default=10.)
     p.add_argument("--include-initial-cost", action="store_true",
                    help="Charge transaction costs on the first allocation from cash.")
+    p.add_argument("--training-vintages", help="JSON with decision_times, observations and vintage records")
     p.add_argument("--grid-count", type=int, default=2500)
     p.add_argument("--min-months", type=int, default=84)
     args = p.parse_args()
     try:
         m, a, panel = load_panel(args.input, max(args.min_months, args.lookback + 1))
+        manifest = None
+        rates = None
+        if args.training_vintages:
+            with open(args.training_vintages, encoding="utf-8") as source:
+                manifest = json.load(source)
+            if not isinstance(manifest, dict):
+                raise ValueError("training vintages must be an object")
+            if "rf_series_id" in manifest or "evaluation_rf" in manifest:
+                evaluation_rf = manifest.get("evaluation_rf")
+                if not isinstance(evaluation_rf, dict) or any(month not in evaluation_rf for month in m):
+                    raise ValueError("evaluation_rf requires a monthly return for every panel month")
+                rates = [evaluation_rf[month] for month in m]
         result = backtest(m, a, panel, args.lookback, args.rebalance, args.cost_bps, grid_count=args.grid_count,
-                          include_initial_cost=args.include_initial_cost)
+                          include_initial_cost=args.include_initial_cost, risk_free=rates, training_vintages=manifest)
         print(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False))
     except (ValueError, OSError, TypeError) as exc:
         print(json.dumps({"status": "BLOCKED", "reason": str(exc)}, ensure_ascii=False))
