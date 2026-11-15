@@ -1,0 +1,195 @@
+[
+  {
+    "series": "NASDAQXNDX",
+    "decision_month": "2017-01",
+    "vintage": "2016-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=NASDAQXNDX&vintage_date=2016-12-30",
+    "reference_sha256": "82950f9c9726471e109bd011d4573279a31e66f93c6edc8b3cb6692809fb8d69",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "series": "NASDAQXNDX",
+    "decision_month": "2018-01",
+    "vintage": "2017-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=NASDAQXNDX&vintage_date=2017-12-30",
+    "reference_sha256": "82950f9c9726471e109bd011d4573279a31e66f93c6edc8b3cb6692809fb8d69",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "series": "NASDAQXNDX",
+    "decision_month": "2019-01",
+    "vintage": "2018-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=NASDAQXNDX&vintage_date=2018-12-30",
+    "reference_sha256": "82950f9c9726471e109bd011d4573279a31e66f93c6edc8b3cb6692809fb8d69",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "series": "NASDAQXNDX",
+    "decision_month": "2020-01",
+    "vintage": "2019-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=NASDAQXNDX&vintage_date=2019-12-30",
+    "reference_sha256": "82950f9c9726471e109bd011d4573279a31e66f93c6edc8b3cb6692809fb8d69",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "series": "NASDAQXNDX",
+    "decision_month": "2021-01",
+    "vintage": "2020-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=NASDAQXNDX&vintage_date=2020-12-30",
+    "reference_sha256": "82950f9c9726471e109bd011d4573279a31e66f93c6edc8b3cb6692809fb8d69",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "series": "NASDAQXNDX",
+    "decision_month": "2022-01",
+    "vintage": "2021-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=NASDAQXNDX&vintage_date=2021-12-30",
+    "reference_sha256": "82950f9c9726471e109bd011d4573279a31e66f93c6edc8b3cb6692809fb8d69",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "series": "NASDAQXNDX",
+    "decision_month": "2023-01",
+    "vintage": "2022-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=NASDAQXNDX&vintage_date=2022-12-30",
+    "reference_sha256": "82950f9c9726471e109bd011d4573279a31e66f93c6edc8b3cb6692809fb8d69",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "series": "NASDAQXNDX",
+    "decision_month": "2024-01",
+    "vintage": "2023-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=NASDAQXNDX&vintage_date=2023-12-30",
+    "reference_sha256": "82950f9c9726471e109bd011d4573279a31e66f93c6edc8b3cb6692809fb8d69",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "series": "NASDAQXNDX",
+    "decision_month": "2025-01",
+    "vintage": "2024-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=NASDAQXNDX&vintage_date=2024-12-30",
+    "reference_sha256": "82950f9c9726471e109bd011d4573279a31e66f93c6edc8b3cb6692809fb8d69",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "series": "NASDAQXNDX",
+    "decision_month": "2026-01",
+    "vintage": "2025-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=NASDAQXNDX&vintage_date=2025-12-30",
+    "reference_sha256": "82950f9c9726471e109bd011d4573279a31e66f93c6edc8b3cb6692809fb8d69",
+    "sha256": "f07fad7084fcb840e2909df70082af9d0dd2825100a490364a48dbd9a305ab88",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  },
+  {
+    "series": "DEXKOUS",
+    "decision_month": "2017-01",
+    "vintage": "2016-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=DEXKOUS&vintage_date=2016-12-30",
+    "reference_sha256": "0257f9e7f21bcb0bff94b8bb77c9e01369bf18ecd7d8673632a56db2370f8c64",
+    "sha256": "55da570862443b1f48202e5ee3f436d04de97f83835f1cd145238cfd6f305ffa",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  },
+  {
+    "series": "DEXKOUS",
+    "decision_month": "2018-01",
+    "vintage": "2017-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=DEXKOUS&vintage_date=2017-12-30",
+    "reference_sha256": "0257f9e7f21bcb0bff94b8bb77c9e01369bf18ecd7d8673632a56db2370f8c64",
+    "sha256": "f61143cfdaf96f58674409d4c5c5bb9e79d9a41e8e0a684bb9639997d44bbe03",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  },
+  {
+    "series": "DEXKOUS",
+    "decision_month": "2019-01",
+    "vintage": "2018-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=DEXKOUS&vintage_date=2018-12-30",
+    "reference_sha256": "0257f9e7f21bcb0bff94b8bb77c9e01369bf18ecd7d8673632a56db2370f8c64",
+    "sha256": "7a825fb90df59723a86b42f782097666a45fc2826a69ddceada709f10fdc1e29",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  },
+  {
+    "series": "DEXKOUS",
+    "decision_month": "2020-01",
+    "vintage": "2019-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=DEXKOUS&vintage_date=2019-12-30",
+    "reference_sha256": "0257f9e7f21bcb0bff94b8bb77c9e01369bf18ecd7d8673632a56db2370f8c64",
+    "sha256": "3d3eff221e0c06dc6f354012ecfcc18dd552ef95ef3acc7a1b8a44be28c25fae",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  },
+  {
+    "series": "DEXKOUS",
+    "decision_month": "2021-01",
+    "vintage": "2020-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=DEXKOUS&vintage_date=2020-12-30",
+    "reference_sha256": "0257f9e7f21bcb0bff94b8bb77c9e01369bf18ecd7d8673632a56db2370f8c64",
+    "sha256": "78b5620287302ccb5612feb4b1bb41dac77e07cf837dda964c966bbb2bc9e99a",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  },
+  {
+    "series": "DEXKOUS",
+    "decision_month": "2022-01",
+    "vintage": "2021-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=DEXKOUS&vintage_date=2021-12-30",
+    "reference_sha256": "0257f9e7f21bcb0bff94b8bb77c9e01369bf18ecd7d8673632a56db2370f8c64",
+    "sha256": "27f64d31519b13b9b9f338feaacf5e51d385368a169c7b9c7f24bd0964095d9c",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  },
+  {
+    "series": "DEXKOUS",
+    "decision_month": "2023-01",
+    "vintage": "2022-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=DEXKOUS&vintage_date=2022-12-30",
+    "reference_sha256": "0257f9e7f21bcb0bff94b8bb77c9e01369bf18ecd7d8673632a56db2370f8c64",
+    "sha256": "c52e5fdcca41ffeb48149dec5eb104804caca35a9162f5e3d6a7ce9551620c8d",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  },
+  {
+    "series": "DEXKOUS",
+    "decision_month": "2024-01",
+    "vintage": "2023-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=DEXKOUS&vintage_date=2023-12-30",
+    "reference_sha256": "0257f9e7f21bcb0bff94b8bb77c9e01369bf18ecd7d8673632a56db2370f8c64",
+    "sha256": "58c5fc5f66ae4a9cfefdc6e0da15b657e938ada3aba2f3a27cf34fe362eb4fa3",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  },
+  {
+    "series": "DEXKOUS",
+    "decision_month": "2025-01",
+    "vintage": "2024-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=DEXKOUS&vintage_date=2024-12-30",
+    "reference_sha256": "0257f9e7f21bcb0bff94b8bb77c9e01369bf18ecd7d8673632a56db2370f8c64",
+    "sha256": "c53ca46e3103974f46b1dcde549a10a394642c9b38820c546cc30eb962923de9",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  },
+  {
+    "series": "DEXKOUS",
+    "decision_month": "2026-01",
+    "vintage": "2025-12-30",
+    "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=DEXKOUS&vintage_date=2025-12-30",
+    "reference_sha256": "0257f9e7f21bcb0bff94b8bb77c9e01369bf18ecd7d8673632a56db2370f8c64",
+    "sha256": "5739ac34b2674f7713ffbba50366ef860526027ae790899212be1920731b0f0f",
+    "required_count": 61,
+    "missing": [],
+    "differences": []
+  }
+]
