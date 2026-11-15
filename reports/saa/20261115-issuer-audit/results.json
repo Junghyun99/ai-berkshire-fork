@@ -1,0 +1,85 @@
+{
+  "retrieval_date_utc": "2026-11-15",
+  "quality": "research_proxy",
+  "amount_tolerance_usd": "0.0005",
+  "historical_available_at_verified": false,
+  "xml_bare_ampersands_repaired_in_memory": 6,
+  "issuer_sources": {
+    "spy-distributions.xlsx": {
+      "url": "https://www.ssga.com/library-content/products/fund-data/etfs/us/spdr-etf-historical-distributions.xlsx",
+      "sha256": "4add18439e505ba6c114bea5d352ac68b1ea5420bc99abdf2e21500dd6f1faa2"
+    },
+    "spy-product.xlsx": {
+      "url": "https://www.ssga.com/library-content/products/fund-data/etfs/us/spdr-product-data-us-en.xlsx",
+      "sha256": "b4ca643ea24867d77052117c488b2f511f8e986410f76ffaef14cac4287b028a"
+    },
+    "ief-download": {
+      "url": "https://www.blackrock.com/varnish-api/blk-one01-product-data/product-data/api/v1/get-fund-document?appSubType=ISHARES&appType=PRODUCT_PAGE&component=fundDownload&locale=en_US&portfolioId=239456&targetSite=us-ishares&userType=individual",
+      "sha256": "b056f55f83ff675d7ccce77c769ae8273f4ac25230eb2007a8025fe1a069f769"
+    }
+  },
+  "symbols": {
+    "SPY": {
+      "original_sha256": "3e83365a8d52cf1ffde81e712363da988ddbe03f87438713277d4abcb899ec85",
+      "original_start": "2004-01-02",
+      "original_end": "2026-09-30",
+      "issuer_distribution_start": "1993-03-19",
+      "issuer_distribution_end": "2026-09-18",
+      "comparison": {
+        "start": "2004-01-02",
+        "end": "2026-09-30",
+        "yahoo_events": 92,
+        "issuer_events": 92,
+        "matched_dates": 92,
+        "yahoo_only_dates": [],
+        "issuer_only_dates": [],
+        "exact_amount_matches": 1,
+        "within_0_0005_usd": 91,
+        "max_abs_amount_difference_usd": "0.003431",
+        "outside_tolerance": [
+          {
+            "date": "2021-12-17",
+            "yahoo": "1.633",
+            "issuer": "1.636431"
+          }
+        ]
+      }
+    },
+    "IEF": {
+      "original_sha256": "ee0b09bd18ecee55765b8a4d70f9085fc3c1a1e13d977ed3f13257505f267c56",
+      "original_start": "2004-01-02",
+      "original_end": "2026-09-30",
+      "issuer_distribution_start": "2002-09-03",
+      "issuer_distribution_end": "2026-11-02",
+      "comparison": {
+        "start": "2004-01-02",
+        "end": "2026-09-30",
+        "yahoo_events": 272,
+        "issuer_events": 272,
+        "matched_dates": 272,
+        "yahoo_only_dates": [],
+        "issuer_only_dates": [],
+        "exact_amount_matches": 2,
+        "within_0_0005_usd": 272,
+        "max_abs_amount_difference_usd": "0.0005",
+        "outside_tolerance": []
+      }
+    }
+  },
+  "ief_historical": {
+    "field_names": [
+      "As Of",
+      "NAV per Share",
+      "Ex-Dividends",
+      "Shares Outstanding"
+    ],
+    "rows": 6122,
+    "start": "2002-07-22",
+    "end": "2026-11-13",
+    "exchange_close_verification": "not_performed_NAV_is_not_exchange_close"
+  },
+  "spy_product": {
+    "date": "Nov 12 2026",
+    "exchange_close_verification": "not_performed_latest_snapshot_outside_original_period"
+  }
+}
