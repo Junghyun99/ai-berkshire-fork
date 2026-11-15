@@ -1,0 +1,2244 @@
+{
+  "calculated_at": "2026-11-14T11:55:03.830604+00:00",
+  "scope": "KR_RF_only_fixed_return_paths",
+  "initial_cost_included": false,
+  "quality": "research_proxy",
+  "cutoff_rule": "two calendar days before evaluation month",
+  "missing_rule": "most recent observation no later than lag-3 target",
+  "results": {
+    "equal": {
+      "original": {
+        "cagr": 0.13287362736478636,
+        "mdd": -0.1700032610629585,
+        "volatility": 0.11732351095536424,
+        "sharpe_rf0": 1.1267423953036932,
+        "sortino_mar0": 1.974925024216743,
+        "total_turnover": 1.1645194349195225,
+        "months": 117,
+        "sharpe_rf_proxy": 0.9467551142861659,
+        "sortino_rf_proxy": 1.596190102684198
+      },
+      "revised": {
+        "cagr": 0.13287362736478636,
+        "mdd": -0.1700032610629585,
+        "volatility": 0.11732351095536424,
+        "sharpe_rf0": 1.1267423953036932,
+        "sortino_mar0": 1.974925024216743,
+        "total_turnover": 1.1645194349195225,
+        "months": 117,
+        "sharpe_rf_proxy": 0.9466524501436201,
+        "sortino_rf_proxy": 1.595982228838888
+      },
+      "delta": {
+        "cagr": 0.0,
+        "mdd": 0.0,
+        "sharpe_rf_proxy": -0.00010266414254578304,
+        "sortino_rf_proxy": -0.00020787384530995823
+      }
+    },
+    "minvar": {
+      "original": {
+        "cagr": 0.022727244107139333,
+        "mdd": -0.14278790325653967,
+        "volatility": 0.058146267051209,
+        "sharpe_rf0": 0.41561959988702524,
+        "sortino_mar0": 0.6461997277183006,
+        "total_turnover": 1.9524497148526132,
+        "months": 117,
+        "sharpe_rf_proxy": 0.048960409112295385,
+        "sortino_rf_proxy": 0.06990931006300023
+      },
+      "revised": {
+        "cagr": 0.022727244107139333,
+        "mdd": -0.14278790325653967,
+        "volatility": 0.058146267051209,
+        "sharpe_rf0": 0.41561959988702524,
+        "sortino_mar0": 0.6461997277183006,
+        "total_turnover": 1.9524497148526132,
+        "months": 117,
+        "sharpe_rf_proxy": 0.04876732000208522,
+        "sortino_rf_proxy": 0.06963021921849408
+      },
+      "delta": {
+        "cagr": 0.0,
+        "mdd": 0.0,
+        "sharpe_rf_proxy": -0.00019308911021016784,
+        "sortino_rf_proxy": -0.0002790908445061552
+      }
+    },
+    "shrink_minvar": {
+      "original": {
+        "cagr": 0.04443641547710597,
+        "mdd": -0.13725278451565004,
+        "volatility": 0.05996162332583768,
+        "sharpe_rf0": 0.7561134164711222,
+        "sortino_mar0": 1.2338764398904554,
+        "total_turnover": 2.0083981518735516,
+        "months": 117,
+        "sharpe_rf_proxy": 0.40256384174620685,
+        "sortino_rf_proxy": 0.6057161608206849
+      },
+      "revised": {
+        "cagr": 0.04443641547710597,
+        "mdd": -0.13725278451565004,
+        "volatility": 0.05996162332583768,
+        "sharpe_rf0": 0.7561134164711222,
+        "sortino_mar0": 1.2338764398904554,
+        "total_turnover": 2.0083981518735516,
+        "months": 117,
+        "sharpe_rf_proxy": 0.4023685144136748,
+        "sortino_rf_proxy": 0.6053891952145627
+      },
+      "delta": {
+        "cagr": 0.0,
+        "mdd": 0.0,
+        "sharpe_rf_proxy": -0.00019532733253202483,
+        "sortino_rf_proxy": -0.00032696560612222036
+      }
+    },
+    "max_sharpe": {
+      "original": {
+        "cagr": 0.10225859599200815,
+        "mdd": -0.2473451356208205,
+        "volatility": 0.11721459990487118,
+        "sharpe_rf0": 0.8922335197448206,
+        "sortino_mar0": 1.4645780332023746,
+        "total_turnover": 7.974985795226603,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7124269452414707,
+        "sortino_rf_proxy": 1.1199366063885192
+      },
+      "revised": {
+        "cagr": 0.10225859599200815,
+        "mdd": -0.2473451356208205,
+        "volatility": 0.11721459990487118,
+        "sharpe_rf0": 0.8922335197448206,
+        "sortino_mar0": 1.4645780332023746,
+        "total_turnover": 7.974985795226603,
+        "months": 117,
+        "sharpe_rf_proxy": 0.7123247653045868,
+        "sortino_rf_proxy": 1.1197516949871422
+      },
+      "delta": {
+        "cagr": 0.0,
+        "mdd": 0.0,
+        "sharpe_rf_proxy": -0.00010217993688388383,
+        "sortino_rf_proxy": -0.00018491140137699702
+      }
+    },
+    "risk_parity": {
+      "original": {
+        "cagr": 0.07440602064003432,
+        "mdd": -0.13096540215071095,
+        "volatility": 0.07709273567156757,
+        "sharpe_rf0": 0.9719313252244716,
+        "sortino_mar0": 1.6473962830712396,
+        "total_turnover": 1.6989865846506629,
+        "months": 117,
+        "sharpe_rf_proxy": 0.6977814330661978,
+        "sortino_rf_proxy": 1.1120226310950923
+      },
+      "revised": {
+        "cagr": 0.07440602064003432,
+        "mdd": -0.13096540215071095,
+        "volatility": 0.07709273567156757,
+        "sharpe_rf0": 0.9719313252244716,
+        "sortino_mar0": 1.6473962830712396,
+        "total_turnover": 1.6989865846506629,
+        "months": 117,
+        "sharpe_rf_proxy": 0.6976253236760112,
+        "sortino_rf_proxy": 1.111730653238399
+      },
+      "delta": {
+        "cagr": 0.0,
+        "mdd": 0.0,
+        "sharpe_rf_proxy": -0.00015610939018662062,
+        "sortino_rf_proxy": -0.0002919778566932152
+      }
+    }
+  },
+  "allocation_checks": [
+    {
+      "month": "2017-01",
+      "old": [
+        0.0,
+        0.0,
+        0.3,
+        0.7,
+        0.0
+      ],
+      "new": [
+        0.0,
+        0.0,
+        0.3,
+        0.7,
+        0.0
+      ],
+      "changed": false
+    },
+    {
+      "month": "2018-01",
+      "old": [
+        0.19650421862006232,
+        0.05282158126986088,
+        0.3659879578649655,
+        0.3789728864976485,
+        0.005713355747462811
+      ],
+      "new": [
+        0.19650421862006232,
+        0.05282158126986088,
+        0.3659879578649655,
+        0.3789728864976485,
+        0.005713355747462811
+      ],
+      "changed": false
+    },
+    {
+      "month": "2019-01",
+      "old": [
+        0.0,
+        0.0,
+        0.4,
+        0.6,
+        0.0
+      ],
+      "new": [
+        0.0,
+        0.0,
+        0.4,
+        0.6,
+        0.0
+      ],
+      "changed": false
+    },
+    {
+      "month": "2020-01",
+      "old": [
+        0.0,
+        0.0,
+        0.3,
+        0.7,
+        0.0
+      ],
+      "new": [
+        0.0,
+        0.0,
+        0.3,
+        0.7,
+        0.0
+      ],
+      "changed": false
+    },
+    {
+      "month": "2021-01",
+      "old": [
+        0.0,
+        0.0,
+        0.4,
+        0.6,
+        0.0
+      ],
+      "new": [
+        0.0,
+        0.0,
+        0.4,
+        0.6,
+        0.0
+      ],
+      "changed": false
+    },
+    {
+      "month": "2022-01",
+      "old": [
+        0.0,
+        0.0,
+        0.8,
+        0.0,
+        0.19999999999999996
+      ],
+      "new": [
+        0.0,
+        0.0,
+        0.8,
+        0.0,
+        0.19999999999999996
+      ],
+      "changed": false
+    },
+    {
+      "month": "2023-01",
+      "old": [
+        0.0,
+        0.5,
+        0.0,
+        0.0,
+        0.5
+      ],
+      "new": [
+        0.0,
+        0.5,
+        0.0,
+        0.0,
+        0.5
+      ],
+      "changed": false
+    },
+    {
+      "month": "2024-01",
+      "old": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "new": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "changed": false
+    },
+    {
+      "month": "2025-01",
+      "old": [
+        0.0,
+        0.1,
+        0.9,
+        0.0,
+        0.0
+      ],
+      "new": [
+        0.0,
+        0.1,
+        0.9,
+        0.0,
+        0.0
+      ],
+      "changed": false
+    },
+    {
+      "month": "2026-01",
+      "old": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "new": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "changed": false
+    }
+  ],
+  "monthly_evidence": [
+    {
+      "month": "2017-01",
+      "cutoff": "2016-12-30",
+      "target": "2016-10-01",
+      "selected": "2016-10-01",
+      "rate": 0.0011250000000000001,
+      "original_rate": 0.0011250000000000001,
+      "source": {
+        "vintage_date": "2016-12-30",
+        "sha256": "45f1f651db6ff0fb946aa0a681232136b5f07a02a5e7f3fc1fcb4cb6a3835b7b",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2016-12-30",
+        "column": "IR3TIB01KRM156N_20161230",
+        "observations": {
+          "2016-10-01": "1.35"
+        }
+      }
+    },
+    {
+      "month": "2017-02",
+      "cutoff": "2017-01-30",
+      "target": "2016-11-01",
+      "selected": "2016-11-01",
+      "rate": 0.0011833333333333333,
+      "original_rate": 0.0011833333333333333,
+      "source": {
+        "vintage_date": "2017-01-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-01-30",
+        "sha256": "6e57dcbac17087e65c1f0c3b6a977e019482136606219e8716070f789a83c0ae",
+        "observations": {
+          "2016-11-01": "1.42"
+        }
+      }
+    },
+    {
+      "month": "2017-03",
+      "cutoff": "2017-02-27",
+      "target": "2016-12-01",
+      "selected": "2016-12-01",
+      "rate": 0.0012833333333333334,
+      "original_rate": 0.0012833333333333334,
+      "source": {
+        "vintage_date": "2017-02-27",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-02-27",
+        "sha256": "6fbd9c7097a5e8f35975fe718158d30d239ca45532d589c67daa28c3d73dd60e",
+        "observations": {
+          "2016-12-01": "1.54"
+        }
+      }
+    },
+    {
+      "month": "2017-04",
+      "cutoff": "2017-03-30",
+      "target": "2017-01-01",
+      "selected": "2017-01-01",
+      "rate": 0.00125,
+      "original_rate": 0.00125,
+      "source": {
+        "vintage_date": "2017-03-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-03-30",
+        "sha256": "518ae40eff10f976ed44fb45b8fcc3831c59fda94900270f21d247b818224edb",
+        "observations": {
+          "2017-01-01": "1.50"
+        }
+      }
+    },
+    {
+      "month": "2017-05",
+      "cutoff": "2017-04-29",
+      "target": "2017-02-01",
+      "selected": "2017-02-01",
+      "rate": 0.0012416666666666667,
+      "original_rate": 0.0012416666666666667,
+      "source": {
+        "vintage_date": "2017-04-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-04-29",
+        "sha256": "6da81c8fa905b227224175d70c61ad3b9f54fd57c3ff219d2e5d86e5a9a193f0",
+        "observations": {
+          "2017-02-01": "1.49"
+        }
+      }
+    },
+    {
+      "month": "2017-06",
+      "cutoff": "2017-05-30",
+      "target": "2017-03-01",
+      "selected": "2017-03-01",
+      "rate": 0.0012333333333333332,
+      "original_rate": 0.0012333333333333332,
+      "source": {
+        "vintage_date": "2017-05-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-05-30",
+        "sha256": "29a8638472c87817a72479001871db5334eb3a6fa67d210190500d2c837c22f4",
+        "observations": {
+          "2017-03-01": "1.48"
+        }
+      }
+    },
+    {
+      "month": "2017-07",
+      "cutoff": "2017-06-29",
+      "target": "2017-04-01",
+      "selected": "2017-04-01",
+      "rate": 0.0011916666666666666,
+      "original_rate": 0.0011916666666666666,
+      "source": {
+        "vintage_date": "2017-06-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-06-29",
+        "sha256": "b2a3ca73e36032462b48ba5b26cdc9f912d482b889c9ca5b95001679dfd68658",
+        "observations": {
+          "2017-04-01": "1.43"
+        }
+      }
+    },
+    {
+      "month": "2017-08",
+      "cutoff": "2017-07-30",
+      "target": "2017-05-01",
+      "selected": "2017-05-01",
+      "rate": 0.0011583333333333333,
+      "original_rate": 0.0011583333333333333,
+      "source": {
+        "vintage_date": "2017-07-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-07-30",
+        "sha256": "5761cbd5f6c5b003b900da1ede114816a469fe945bdbf007241fc5e6373d12bf",
+        "observations": {
+          "2017-05-01": "1.39"
+        }
+      }
+    },
+    {
+      "month": "2017-09",
+      "cutoff": "2017-08-30",
+      "target": "2017-06-01",
+      "selected": "2017-06-01",
+      "rate": 0.00115,
+      "original_rate": 0.00115,
+      "source": {
+        "vintage_date": "2017-08-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-08-30",
+        "sha256": "32d4c63904a2be8fb0aeb2ecb2fea81d57566e10949931a8ac174f8fdd5d198a",
+        "observations": {
+          "2017-06-01": "1.38"
+        }
+      }
+    },
+    {
+      "month": "2017-10",
+      "cutoff": "2017-09-29",
+      "target": "2017-07-01",
+      "selected": "2017-07-01",
+      "rate": 0.0011583333333333333,
+      "original_rate": 0.0011583333333333333,
+      "source": {
+        "vintage_date": "2017-09-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-09-29",
+        "sha256": "e717ec56fd3caa3ffad0f5fe2691097b80b7c15e2e36c4745adcb93af318dc37",
+        "observations": {
+          "2017-07-01": "1.39"
+        }
+      }
+    },
+    {
+      "month": "2017-11",
+      "cutoff": "2017-10-30",
+      "target": "2017-08-01",
+      "selected": "2017-08-01",
+      "rate": 0.0011583333333333333,
+      "original_rate": 0.0011583333333333333,
+      "source": {
+        "vintage_date": "2017-10-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-10-30",
+        "sha256": "06675a9b4b774a6e1ead580ae646c06049746c804231f5f8d4be311d8bad07d8",
+        "observations": {
+          "2017-08-01": "1.39"
+        }
+      }
+    },
+    {
+      "month": "2017-12",
+      "cutoff": "2017-11-29",
+      "target": "2017-09-01",
+      "selected": "2017-09-01",
+      "rate": 0.00115,
+      "original_rate": 0.00115,
+      "source": {
+        "vintage_date": "2017-11-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-11-29",
+        "sha256": "a4e8e86ce3be90f1d9522cc2e11f8f00d57c6b7316530ed4857bded6ca059b29",
+        "observations": {
+          "2017-09-01": "1.38"
+        }
+      }
+    },
+    {
+      "month": "2018-01",
+      "cutoff": "2017-12-30",
+      "target": "2017-10-01",
+      "selected": "2017-10-01",
+      "rate": 0.00115,
+      "original_rate": 0.00115,
+      "source": {
+        "vintage_date": "2017-12-30",
+        "sha256": "1f3bc28ca9ed62b29a21a229d56d04f6c38084b25fe4db21dd0efb61b3a7f190",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2017-12-30",
+        "column": "IR3TIB01KRM156N_20171230",
+        "observations": {
+          "2017-10-01": "1.38"
+        }
+      }
+    },
+    {
+      "month": "2018-02",
+      "cutoff": "2018-01-30",
+      "target": "2017-11-01",
+      "selected": "2017-11-01",
+      "rate": 0.0012083333333333334,
+      "original_rate": 0.0012083333333333334,
+      "source": {
+        "vintage_date": "2018-01-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-01-30",
+        "sha256": "f9e14b672cb3438a6d186c2a3188c1c3fb2c905581d5949f19226e7493ff9c9b",
+        "observations": {
+          "2017-11-01": "1.450"
+        }
+      }
+    },
+    {
+      "month": "2018-03",
+      "cutoff": "2018-02-27",
+      "target": "2017-12-01",
+      "selected": "2017-12-01",
+      "rate": 0.0013833333333333332,
+      "original_rate": 0.0013833333333333332,
+      "source": {
+        "vintage_date": "2018-02-27",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-02-27",
+        "sha256": "6d54b01d8bd6cc1aa2039749f18ee0f8f3febd7ac0949b16f85d7dbc1f51ee37",
+        "observations": {
+          "2017-12-01": "1.660"
+        }
+      }
+    },
+    {
+      "month": "2018-04",
+      "cutoff": "2018-03-30",
+      "target": "2018-01-01",
+      "selected": "2018-01-01",
+      "rate": 0.0013833333333333332,
+      "original_rate": 0.0013833333333333332,
+      "source": {
+        "vintage_date": "2018-03-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-03-30",
+        "sha256": "2c98bbb6e6ae1ff0f1324c5f1ef379dca4f0f517230170d43efbf93372f13a19",
+        "observations": {
+          "2018-01-01": "1.660"
+        }
+      }
+    },
+    {
+      "month": "2018-05",
+      "cutoff": "2018-04-29",
+      "target": "2018-02-01",
+      "selected": "2018-02-01",
+      "rate": 0.001375,
+      "original_rate": 0.001375,
+      "source": {
+        "vintage_date": "2018-04-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-04-29",
+        "sha256": "0cde9c8955d7c65e2546e56a12cec38a411eff0dbc0e8fcb3a2deca1d3bd982f",
+        "observations": {
+          "2018-02-01": "1.650"
+        }
+      }
+    },
+    {
+      "month": "2018-06",
+      "cutoff": "2018-05-30",
+      "target": "2018-03-01",
+      "selected": "2018-03-01",
+      "rate": 0.001375,
+      "original_rate": 0.001375,
+      "source": {
+        "vintage_date": "2018-05-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-05-30",
+        "sha256": "405e61fbb7f115b1c1168d789d4d24ea062b076a6e4ee4a308cebe5f6cb257fd",
+        "observations": {
+          "2018-03-01": "1.650"
+        }
+      }
+    },
+    {
+      "month": "2018-07",
+      "cutoff": "2018-06-29",
+      "target": "2018-04-01",
+      "selected": "2018-04-01",
+      "rate": 0.001375,
+      "original_rate": 0.001375,
+      "source": {
+        "vintage_date": "2018-06-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-06-29",
+        "sha256": "66a6f7be544dfa20aced3a0aba5e5d17f8bcb0bb3c85bfb0239cad11ccc6e884",
+        "observations": {
+          "2018-04-01": "1.650"
+        }
+      }
+    },
+    {
+      "month": "2018-08",
+      "cutoff": "2018-07-30",
+      "target": "2018-05-01",
+      "selected": "2018-05-01",
+      "rate": 0.001375,
+      "original_rate": 0.001375,
+      "source": {
+        "vintage_date": "2018-07-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-07-30",
+        "sha256": "d9cbe5917a6dfa9d6e026f959c41477263d3b4af0aabe69e929a0b65eabb8d6b",
+        "observations": {
+          "2018-05-01": "1.650"
+        }
+      }
+    },
+    {
+      "month": "2018-09",
+      "cutoff": "2018-08-30",
+      "target": "2018-06-01",
+      "selected": "2018-06-01",
+      "rate": 0.001375,
+      "original_rate": 0.001375,
+      "source": {
+        "vintage_date": "2018-08-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-08-30",
+        "sha256": "6203214ecc2083bac464a4dc7a9340209f08589978ccdaac16a5cb4185d1c59b",
+        "observations": {
+          "2018-06-01": "1.650"
+        }
+      }
+    },
+    {
+      "month": "2018-10",
+      "cutoff": "2018-09-29",
+      "target": "2018-07-01",
+      "selected": "2018-07-01",
+      "rate": 0.001375,
+      "original_rate": 0.001375,
+      "source": {
+        "vintage_date": "2018-09-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-09-29",
+        "sha256": "e00cb0db15a3487766ed03e77ee8b90c35b8e947575ac0ce651933d66236cd80",
+        "observations": {
+          "2018-07-01": "1.650"
+        }
+      }
+    },
+    {
+      "month": "2018-11",
+      "cutoff": "2018-10-30",
+      "target": "2018-08-01",
+      "selected": "2018-08-01",
+      "rate": 0.001375,
+      "original_rate": 0.001375,
+      "source": {
+        "vintage_date": "2018-10-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-10-30",
+        "sha256": "7d7ba9dc5626f3a5cb0ba36e00e598093e2e82bc59b0a2557301e307b2b72c50",
+        "observations": {
+          "2018-08-01": "1.650"
+        }
+      }
+    },
+    {
+      "month": "2018-12",
+      "cutoff": "2018-11-29",
+      "target": "2018-09-01",
+      "selected": "2018-09-01",
+      "rate": 0.001375,
+      "original_rate": 0.001375,
+      "source": {
+        "vintage_date": "2018-11-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-11-29",
+        "sha256": "5163dbebc69f056b27e27beeeeac80029a0656d917c53597dd06fb700496ff8d",
+        "observations": {
+          "2018-09-01": "1.650"
+        }
+      }
+    },
+    {
+      "month": "2019-01",
+      "cutoff": "2018-12-30",
+      "target": "2018-10-01",
+      "selected": "2018-10-01",
+      "rate": 0.0014,
+      "original_rate": 0.0014,
+      "source": {
+        "vintage_date": "2018-12-30",
+        "sha256": "b639fe231dbce8eb3c9aea1c4d80cbbc2e4d212bcd3f6f865b7bd503e241342b",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2018-12-30",
+        "column": "IR3TIB01KRM156N_20181230",
+        "observations": {
+          "2018-10-01": "1.680"
+        }
+      }
+    },
+    {
+      "month": "2019-02",
+      "cutoff": "2019-01-30",
+      "target": "2018-11-01",
+      "selected": "2018-11-01",
+      "rate": 0.001425,
+      "original_rate": 0.001425,
+      "source": {
+        "vintage_date": "2019-01-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-01-30",
+        "sha256": "9932168370559ce264e51599c01c422b49915c7c25b3ded01611529e4a5f2402",
+        "observations": {
+          "2018-11-01": "1.710"
+        }
+      }
+    },
+    {
+      "month": "2019-03",
+      "cutoff": "2019-02-27",
+      "target": "2018-12-01",
+      "selected": "2018-12-01",
+      "rate": 0.0015916666666666666,
+      "original_rate": 0.0015916666666666666,
+      "source": {
+        "vintage_date": "2019-02-27",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-02-27",
+        "sha256": "92497c288c4ff58dff5a31dca9a3152bed77d33c56a4dc6766c9a565ee97ed12",
+        "observations": {
+          "2018-12-01": "1.910"
+        }
+      }
+    },
+    {
+      "month": "2019-04",
+      "cutoff": "2019-03-30",
+      "target": "2019-01-01",
+      "selected": "2018-12-01",
+      "rate": 0.0015916666666666666,
+      "original_rate": 0.0015583333333333334,
+      "source": {
+        "vintage_date": "2019-03-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-03-30",
+        "sha256": "efc00ec2a96659813116e0dd327dd95aa75f4e36ecee7ffb8b342457e70286ce",
+        "observations": {
+          "2018-12-01": "1.910",
+          "2019-01-01": null
+        }
+      }
+    },
+    {
+      "month": "2019-05",
+      "cutoff": "2019-04-29",
+      "target": "2019-02-01",
+      "selected": "2019-02-01",
+      "rate": 0.0015583333333333334,
+      "original_rate": 0.0015583333333333334,
+      "source": {
+        "vintage_date": "2019-04-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-04-29",
+        "sha256": "c583848dd3fa6ce363e480600caa0b23fd28e0c1464bc5016fbfdf9531948dac",
+        "observations": {
+          "2019-02-01": "1.870"
+        }
+      }
+    },
+    {
+      "month": "2019-06",
+      "cutoff": "2019-05-30",
+      "target": "2019-03-01",
+      "selected": "2019-03-01",
+      "rate": 0.0015833333333333333,
+      "original_rate": 0.0015833333333333333,
+      "source": {
+        "vintage_date": "2019-05-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-05-30",
+        "sha256": "218e791e8581a451d6f6ef1b641816160cdc0bdba6899dab8f911a7741509880",
+        "observations": {
+          "2019-03-01": "1.900"
+        }
+      }
+    },
+    {
+      "month": "2019-07",
+      "cutoff": "2019-06-29",
+      "target": "2019-04-01",
+      "selected": "2019-04-01",
+      "rate": 0.0015500000000000002,
+      "original_rate": 0.0015500000000000002,
+      "source": {
+        "vintage_date": "2019-06-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-06-29",
+        "sha256": "ea5c3cc04c8926e2aa23049fcdf3fbaa2f016c995c1b3ac173ebc93d5ad0de5d",
+        "observations": {
+          "2019-04-01": "1.860"
+        }
+      }
+    },
+    {
+      "month": "2019-08",
+      "cutoff": "2019-07-30",
+      "target": "2019-05-01",
+      "selected": "2019-05-01",
+      "rate": 0.0015333333333333334,
+      "original_rate": 0.0015333333333333334,
+      "source": {
+        "vintage_date": "2019-07-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-07-30",
+        "sha256": "d0b2fc2bbdb14a362f3d0b2bd61595a967f0c93907646e74d8f74e9cb98f3ef3",
+        "observations": {
+          "2019-05-01": "1.840"
+        }
+      }
+    },
+    {
+      "month": "2019-09",
+      "cutoff": "2019-08-30",
+      "target": "2019-06-01",
+      "selected": "2019-06-01",
+      "rate": 0.0015,
+      "original_rate": 0.0015,
+      "source": {
+        "vintage_date": "2019-08-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-08-30",
+        "sha256": "700d4925707187a158b95df7b2213ab6cfd47c919c0856fd09698040a13222d6",
+        "observations": {
+          "2019-06-01": "1.800"
+        }
+      }
+    },
+    {
+      "month": "2019-10",
+      "cutoff": "2019-09-29",
+      "target": "2019-07-01",
+      "selected": "2019-07-01",
+      "rate": 0.0014,
+      "original_rate": 0.0014,
+      "source": {
+        "vintage_date": "2019-09-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-09-29",
+        "sha256": "ff48b4751cec3ac444d6fd04dae31584cdd2c231eebf1abf11685b2188e51ece",
+        "observations": {
+          "2019-07-01": "1.680"
+        }
+      }
+    },
+    {
+      "month": "2019-11",
+      "cutoff": "2019-10-30",
+      "target": "2019-08-01",
+      "selected": "2019-08-01",
+      "rate": 0.0012416666666666667,
+      "original_rate": 0.0012416666666666667,
+      "source": {
+        "vintage_date": "2019-10-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-10-30",
+        "sha256": "147efef42229c5ab6d6076e2def23bcb21ee30ca10b13d8ee5721cd2afaa2c62",
+        "observations": {
+          "2019-08-01": "1.490"
+        }
+      }
+    },
+    {
+      "month": "2019-12",
+      "cutoff": "2019-11-29",
+      "target": "2019-09-01",
+      "selected": "2019-09-01",
+      "rate": 0.0012833333333333334,
+      "original_rate": 0.0012833333333333334,
+      "source": {
+        "vintage_date": "2019-11-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-11-29",
+        "sha256": "406c1a260eec70a3e5c2ca52a9eb3eeeb040b5af7ed521b0559324633ab29c4f",
+        "observations": {
+          "2019-09-01": "1.540"
+        }
+      }
+    },
+    {
+      "month": "2020-01",
+      "cutoff": "2019-12-30",
+      "target": "2019-10-01",
+      "selected": "2019-10-01",
+      "rate": 0.0012166666666666667,
+      "original_rate": 0.0012166666666666667,
+      "source": {
+        "vintage_date": "2019-12-30",
+        "sha256": "27457db9d3ad605184b826c7847544024780ee989d17c97864418f7ae21481e4",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2019-12-30",
+        "column": "IR3TIB01KRM156N_20191230",
+        "observations": {
+          "2019-10-01": "1.460"
+        }
+      }
+    },
+    {
+      "month": "2020-02",
+      "cutoff": "2020-01-30",
+      "target": "2019-11-01",
+      "selected": "2019-11-01",
+      "rate": 0.0012666666666666666,
+      "original_rate": 0.0012666666666666666,
+      "source": {
+        "vintage_date": "2020-01-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-01-30",
+        "sha256": "8733a9040545dd2351e29036e31305a124bb6ec9edbfa2b6d3f7ec5740ff2dd2",
+        "observations": {
+          "2019-11-01": "1.520"
+        }
+      }
+    },
+    {
+      "month": "2020-03",
+      "cutoff": "2020-02-28",
+      "target": "2019-12-01",
+      "selected": "2019-12-01",
+      "rate": 0.001275,
+      "original_rate": 0.001275,
+      "source": {
+        "vintage_date": "2020-02-28",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-02-28",
+        "sha256": "73b4d4198e278f03e5828264360a52ad4e3149dea1095c691b739fb5230c6e37",
+        "observations": {
+          "2019-12-01": "1.530"
+        }
+      }
+    },
+    {
+      "month": "2020-04",
+      "cutoff": "2020-03-30",
+      "target": "2020-01-01",
+      "selected": "2020-01-01",
+      "rate": 0.001225,
+      "original_rate": 0.001225,
+      "source": {
+        "vintage_date": "2020-03-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-03-30",
+        "sha256": "d9e6b3816de45d2e0ae44cbbe7c68e16c31777da16d6cc47e9040c1a5359d92b",
+        "observations": {
+          "2020-01-01": "1.470"
+        }
+      }
+    },
+    {
+      "month": "2020-05",
+      "cutoff": "2020-04-29",
+      "target": "2020-02-01",
+      "selected": "2020-02-01",
+      "rate": 0.0011833333333333333,
+      "original_rate": 0.0011833333333333333,
+      "source": {
+        "vintage_date": "2020-04-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-04-29",
+        "sha256": "a2c3efad5f1c1f51b7d85196574d403425688af48d83e832dc1c710d2bfdda2e",
+        "observations": {
+          "2020-02-01": "1.420"
+        }
+      }
+    },
+    {
+      "month": "2020-06",
+      "cutoff": "2020-05-30",
+      "target": "2020-03-01",
+      "selected": "2020-03-01",
+      "rate": 0.001025,
+      "original_rate": 0.001025,
+      "source": {
+        "vintage_date": "2020-05-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-05-30",
+        "sha256": "40d74f4a55379e862b6c813f227a022db18405d4da0b15db559e05903da01fa0",
+        "observations": {
+          "2020-03-01": "1.230"
+        }
+      }
+    },
+    {
+      "month": "2020-07",
+      "cutoff": "2020-06-29",
+      "target": "2020-04-01",
+      "selected": "2020-04-01",
+      "rate": 0.0009166666666666668,
+      "original_rate": 0.0009166666666666668,
+      "source": {
+        "vintage_date": "2020-06-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-06-29",
+        "sha256": "58adbb3790f24c66fe36d7558898520c871984b7f8b85140f2f65903297af587",
+        "observations": {
+          "2020-04-01": "1.100"
+        }
+      }
+    },
+    {
+      "month": "2020-08",
+      "cutoff": "2020-07-30",
+      "target": "2020-05-01",
+      "selected": "2020-05-01",
+      "rate": 0.0008500000000000001,
+      "original_rate": 0.0008500000000000001,
+      "source": {
+        "vintage_date": "2020-07-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-07-30",
+        "sha256": "19d311291c0029b7765b2ee2cacc0398524fade2c7a93c53fce17e5314357e96",
+        "observations": {
+          "2020-05-01": "1.020"
+        }
+      }
+    },
+    {
+      "month": "2020-09",
+      "cutoff": "2020-08-30",
+      "target": "2020-06-01",
+      "selected": "2020-06-01",
+      "rate": 0.0006583333333333334,
+      "original_rate": 0.0006583333333333334,
+      "source": {
+        "vintage_date": "2020-08-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-08-30",
+        "sha256": "f6fecb7634078547f6eea7434cfb94ef806d53b95dc1fbff6fde9fc1f714fc19",
+        "observations": {
+          "2020-06-01": "0.790"
+        }
+      }
+    },
+    {
+      "month": "2020-10",
+      "cutoff": "2020-09-29",
+      "target": "2020-07-01",
+      "selected": "2020-07-01",
+      "rate": 0.0006583333333333334,
+      "original_rate": 0.0006583333333333334,
+      "source": {
+        "vintage_date": "2020-09-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-09-29",
+        "sha256": "ff8b9e34bad757fc443a6d7c5c373c3ed3a144b513b2184692e1abc9bf0faacb",
+        "observations": {
+          "2020-07-01": "0.790"
+        }
+      }
+    },
+    {
+      "month": "2020-11",
+      "cutoff": "2020-10-30",
+      "target": "2020-08-01",
+      "selected": "2020-08-01",
+      "rate": 0.0005666666666666667,
+      "original_rate": 0.0005666666666666667,
+      "source": {
+        "vintage_date": "2020-10-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-10-30",
+        "sha256": "f648e49e961068aebcb7aa465068f1301e0036477045082d7bc587d0f9c6737f",
+        "observations": {
+          "2020-08-01": "0.680"
+        }
+      }
+    },
+    {
+      "month": "2020-12",
+      "cutoff": "2020-11-29",
+      "target": "2020-09-01",
+      "selected": "2020-09-01",
+      "rate": 0.000525,
+      "original_rate": 0.000525,
+      "source": {
+        "vintage_date": "2020-11-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-11-29",
+        "sha256": "3a3f6da86d16368743041d857a0a96929196a1799a9d3feb810cd9606404372a",
+        "observations": {
+          "2020-09-01": "0.630"
+        }
+      }
+    },
+    {
+      "month": "2021-01",
+      "cutoff": "2020-12-30",
+      "target": "2020-10-01",
+      "selected": "2020-10-01",
+      "rate": 0.000525,
+      "original_rate": 0.000525,
+      "source": {
+        "vintage_date": "2020-12-30",
+        "sha256": "5d2e7707443f4d56bfadd5f6785b3f0fad1f8092eff38779a7ac189c0cc43208",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2020-12-30",
+        "column": "IR3TIB01KRM156N_20201230",
+        "observations": {
+          "2020-10-01": "0.630"
+        }
+      }
+    },
+    {
+      "month": "2021-02",
+      "cutoff": "2021-01-30",
+      "target": "2020-11-01",
+      "selected": "2020-11-01",
+      "rate": 0.00055,
+      "original_rate": 0.00055,
+      "source": {
+        "vintage_date": "2021-01-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-01-30",
+        "sha256": "741315f6c295677d0e5244acb819f29a9c466ee3d642a540c33bd127361fb7ee",
+        "observations": {
+          "2020-11-01": "0.660"
+        }
+      }
+    },
+    {
+      "month": "2021-03",
+      "cutoff": "2021-02-27",
+      "target": "2020-12-01",
+      "selected": "2020-12-01",
+      "rate": 0.00055,
+      "original_rate": 0.00055,
+      "source": {
+        "vintage_date": "2021-02-27",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-02-27",
+        "sha256": "8c64b78d7a81d718f33ea46c04678783f273ee16123d7420181c50c86b3a1fa7",
+        "observations": {
+          "2020-12-01": "0.660"
+        }
+      }
+    },
+    {
+      "month": "2021-04",
+      "cutoff": "2021-03-30",
+      "target": "2021-01-01",
+      "selected": "2021-01-01",
+      "rate": 0.0005666666666666667,
+      "original_rate": 0.0005666666666666667,
+      "source": {
+        "vintage_date": "2021-03-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-03-30",
+        "sha256": "fbc06ff37a39ba0ddbedf03824a1f142b68a407a395914078855afabb20d904c",
+        "observations": {
+          "2021-01-01": "0.680"
+        }
+      }
+    },
+    {
+      "month": "2021-05",
+      "cutoff": "2021-04-29",
+      "target": "2021-02-01",
+      "selected": "2021-02-01",
+      "rate": 0.0006083333333333333,
+      "original_rate": 0.0006083333333333333,
+      "source": {
+        "vintage_date": "2021-04-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-04-29",
+        "sha256": "c4bb6c81989e5d3161a96cfb5e1898593d7718d04d66068e0ccc8c34b055e2ac",
+        "observations": {
+          "2021-02-01": "0.730"
+        }
+      }
+    },
+    {
+      "month": "2021-06",
+      "cutoff": "2021-05-30",
+      "target": "2021-03-01",
+      "selected": "2021-03-01",
+      "rate": 0.000625,
+      "original_rate": 0.000625,
+      "source": {
+        "vintage_date": "2021-05-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-05-30",
+        "sha256": "c4903a0a20c0db0acd2f42a5e594df09ceb442dd71c1601463dba83bb6d0650a",
+        "observations": {
+          "2021-03-01": "0.750"
+        }
+      }
+    },
+    {
+      "month": "2021-07",
+      "cutoff": "2021-06-29",
+      "target": "2021-04-01",
+      "selected": "2021-04-01",
+      "rate": 0.0006166666666666666,
+      "original_rate": 0.0006166666666666666,
+      "source": {
+        "vintage_date": "2021-06-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-06-29",
+        "sha256": "ebd9a1bc9917a275e8189541648a6eeb3e14f1ad97d408ca1202a4daa4e1588a",
+        "observations": {
+          "2021-04-01": "0.740"
+        }
+      }
+    },
+    {
+      "month": "2021-08",
+      "cutoff": "2021-07-30",
+      "target": "2021-05-01",
+      "selected": "2021-05-01",
+      "rate": 0.0005666666666666667,
+      "original_rate": 0.0005666666666666667,
+      "source": {
+        "vintage_date": "2021-07-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-07-30",
+        "sha256": "f0a1200dbf0623feb8a26c1e6487f418f4260eb88a1ccb73baf0b294e9ae1ca6",
+        "observations": {
+          "2021-05-01": "0.680"
+        }
+      }
+    },
+    {
+      "month": "2021-09",
+      "cutoff": "2021-08-30",
+      "target": "2021-06-01",
+      "selected": "2021-06-01",
+      "rate": 0.00055,
+      "original_rate": 0.00055,
+      "source": {
+        "vintage_date": "2021-08-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-08-30",
+        "sha256": "0b8231a5ba8c895ad665d3a86c0b52fcb1a3dafd7fafa4ad408d4f296a48c650",
+        "observations": {
+          "2021-06-01": "0.660"
+        }
+      }
+    },
+    {
+      "month": "2021-10",
+      "cutoff": "2021-09-29",
+      "target": "2021-07-01",
+      "selected": "2021-07-01",
+      "rate": 0.000575,
+      "original_rate": 0.000575,
+      "source": {
+        "vintage_date": "2021-09-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-09-29",
+        "sha256": "212d4c40da4fb063ec2f0960c9f197f61cbf9ab5cc1121dd1f65609fc3e3346e",
+        "observations": {
+          "2021-07-01": "0.690"
+        }
+      }
+    },
+    {
+      "month": "2021-11",
+      "cutoff": "2021-10-30",
+      "target": "2021-08-01",
+      "selected": "2021-08-01",
+      "rate": 0.0006416666666666667,
+      "original_rate": 0.0006416666666666667,
+      "source": {
+        "vintage_date": "2021-10-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-10-30",
+        "sha256": "9faed72b3b88ac2855188df8551d000c0fc287785102d4e2821dcd4acde0d702",
+        "observations": {
+          "2021-08-01": "0.770"
+        }
+      }
+    },
+    {
+      "month": "2021-12",
+      "cutoff": "2021-11-29",
+      "target": "2021-09-01",
+      "selected": "2021-09-01",
+      "rate": 0.0008166666666666666,
+      "original_rate": 0.0008166666666666666,
+      "source": {
+        "vintage_date": "2021-11-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-11-29",
+        "sha256": "4cc84065a201f7a03eabdd69a2a734e726f398ff0965119cfe888bdaa85e4a38",
+        "observations": {
+          "2021-09-01": "0.980"
+        }
+      }
+    },
+    {
+      "month": "2022-01",
+      "cutoff": "2021-12-30",
+      "target": "2021-10-01",
+      "selected": "2021-10-01",
+      "rate": 0.0009000000000000001,
+      "original_rate": 0.0009000000000000001,
+      "source": {
+        "vintage_date": "2021-12-30",
+        "sha256": "c9c3e1a3fe28fbc624eb3b3ebbfaf123a6e200d76cf77fa2ccf20072ac3846b5",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2021-12-30",
+        "column": "IR3TIB01KRM156N_20211230",
+        "observations": {
+          "2021-10-01": "1.080"
+        }
+      }
+    },
+    {
+      "month": "2022-02",
+      "cutoff": "2022-01-30",
+      "target": "2021-11-01",
+      "selected": "2021-11-01",
+      "rate": 0.000975,
+      "original_rate": 0.000975,
+      "source": {
+        "vintage_date": "2022-01-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-01-30",
+        "sha256": "2d4f3f09c8a2467d4ac9cddce49ddfff04b622edd1f4a0bdc9d108caea61128e",
+        "observations": {
+          "2021-11-01": "1.170"
+        }
+      }
+    },
+    {
+      "month": "2022-03",
+      "cutoff": "2022-02-27",
+      "target": "2021-12-01",
+      "selected": "2021-12-01",
+      "rate": 0.0010583333333333334,
+      "original_rate": 0.0010583333333333334,
+      "source": {
+        "vintage_date": "2022-02-27",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-02-27",
+        "sha256": "41afe18f24d012621222552f96633bd3bd41a0fe5c6c8f4423622e2e106ebaa2",
+        "observations": {
+          "2021-12-01": "1.270"
+        }
+      }
+    },
+    {
+      "month": "2022-04",
+      "cutoff": "2022-03-30",
+      "target": "2022-01-01",
+      "selected": "2022-01-01",
+      "rate": 0.0011583333333333333,
+      "original_rate": 0.0011583333333333333,
+      "source": {
+        "vintage_date": "2022-03-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-03-30",
+        "sha256": "a2247e8eb898415c24b79541b033cd14dad238d1e3af2b185bf27252c6ae0769",
+        "observations": {
+          "2022-01-01": "1.390"
+        }
+      }
+    },
+    {
+      "month": "2022-05",
+      "cutoff": "2022-04-29",
+      "target": "2022-02-01",
+      "selected": "2022-02-01",
+      "rate": 0.00125,
+      "original_rate": 0.00125,
+      "source": {
+        "vintage_date": "2022-04-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-04-29",
+        "sha256": "c9a68c09f8b59445609e2196b8debd0c38235725ae3853f6c098936fab6f9ee2",
+        "observations": {
+          "2022-02-01": "1.500"
+        }
+      }
+    },
+    {
+      "month": "2022-06",
+      "cutoff": "2022-05-30",
+      "target": "2022-03-01",
+      "selected": "2022-03-01",
+      "rate": 0.00125,
+      "original_rate": 0.00125,
+      "source": {
+        "vintage_date": "2022-05-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-05-30",
+        "sha256": "aa96daa79631bad42b295dab96f10e19eb4b1ba9894776c7b049f3c945e6b958",
+        "observations": {
+          "2022-03-01": "1.500"
+        }
+      }
+    },
+    {
+      "month": "2022-07",
+      "cutoff": "2022-06-29",
+      "target": "2022-04-01",
+      "selected": "2022-04-01",
+      "rate": 0.0013666666666666666,
+      "original_rate": 0.0013666666666666666,
+      "source": {
+        "vintage_date": "2022-06-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-06-29",
+        "sha256": "e161650742f790ebad3933be816068bd721c933b878b8370841011ba4754f07e",
+        "observations": {
+          "2022-04-01": "1.640"
+        }
+      }
+    },
+    {
+      "month": "2022-08",
+      "cutoff": "2022-07-30",
+      "target": "2022-05-01",
+      "selected": "2022-05-01",
+      "rate": 0.001475,
+      "original_rate": 0.001475,
+      "source": {
+        "vintage_date": "2022-07-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-07-30",
+        "sha256": "950b549173d38c1536390af2021083e339099c64d3a3d34007c568fb6e3529af",
+        "observations": {
+          "2022-05-01": "1.770"
+        }
+      }
+    },
+    {
+      "month": "2022-09",
+      "cutoff": "2022-08-30",
+      "target": "2022-06-01",
+      "selected": "2022-06-01",
+      "rate": 0.0016583333333333333,
+      "original_rate": 0.0016583333333333333,
+      "source": {
+        "vintage_date": "2022-08-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-08-30",
+        "sha256": "4d8f50ece677648409403152144fa40dd6ca951d612d907b9f01a4a06bab88d3",
+        "observations": {
+          "2022-06-01": "1.990"
+        }
+      }
+    },
+    {
+      "month": "2022-10",
+      "cutoff": "2022-09-29",
+      "target": "2022-07-01",
+      "selected": "2022-07-01",
+      "rate": 0.0020083333333333333,
+      "original_rate": 0.0020083333333333333,
+      "source": {
+        "vintage_date": "2022-09-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-09-29",
+        "sha256": "598e6b1107868800774481662f8ec7d8fc809f7c65c886f6239a323cdf547361",
+        "observations": {
+          "2022-07-01": "2.410"
+        }
+      }
+    },
+    {
+      "month": "2022-11",
+      "cutoff": "2022-10-30",
+      "target": "2022-08-01",
+      "selected": "2022-08-01",
+      "rate": 0.0023250000000000002,
+      "original_rate": 0.0023250000000000002,
+      "source": {
+        "vintage_date": "2022-10-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-10-30",
+        "sha256": "4c9c8c427147adef67a1b8d9691c068e45a101b5caccfffa5f56353714b06b93",
+        "observations": {
+          "2022-08-01": "2.790"
+        }
+      }
+    },
+    {
+      "month": "2022-12",
+      "cutoff": "2022-11-29",
+      "target": "2022-09-01",
+      "selected": "2022-09-01",
+      "rate": 0.0025083333333333333,
+      "original_rate": 0.0025083333333333333,
+      "source": {
+        "vintage_date": "2022-11-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-11-29",
+        "sha256": "3a5ed6129fc1e1480984c5c0c24d456964c9548ec8cbd7d326f64be44f0a8c09",
+        "observations": {
+          "2022-09-01": "3.010"
+        }
+      }
+    },
+    {
+      "month": "2023-01",
+      "cutoff": "2022-12-30",
+      "target": "2022-10-01",
+      "selected": "2022-10-01",
+      "rate": 0.003075,
+      "original_rate": 0.003075,
+      "source": {
+        "vintage_date": "2022-12-30",
+        "sha256": "bd0670750289b3b985b039ef20c671427ad750ca7d7b003eb46f38b5bcb601ee",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2022-12-30",
+        "column": "IR3TIB01KRM156N_20221230",
+        "observations": {
+          "2022-10-01": "3.690"
+        }
+      }
+    },
+    {
+      "month": "2023-02",
+      "cutoff": "2023-01-30",
+      "target": "2022-11-01",
+      "selected": "2022-11-01",
+      "rate": 0.0033250000000000003,
+      "original_rate": 0.0033250000000000003,
+      "source": {
+        "vintage_date": "2023-01-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-01-30",
+        "sha256": "7414a475999574aaa552b0dd93c153d9f8d051ecd7bc8bf0382b437199467019",
+        "observations": {
+          "2022-11-01": "3.990"
+        }
+      }
+    },
+    {
+      "month": "2023-03",
+      "cutoff": "2023-02-27",
+      "target": "2022-12-01",
+      "selected": "2022-12-01",
+      "rate": 0.0033499999999999997,
+      "original_rate": 0.0033499999999999997,
+      "source": {
+        "vintage_date": "2023-02-27",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-02-27",
+        "sha256": "0c8e7cea26d0be8a1e35b0703b47a32803fe68d14626e139cfa5ec31c380b962",
+        "observations": {
+          "2022-12-01": "4.020"
+        }
+      }
+    },
+    {
+      "month": "2023-04",
+      "cutoff": "2023-03-30",
+      "target": "2023-01-01",
+      "selected": "2023-01-01",
+      "rate": 0.0031666666666666666,
+      "original_rate": 0.0031666666666666666,
+      "source": {
+        "vintage_date": "2023-03-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-03-30",
+        "sha256": "76dc0e2045ab6a776b4006fdc7dcb237a68c1dc1ff385da8c7a608f0a442bde8",
+        "observations": {
+          "2023-01-01": "3.800"
+        }
+      }
+    },
+    {
+      "month": "2023-05",
+      "cutoff": "2023-04-29",
+      "target": "2023-02-01",
+      "selected": "2023-02-01",
+      "rate": 0.0029333333333333334,
+      "original_rate": 0.0029333333333333334,
+      "source": {
+        "vintage_date": "2023-04-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-04-29",
+        "sha256": "8d7ec1e23ca748af3ca6a5dd4f2279443198a058beffe3a105c92ddc34f08712",
+        "observations": {
+          "2023-02-01": "3.520"
+        }
+      }
+    },
+    {
+      "month": "2023-06",
+      "cutoff": "2023-05-30",
+      "target": "2023-03-01",
+      "selected": "2023-03-01",
+      "rate": 0.0030083333333333333,
+      "original_rate": 0.0030083333333333333,
+      "source": {
+        "vintage_date": "2023-05-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-05-30",
+        "sha256": "c7988f40af1e2cd2235adf2ec165c83a9c50006fe5915b9149d3e3621bae49ce",
+        "observations": {
+          "2023-03-01": "3.610"
+        }
+      }
+    },
+    {
+      "month": "2023-07",
+      "cutoff": "2023-06-29",
+      "target": "2023-04-01",
+      "selected": "2023-04-01",
+      "rate": 0.002916666666666667,
+      "original_rate": 0.002916666666666667,
+      "source": {
+        "vintage_date": "2023-06-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-06-29",
+        "sha256": "9f70e3556615a08dea480d91dff1f96ba1fac5c4f7ea214be5116689c1485aaa",
+        "observations": {
+          "2023-04-01": "3.500"
+        }
+      }
+    },
+    {
+      "month": "2023-08",
+      "cutoff": "2023-07-30",
+      "target": "2023-05-01",
+      "selected": "2023-05-01",
+      "rate": 0.0030333333333333336,
+      "original_rate": 0.0030333333333333336,
+      "source": {
+        "vintage_date": "2023-07-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-07-30",
+        "sha256": "cec6ad41b8702adaf08a181f4d71da868fd20f68b6d97c0c5553624e40e9e55c",
+        "observations": {
+          "2023-05-01": "3.64"
+        }
+      }
+    },
+    {
+      "month": "2023-09",
+      "cutoff": "2023-08-30",
+      "target": "2023-06-01",
+      "selected": "2023-06-01",
+      "rate": 0.003125,
+      "original_rate": 0.003125,
+      "source": {
+        "vintage_date": "2023-08-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-08-30",
+        "sha256": "1c0d6cb0811a102b76d4c9e12d36897a3766eb535dc503d35cae60f638d18d99",
+        "observations": {
+          "2023-06-01": "3.75"
+        }
+      }
+    },
+    {
+      "month": "2023-10",
+      "cutoff": "2023-09-29",
+      "target": "2023-07-01",
+      "selected": "2023-07-01",
+      "rate": 0.003125,
+      "original_rate": 0.003125,
+      "source": {
+        "vintage_date": "2023-09-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-09-29",
+        "sha256": "365e06f8082428179c23595f34c1378dc1b7402a2cf270dc3dee2e6bad54bcc8",
+        "observations": {
+          "2023-07-01": "3.75"
+        }
+      }
+    },
+    {
+      "month": "2023-11",
+      "cutoff": "2023-10-30",
+      "target": "2023-08-01",
+      "selected": "2023-08-01",
+      "rate": 0.0030833333333333333,
+      "original_rate": 0.0030833333333333333,
+      "source": {
+        "vintage_date": "2023-10-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-10-30",
+        "sha256": "a5955f2472cb060158bea61123fb125948d59baad1ef51a1c0e9e3381e8e6231",
+        "observations": {
+          "2023-08-01": "3.70"
+        }
+      }
+    },
+    {
+      "month": "2023-12",
+      "cutoff": "2023-11-29",
+      "target": "2023-09-01",
+      "selected": "2023-09-01",
+      "rate": 0.003133333333333333,
+      "original_rate": 0.003133333333333333,
+      "source": {
+        "vintage_date": "2023-11-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-11-29",
+        "sha256": "280b1962c1b183e532bbb433556932aa737d937a61f9c412fd8ae64744d4ea99",
+        "observations": {
+          "2023-09-01": "3.76"
+        }
+      }
+    },
+    {
+      "month": "2024-01",
+      "cutoff": "2023-12-30",
+      "target": "2023-10-01",
+      "selected": "2023-10-01",
+      "rate": 0.003183333333333333,
+      "original_rate": 0.003183333333333333,
+      "source": {
+        "vintage_date": "2023-12-30",
+        "sha256": "c77cfb1df85f095d87d7dd2ca69fec89c35c154e7cf8fc99cf4f361bc1a46897",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2023-12-30",
+        "column": "IR3TIB01KRM156N_20231230",
+        "observations": {
+          "2023-10-01": "3.82"
+        }
+      }
+    },
+    {
+      "month": "2024-02",
+      "cutoff": "2024-01-30",
+      "target": "2023-11-01",
+      "selected": "2023-11-01",
+      "rate": 0.003191666666666667,
+      "original_rate": 0.003191666666666667,
+      "source": {
+        "vintage_date": "2024-01-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-01-30",
+        "sha256": "b3d547e83f530be2f6dba8e971514965bfb51edf91a20af57db769008b4c8643",
+        "observations": {
+          "2023-11-01": "3.83"
+        }
+      }
+    },
+    {
+      "month": "2024-03",
+      "cutoff": "2024-02-28",
+      "target": "2023-12-01",
+      "selected": "2023-12-01",
+      "rate": 0.003191666666666667,
+      "original_rate": 0.003191666666666667,
+      "source": {
+        "vintage_date": "2024-02-28",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-02-28",
+        "sha256": "522b7fc8a9392ec45c45095ff76f9f72b2874bdd637970ee78d7376e6f9c5e38",
+        "observations": {
+          "2023-12-01": "3.83"
+        }
+      }
+    },
+    {
+      "month": "2024-04",
+      "cutoff": "2024-03-30",
+      "target": "2024-01-01",
+      "selected": "2023-12-01",
+      "rate": 0.003191666666666667,
+      "original_rate": 0.003116666666666667,
+      "source": {
+        "vintage_date": "2024-03-30",
+        "sha256": "be1c02d835ca6839961c29f8fbbe05b3fa53c7952f35f2a9e35e150b964c35c4",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-03-30",
+        "column": "IR3TIB01KRM156N_20240330",
+        "observations": {
+          "2023-12-01": "3.83",
+          "2024-01-01": null
+        }
+      }
+    },
+    {
+      "month": "2024-05",
+      "cutoff": "2024-04-29",
+      "target": "2024-02-01",
+      "selected": "2024-02-01",
+      "rate": 0.003075,
+      "original_rate": 0.003075,
+      "source": {
+        "vintage_date": "2024-04-29",
+        "sha256": "c0f1888f41f240af32b53aef16ea69fcc7d53753f64f41b5e3ae5c14eb56b436",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-04-29",
+        "column": "IR3TIB01KRM156N_20240429",
+        "observations": {
+          "2024-02-01": "3.69"
+        }
+      }
+    },
+    {
+      "month": "2024-06",
+      "cutoff": "2024-05-30",
+      "target": "2024-03-01",
+      "selected": "2024-03-01",
+      "rate": 0.0030416666666666665,
+      "original_rate": 0.0030416666666666665,
+      "source": {
+        "vintage_date": "2024-05-30",
+        "sha256": "d1e95241738eaa41b4f096f84070342e017b40fda7e4c0ec86cb877bea42c1f6",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-05-30",
+        "column": "IR3TIB01KRM156N_20240530",
+        "observations": {
+          "2024-03-01": "3.65"
+        }
+      }
+    },
+    {
+      "month": "2024-07",
+      "cutoff": "2024-06-29",
+      "target": "2024-04-01",
+      "selected": "2024-04-01",
+      "rate": 0.0029749999999999998,
+      "original_rate": 0.0029749999999999998,
+      "source": {
+        "vintage_date": "2024-06-29",
+        "sha256": "c8b0f69ee22962537d4eccbcecf6450da90a93f17ff2e3fb285e301b8f48a739",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-06-29",
+        "column": "IR3TIB01KRM156N_20240629",
+        "observations": {
+          "2024-04-01": "3.57"
+        }
+      }
+    },
+    {
+      "month": "2024-08",
+      "cutoff": "2024-07-30",
+      "target": "2024-05-01",
+      "selected": "2024-05-01",
+      "rate": 0.003,
+      "original_rate": 0.003,
+      "source": {
+        "vintage_date": "2024-07-30",
+        "sha256": "b0b470047a5a2a08d1f34621a3654138f43c747113594cd68d0d8aafc0356c51",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-07-30",
+        "column": "IR3TIB01KRM156N_20240730",
+        "observations": {
+          "2024-05-01": "3.60"
+        }
+      }
+    },
+    {
+      "month": "2024-09",
+      "cutoff": "2024-08-30",
+      "target": "2024-06-01",
+      "selected": "2024-06-01",
+      "rate": 0.003,
+      "original_rate": 0.003,
+      "source": {
+        "vintage_date": "2024-08-30",
+        "sha256": "b4574bcbbc6cb1450d982f7cb7012374553047b288499318042e9e8de61ea00f",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-08-30",
+        "column": "IR3TIB01KRM156N_20240830",
+        "observations": {
+          "2024-06-01": "3.60"
+        }
+      }
+    },
+    {
+      "month": "2024-10",
+      "cutoff": "2024-09-29",
+      "target": "2024-07-01",
+      "selected": "2024-07-01",
+      "rate": 0.00295,
+      "original_rate": 0.00295,
+      "source": {
+        "vintage_date": "2024-09-29",
+        "sha256": "3f8ecd4b1c65ef38093b162dad0d4f6935d45a8d4612774079dfa1e0d9913dbb",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-09-29",
+        "column": "IR3TIB01KRM156N_20240929",
+        "observations": {
+          "2024-07-01": "3.54"
+        }
+      }
+    },
+    {
+      "month": "2024-11",
+      "cutoff": "2024-10-30",
+      "target": "2024-08-01",
+      "selected": "2024-08-01",
+      "rate": 0.002916666666666667,
+      "original_rate": 0.002916666666666667,
+      "source": {
+        "vintage_date": "2024-10-30",
+        "sha256": "64aa0b4d3d81e8027e9a170723146719b48ed4b9b1b711f3e0863d36e71cd62b",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-10-30",
+        "column": "IR3TIB01KRM156N_20241030",
+        "observations": {
+          "2024-08-01": "3.50"
+        }
+      }
+    },
+    {
+      "month": "2024-12",
+      "cutoff": "2024-11-29",
+      "target": "2024-09-01",
+      "selected": "2024-09-01",
+      "rate": 0.0029333333333333334,
+      "original_rate": 0.0029333333333333334,
+      "source": {
+        "vintage_date": "2024-11-29",
+        "sha256": "8f56ce48c870c39804e84519405661e80b66d44ce36ee873a4f638b0f96a1c19",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-11-29",
+        "column": "IR3TIB01KRM156N_20241129",
+        "observations": {
+          "2024-09-01": "3.52"
+        }
+      }
+    },
+    {
+      "month": "2025-01",
+      "cutoff": "2024-12-30",
+      "target": "2024-10-01",
+      "selected": "2024-10-01",
+      "rate": 0.0028583333333333334,
+      "original_rate": 0.0028583333333333334,
+      "source": {
+        "vintage_date": "2024-12-30",
+        "sha256": "2c54e4d1a2fb554f4fa176d090f3468afac0532f022960a020166c09a99da21e",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2024-12-30",
+        "column": "IR3TIB01KRM156N_20241230",
+        "observations": {
+          "2024-10-01": "3.43"
+        }
+      }
+    },
+    {
+      "month": "2025-02",
+      "cutoff": "2025-01-30",
+      "target": "2024-11-01",
+      "selected": "2024-11-01",
+      "rate": 0.00285,
+      "original_rate": 0.00285,
+      "source": {
+        "vintage_date": "2025-01-30",
+        "sha256": "16842f5bf9bb3630534c508335e2306a38d62e1625715ad7ecdbb361cf66b9b7",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-01-30",
+        "column": "IR3TIB01KRM156N_20250130",
+        "observations": {
+          "2024-11-01": "3.42"
+        }
+      }
+    },
+    {
+      "month": "2025-03",
+      "cutoff": "2025-02-27",
+      "target": "2024-12-01",
+      "selected": "2024-12-01",
+      "rate": 0.0027916666666666667,
+      "original_rate": 0.0027916666666666667,
+      "source": {
+        "vintage_date": "2025-02-27",
+        "sha256": "12217650110ff63960ffdb55d5912b890b9794d9645e272cd4b70221c2c20d7b",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-02-27",
+        "column": "IR3TIB01KRM156N_20250227",
+        "observations": {
+          "2024-12-01": "3.35"
+        }
+      }
+    },
+    {
+      "month": "2025-04",
+      "cutoff": "2025-03-30",
+      "target": "2025-01-01",
+      "selected": "2025-01-01",
+      "rate": 0.002533333333333333,
+      "original_rate": 0.002533333333333333,
+      "source": {
+        "vintage_date": "2025-03-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-03-30",
+        "sha256": "785dacb170ec80cdd9a15cd3941e5700b7ea48e7d2dc1411a3df405dbbfc2189",
+        "observations": {
+          "2025-01-01": "3.04"
+        }
+      }
+    },
+    {
+      "month": "2025-05",
+      "cutoff": "2025-04-29",
+      "target": "2025-02-01",
+      "selected": "2025-02-01",
+      "rate": 0.0024583333333333336,
+      "original_rate": 0.0024583333333333336,
+      "source": {
+        "vintage_date": "2025-04-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-04-29",
+        "sha256": "a017d7457f40ac920951d3d407306a3349c38b313764254266231e434de30512",
+        "observations": {
+          "2025-02-01": "2.95"
+        }
+      }
+    },
+    {
+      "month": "2025-06",
+      "cutoff": "2025-05-30",
+      "target": "2025-03-01",
+      "selected": "2025-03-01",
+      "rate": 0.0023666666666666667,
+      "original_rate": 0.0023666666666666667,
+      "source": {
+        "vintage_date": "2025-05-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-05-30",
+        "sha256": "8869fa2eff22372bd85cde17adec06a661e42e7b20e93c0effdc6fee427ed933",
+        "observations": {
+          "2025-03-01": "2.84"
+        }
+      }
+    },
+    {
+      "month": "2025-07",
+      "cutoff": "2025-06-29",
+      "target": "2025-04-01",
+      "selected": "2025-04-01",
+      "rate": 0.0022833333333333334,
+      "original_rate": 0.0022833333333333334,
+      "source": {
+        "vintage_date": "2025-06-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-06-29",
+        "sha256": "0cbba8008a0643a73c0e7a7fc72f93c5648153e2f2eac8f8c17d5289b616a8d2",
+        "observations": {
+          "2025-04-01": "2.74"
+        }
+      }
+    },
+    {
+      "month": "2025-08",
+      "cutoff": "2025-07-30",
+      "target": "2025-05-01",
+      "selected": "2025-05-01",
+      "rate": 0.002225,
+      "original_rate": 0.002225,
+      "source": {
+        "vintage_date": "2025-07-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-07-30",
+        "sha256": "188ed45ca787db9cf03a12b6d53734aaab46c202613f3ae7889d86207e111356",
+        "observations": {
+          "2025-05-01": "2.67"
+        }
+      }
+    },
+    {
+      "month": "2025-09",
+      "cutoff": "2025-08-30",
+      "target": "2025-06-01",
+      "selected": "2025-06-01",
+      "rate": 0.0021416666666666667,
+      "original_rate": 0.0021416666666666667,
+      "source": {
+        "vintage_date": "2025-08-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-08-30",
+        "sha256": "406acfcaded2aa194f57784d82405c322bd89e94d9175e3ae8015865e93dca6a",
+        "observations": {
+          "2025-06-01": "2.57"
+        }
+      }
+    },
+    {
+      "month": "2025-10",
+      "cutoff": "2025-09-29",
+      "target": "2025-07-01",
+      "selected": "2025-07-01",
+      "rate": 0.0020916666666666666,
+      "original_rate": 0.0020916666666666666,
+      "source": {
+        "vintage_date": "2025-09-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-09-29",
+        "sha256": "9d00f5a44cd036b517244541351d61815b16b39f6176264636f7136353056e04",
+        "observations": {
+          "2025-07-01": "2.51"
+        }
+      }
+    },
+    {
+      "month": "2025-11",
+      "cutoff": "2025-10-30",
+      "target": "2025-08-01",
+      "selected": "2025-08-01",
+      "rate": 0.0020916666666666666,
+      "original_rate": 0.0020916666666666666,
+      "source": {
+        "vintage_date": "2025-10-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-10-30",
+        "sha256": "7e934e7b7a21e6218dd03d2753a9abce9dd18b0a19e67e5724f7fad859861b77",
+        "observations": {
+          "2025-08-01": "2.51"
+        }
+      }
+    },
+    {
+      "month": "2025-12",
+      "cutoff": "2025-11-29",
+      "target": "2025-09-01",
+      "selected": "2025-09-01",
+      "rate": 0.0021333333333333334,
+      "original_rate": 0.0021333333333333334,
+      "source": {
+        "vintage_date": "2025-11-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-11-29",
+        "sha256": "3ea17cc4a067dd1372fa700429a6943c837b18638ff5dc8d95e29ad63f0a77c9",
+        "observations": {
+          "2025-09-01": "2.56"
+        }
+      }
+    },
+    {
+      "month": "2026-01",
+      "cutoff": "2025-12-30",
+      "target": "2025-10-01",
+      "selected": "2025-10-01",
+      "rate": 0.0021249999999999997,
+      "original_rate": 0.0021249999999999997,
+      "source": {
+        "vintage_date": "2025-12-30",
+        "sha256": "7ea1ea4af3a4f300667e445020741f8c190ec70d7047a6b772eab26e4d8fb0f1",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2025-12-30",
+        "column": "IR3TIB01KRM156N_20251230",
+        "observations": {
+          "2025-10-01": "2.55"
+        }
+      }
+    },
+    {
+      "month": "2026-02",
+      "cutoff": "2026-01-30",
+      "target": "2025-11-01",
+      "selected": "2025-11-01",
+      "rate": 0.0022416666666666665,
+      "original_rate": 0.0022416666666666665,
+      "source": {
+        "vintage_date": "2026-01-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2026-01-30",
+        "sha256": "183738b691cfd281a61bb69adaabc51f66b51d610736b42a851cdc5eeb617ae7",
+        "observations": {
+          "2025-11-01": "2.69"
+        }
+      }
+    },
+    {
+      "month": "2026-03",
+      "cutoff": "2026-02-27",
+      "target": "2025-12-01",
+      "selected": "2025-12-01",
+      "rate": 0.0023666666666666667,
+      "original_rate": 0.0023666666666666667,
+      "source": {
+        "vintage_date": "2026-02-27",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2026-02-27",
+        "sha256": "461f58fff949848d32d4b6715392699b185cb4ca64fe0bb18fd35ec4f015fbd2",
+        "observations": {
+          "2025-12-01": "2.84"
+        }
+      }
+    },
+    {
+      "month": "2026-04",
+      "cutoff": "2026-03-30",
+      "target": "2026-01-01",
+      "selected": "2026-01-01",
+      "rate": 0.0022500000000000003,
+      "original_rate": 0.0022500000000000003,
+      "source": {
+        "vintage_date": "2026-03-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2026-03-30",
+        "sha256": "803160467de3e4bb1bca3733e64dca7e7b60ede73d01561f574bf440205c0129",
+        "observations": {
+          "2026-01-01": "2.70"
+        }
+      }
+    },
+    {
+      "month": "2026-05",
+      "cutoff": "2026-04-29",
+      "target": "2026-02-01",
+      "selected": "2026-02-01",
+      "rate": 0.0023166666666666665,
+      "original_rate": 0.0023166666666666665,
+      "source": {
+        "vintage_date": "2026-04-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2026-04-29",
+        "sha256": "137b5c49b3a3231a127da7ec2b4a7c8b37921b31673d5bcac8511afdfa537903",
+        "observations": {
+          "2026-02-01": "2.78"
+        }
+      }
+    },
+    {
+      "month": "2026-06",
+      "cutoff": "2026-05-30",
+      "target": "2026-03-01",
+      "selected": "2026-03-01",
+      "rate": 0.0023499999999999997,
+      "original_rate": 0.0023499999999999997,
+      "source": {
+        "vintage_date": "2026-05-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2026-05-30",
+        "sha256": "8b798ab49503f1e07c1c95e9ad323ee2e7eef98ece3f60c770778a684d250d7f",
+        "observations": {
+          "2026-03-01": "2.82"
+        }
+      }
+    },
+    {
+      "month": "2026-07",
+      "cutoff": "2026-06-29",
+      "target": "2026-04-01",
+      "selected": "2026-04-01",
+      "rate": 0.0023499999999999997,
+      "original_rate": 0.0023499999999999997,
+      "source": {
+        "vintage_date": "2026-06-29",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2026-06-29",
+        "sha256": "562431b6811bc59cf26545fb1b2edb9d0ce4651e14be83b23dde4004d692eb3d",
+        "observations": {
+          "2026-04-01": "2.82"
+        }
+      }
+    },
+    {
+      "month": "2026-08",
+      "cutoff": "2026-07-30",
+      "target": "2026-05-01",
+      "selected": "2026-05-01",
+      "rate": 0.0023499999999999997,
+      "original_rate": 0.0023499999999999997,
+      "source": {
+        "vintage_date": "2026-07-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2026-07-30",
+        "sha256": "d08903443670c331e985cb6506b0c2a99150fe7931456a03113e4f7b90473077",
+        "observations": {
+          "2026-05-01": "2.82"
+        }
+      }
+    },
+    {
+      "month": "2026-09",
+      "cutoff": "2026-08-30",
+      "target": "2026-06-01",
+      "selected": "2026-06-01",
+      "rate": 0.002425,
+      "original_rate": 0.002425,
+      "source": {
+        "vintage_date": "2026-08-30",
+        "url": "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=IR3TIB01KRM156N&vintage_date=2026-08-30",
+        "sha256": "1ba94788d7761ad48594b5b2d93d0175cc26d541fd47f294f25b8ce555fe81b0",
+        "observations": {
+          "2026-06-01": "2.91"
+        }
+      }
+    }
+  ],
+  "input_hashes": {
+    "recalc/data/experiment/results-full.json": "f3316bf1f2248ec0198618d247f0c844c1735ec3b6c2be19d5f0e4322f7356d8",
+    "recalc/data/experiment/inputs/rates.csv": "e32b26fcfe3944f02d4182589a644e8ecc3388f129997971d0cf997f479d02c8",
+    "recalc/data/experiment/inputs/monthly_returns.csv": "67473443e3d1d5779f682a6e302c1d5f82cb5ac950ed4c0ccd69ef6b84a60f87"
+  }
+}
