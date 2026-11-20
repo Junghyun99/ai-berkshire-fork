@@ -1,0 +1,559 @@
+{
+  "classification": "ex_post_descriptive_not_a_signal",
+  "window_months": 36,
+  "hashes": {
+    "verify96/comparison/full.json": "f7414c10a88d54d216b6b265ca7b9e3fff3e29aad9d4d478f47cdd40bc2944e8",
+    "verify96/results.json": "2a9885b434dc1dd8a072ec1a45a49b1dad11cc6322107b5c5ada13c4c1638f05"
+  },
+  "variants": {
+    "baseline": {
+      "oos_months": 117,
+      "regimes": {
+        "equity_up_bonds_down": {
+          "months": 37,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": 0.02056054192828746,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": -0.00655494538486856,
+              "positive_months": 34
+            },
+            "minvar": {
+              "mean_monthly_return": -0.0014569138154667477,
+              "mean_delta_vs_equal": -0.02201745574375421,
+              "worst_month_return": -0.026970060294964293,
+              "positive_months": 16
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": 0.0007987000666372143,
+              "mean_delta_vs_equal": -0.019761841861650246,
+              "worst_month_return": -0.01928172276069051,
+              "positive_months": 20
+            },
+            "max_sharpe": {
+              "mean_monthly_return": 0.013060857013621186,
+              "mean_delta_vs_equal": -0.0074996849146662745,
+              "worst_month_return": -0.021622678419494168,
+              "positive_months": 26
+            },
+            "risk_parity": {
+              "mean_monthly_return": 0.0077439306819503334,
+              "mean_delta_vs_equal": -0.012816611246337126,
+              "worst_month_return": -0.012177322624088216,
+              "positive_months": 27
+            }
+          }
+        },
+        "equity_up_bonds_up": {
+          "months": 44,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": 0.03190608549108001,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": 0.0012383643687392532,
+              "positive_months": 44
+            },
+            "minvar": {
+              "mean_monthly_return": 0.014385452938428071,
+              "mean_delta_vs_equal": -0.017520632552651936,
+              "worst_month_return": -0.0057081092470605554,
+              "positive_months": 38
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": 0.01761941918991848,
+              "mean_delta_vs_equal": -0.014286666301161528,
+              "worst_month_return": -0.002877664557037529,
+              "positive_months": 42
+            },
+            "max_sharpe": {
+              "mean_monthly_return": 0.03195697037666311,
+              "mean_delta_vs_equal": 5.0884885583105365e-05,
+              "worst_month_return": -0.02795511883491031,
+              "positive_months": 41
+            },
+            "risk_parity": {
+              "mean_monthly_return": 0.022308051000703835,
+              "mean_delta_vs_equal": -0.009598034490376172,
+              "worst_month_return": -0.000667403882107287,
+              "positive_months": 43
+            }
+          }
+        },
+        "equity_down_bonds_down": {
+          "months": 20,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": -0.029328806205632996,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": -0.12435084746059444,
+              "positive_months": 0
+            },
+            "minvar": {
+              "mean_monthly_return": -0.01528920249433709,
+              "mean_delta_vs_equal": 0.014039603711295905,
+              "worst_month_return": -0.04173702078245023,
+              "positive_months": 3
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": -0.016132853054415003,
+              "mean_delta_vs_equal": 0.013195953151217993,
+              "worst_month_return": -0.05554726772802843,
+              "positive_months": 2
+            },
+            "max_sharpe": {
+              "mean_monthly_return": -0.03186084756392661,
+              "mean_delta_vs_equal": -0.002532041358293613,
+              "worst_month_return": -0.1130467856316969,
+              "positive_months": 1
+            },
+            "risk_parity": {
+              "mean_monthly_return": -0.02089465900624966,
+              "mean_delta_vs_equal": 0.008434147199383336,
+              "worst_month_return": -0.08738872246924922,
+              "positive_months": 0
+            }
+          }
+        },
+        "equity_down_bonds_up": {
+          "months": 16,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": -0.0180716434180285,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": -0.05305026749719832,
+              "positive_months": 4
+            },
+            "minvar": {
+              "mean_monthly_return": -0.002352779239127155,
+              "mean_delta_vs_equal": 0.015718864178901344,
+              "worst_month_return": -0.034778841961411344,
+              "positive_months": 7
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": -0.0025066158750416748,
+              "mean_delta_vs_equal": 0.015565027542986824,
+              "worst_month_return": -0.030128985246049123,
+              "positive_months": 7
+            },
+            "max_sharpe": {
+              "mean_monthly_return": -0.01452870019826489,
+              "mean_delta_vs_equal": 0.00354294321976361,
+              "worst_month_return": -0.06427913962422382,
+              "positive_months": 6
+            },
+            "risk_parity": {
+              "mean_monthly_return": -0.007476891428767743,
+              "mean_delta_vs_equal": 0.010594751989260756,
+              "worst_month_return": -0.04034479326612517,
+              "positive_months": 4
+            }
+          }
+        }
+      },
+      "rolling_windows": 82,
+      "rolling_wins_vs_equal": {
+        "equal": {
+          "cagr": 0,
+          "mdd": 0,
+          "sharpe_rf_proxy": 0,
+          "sortino_rf_proxy": 0,
+          "joint_risk_adjusted_and_mdd": 0
+        },
+        "minvar": {
+          "cagr": 0,
+          "mdd": 73,
+          "sharpe_rf_proxy": 0,
+          "sortino_rf_proxy": 0,
+          "joint_risk_adjusted_and_mdd": 0
+        },
+        "shrink_minvar": {
+          "cagr": 0,
+          "mdd": 77,
+          "sharpe_rf_proxy": 17,
+          "sortino_rf_proxy": 16,
+          "joint_risk_adjusted_and_mdd": 16
+        },
+        "max_sharpe": {
+          "cagr": 15,
+          "mdd": 7,
+          "sharpe_rf_proxy": 14,
+          "sortino_rf_proxy": 13,
+          "joint_risk_adjusted_and_mdd": 4
+        },
+        "risk_parity": {
+          "cagr": 0,
+          "mdd": 82,
+          "sharpe_rf_proxy": 5,
+          "sortino_rf_proxy": 5,
+          "joint_risk_adjusted_and_mdd": 4
+        }
+      }
+    },
+    "issuer_div_backward": {
+      "oos_months": 117,
+      "regimes": {
+        "equity_up_bonds_down": {
+          "months": 37,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": 0.020560503767792473,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": -0.006554976981280269,
+              "positive_months": 34
+            },
+            "minvar": {
+              "mean_monthly_return": -0.0014569334610265183,
+              "mean_delta_vs_equal": -0.022017437228818992,
+              "worst_month_return": -0.02696862052423077,
+              "positive_months": 16
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": 0.0007986796354671252,
+              "mean_delta_vs_equal": -0.01976182413232535,
+              "worst_month_return": -0.019281704664052546,
+              "positive_months": 20
+            },
+            "max_sharpe": {
+              "mean_monthly_return": 0.013060713075355612,
+              "mean_delta_vs_equal": -0.007499790692436861,
+              "worst_month_return": -0.021622632260440144,
+              "positive_months": 26
+            },
+            "risk_parity": {
+              "mean_monthly_return": 0.007743859447101839,
+              "mean_delta_vs_equal": -0.012816644320690634,
+              "worst_month_return": -0.01217725397706837,
+              "positive_months": 27
+            }
+          }
+        },
+        "equity_up_bonds_up": {
+          "months": 44,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": 0.03190608994972072,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": 0.0012386681662726051,
+              "positive_months": 44
+            },
+            "minvar": {
+              "mean_monthly_return": 0.014385486030311045,
+              "mean_delta_vs_equal": -0.017520603919409673,
+              "worst_month_return": -0.00570750134984821,
+              "positive_months": 38
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": 0.017619434745717973,
+              "mean_delta_vs_equal": -0.014286655204002742,
+              "worst_month_return": -0.002877065836455195,
+              "positive_months": 42
+            },
+            "max_sharpe": {
+              "mean_monthly_return": 0.03195689336300545,
+              "mean_delta_vs_equal": 5.0803413284735496e-05,
+              "worst_month_return": -0.02795555267812533,
+              "positive_months": 41
+            },
+            "risk_parity": {
+              "mean_monthly_return": 0.02230804299977175,
+              "mean_delta_vs_equal": -0.009598046949948964,
+              "worst_month_return": -0.0006669629286437662,
+              "positive_months": 43
+            }
+          }
+        },
+        "equity_down_bonds_down": {
+          "months": 20,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": -0.029328789350831063,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": -0.12435072967568306,
+              "positive_months": 0
+            },
+            "minvar": {
+              "mean_monthly_return": -0.015289385310897819,
+              "mean_delta_vs_equal": 0.014039404039933246,
+              "worst_month_return": -0.0417368885009084,
+              "positive_months": 3
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": -0.016133014844356815,
+              "mean_delta_vs_equal": 0.01319577450647425,
+              "worst_month_return": -0.05554715045207592,
+              "positive_months": 2
+            },
+            "max_sharpe": {
+              "mean_monthly_return": -0.03186087036183722,
+              "mean_delta_vs_equal": -0.002532081011006154,
+              "worst_month_return": -0.11304704424446177,
+              "positive_months": 1
+            },
+            "risk_parity": {
+              "mean_monthly_return": -0.02089472164445772,
+              "mean_delta_vs_equal": 0.008434067706373343,
+              "worst_month_return": -0.08738857595189553,
+              "positive_months": 0
+            }
+          }
+        },
+        "equity_down_bonds_up": {
+          "months": 16,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": -0.01807152370998316,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": -0.05304995984417893,
+              "positive_months": 4
+            },
+            "minvar": {
+              "mean_monthly_return": -0.002352601853268875,
+              "mean_delta_vs_equal": 0.015718921856714287,
+              "worst_month_return": -0.034778820159032775,
+              "positive_months": 7
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": -0.002506480725060989,
+              "mean_delta_vs_equal": 0.015565042984922173,
+              "worst_month_return": -0.030128901937746866,
+              "positive_months": 7
+            },
+            "max_sharpe": {
+              "mean_monthly_return": -0.014528653407574886,
+              "mean_delta_vs_equal": 0.0035428703024082756,
+              "worst_month_return": -0.06427922910362271,
+              "positive_months": 6
+            },
+            "risk_parity": {
+              "mean_monthly_return": -0.0074766919899765735,
+              "mean_delta_vs_equal": 0.010594831720006588,
+              "worst_month_return": -0.0403446031305531,
+              "positive_months": 4
+            }
+          }
+        }
+      },
+      "rolling_windows": 82,
+      "rolling_wins_vs_equal": {
+        "equal": {
+          "cagr": 0,
+          "mdd": 0,
+          "sharpe_rf_proxy": 0,
+          "sortino_rf_proxy": 0,
+          "joint_risk_adjusted_and_mdd": 0
+        },
+        "minvar": {
+          "cagr": 0,
+          "mdd": 73,
+          "sharpe_rf_proxy": 0,
+          "sortino_rf_proxy": 0,
+          "joint_risk_adjusted_and_mdd": 0
+        },
+        "shrink_minvar": {
+          "cagr": 0,
+          "mdd": 77,
+          "sharpe_rf_proxy": 17,
+          "sortino_rf_proxy": 16,
+          "joint_risk_adjusted_and_mdd": 16
+        },
+        "max_sharpe": {
+          "cagr": 15,
+          "mdd": 7,
+          "sharpe_rf_proxy": 14,
+          "sortino_rf_proxy": 13,
+          "joint_risk_adjusted_and_mdd": 4
+        },
+        "risk_parity": {
+          "cagr": 0,
+          "mdd": 82,
+          "sharpe_rf_proxy": 5,
+          "sortino_rf_proxy": 5,
+          "joint_risk_adjusted_and_mdd": 4
+        }
+      }
+    },
+    "issuer_div_ex_close": {
+      "oos_months": 117,
+      "regimes": {
+        "equity_up_bonds_down": {
+          "months": 37,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": 0.020561114481647023,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": -0.006554976981280269,
+              "positive_months": 34
+            },
+            "minvar": {
+              "mean_monthly_return": -0.0014559475850818443,
+              "mean_delta_vs_equal": -0.022017062066728866,
+              "worst_month_return": -0.026963119220124954,
+              "positive_months": 16
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": 0.0007994671552962305,
+              "mean_delta_vs_equal": -0.01976164732635079,
+              "worst_month_return": -0.019283002637455082,
+              "positive_months": 20
+            },
+            "max_sharpe": {
+              "mean_monthly_return": 0.01306101148715157,
+              "mean_delta_vs_equal": -0.007500102994495451,
+              "worst_month_return": -0.021625163036272488,
+              "positive_months": 26
+            },
+            "risk_parity": {
+              "mean_monthly_return": 0.007744570130956571,
+              "mean_delta_vs_equal": -0.01281654435069045,
+              "worst_month_return": -0.012181581156655907,
+              "positive_months": 27
+            }
+          }
+        },
+        "equity_up_bonds_up": {
+          "months": 44,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": 0.031905906187224185,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": 0.0012382592215709476,
+              "positive_months": 44
+            },
+            "minvar": {
+              "mean_monthly_return": 0.014384769252867911,
+              "mean_delta_vs_equal": -0.017521136934356276,
+              "worst_month_return": -0.0057120684209666095,
+              "positive_months": 38
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": 0.017618733636922203,
+              "mean_delta_vs_equal": -0.014287172550301984,
+              "worst_month_return": -0.002881546782314448,
+              "positive_months": 42
+            },
+            "max_sharpe": {
+              "mean_monthly_return": 0.031955993591638324,
+              "mean_delta_vs_equal": 5.008740441414023e-05,
+              "worst_month_return": -0.0279554061202949,
+              "positive_months": 41
+            },
+            "risk_parity": {
+              "mean_monthly_return": 0.022307345763459285,
+              "mean_delta_vs_equal": -0.0095985604237649,
+              "worst_month_return": -0.0006675820781711916,
+              "positive_months": 43
+            }
+          }
+        },
+        "equity_down_bonds_down": {
+          "months": 20,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": -0.029326943829742887,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": -0.12434926965841153,
+              "positive_months": 0
+            },
+            "minvar": {
+              "mean_monthly_return": -0.015288817865831611,
+              "mean_delta_vs_equal": 0.014038125963911274,
+              "worst_month_return": -0.041734332167703836,
+              "positive_months": 3
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": -0.01613230043462242,
+              "mean_delta_vs_equal": 0.013194643395120465,
+              "worst_month_return": -0.055545219644068666,
+              "positive_months": 2
+            },
+            "max_sharpe": {
+              "mean_monthly_return": -0.03185894590589756,
+              "mean_delta_vs_equal": -0.0025320020761546713,
+              "worst_month_return": -0.11305261893994367,
+              "positive_months": 1
+            },
+            "risk_parity": {
+              "mean_monthly_return": -0.02089369714365367,
+              "mean_delta_vs_equal": 0.008433246686089213,
+              "worst_month_return": -0.08738661005227,
+              "positive_months": 0
+            }
+          }
+        },
+        "equity_down_bonds_up": {
+          "months": 16,
+          "strategies": {
+            "equal": {
+              "mean_monthly_return": -0.018066943564964875,
+              "mean_delta_vs_equal": 0.0,
+              "worst_month_return": -0.053005493534469816,
+              "positive_months": 4
+            },
+            "minvar": {
+              "mean_monthly_return": -0.002350022058160192,
+              "mean_delta_vs_equal": 0.015716921506804683,
+              "worst_month_return": -0.034758715148795694,
+              "positive_months": 7
+            },
+            "shrink_minvar": {
+              "mean_monthly_return": -0.0025044965101309255,
+              "mean_delta_vs_equal": 0.01556244705483395,
+              "worst_month_return": -0.03011887724726159,
+              "positive_months": 7
+            },
+            "max_sharpe": {
+              "mean_monthly_return": -0.01452569267285473,
+              "mean_delta_vs_equal": 0.0035412508921101454,
+              "worst_month_return": -0.06427932481750953,
+              "positive_months": 6
+            },
+            "risk_parity": {
+              "mean_monthly_return": -0.007473631781586221,
+              "mean_delta_vs_equal": 0.010593311783378655,
+              "worst_month_return": -0.04031964314866254,
+              "positive_months": 4
+            }
+          }
+        }
+      },
+      "rolling_windows": 82,
+      "rolling_wins_vs_equal": {
+        "equal": {
+          "cagr": 0,
+          "mdd": 0,
+          "sharpe_rf_proxy": 0,
+          "sortino_rf_proxy": 0,
+          "joint_risk_adjusted_and_mdd": 0
+        },
+        "minvar": {
+          "cagr": 0,
+          "mdd": 73,
+          "sharpe_rf_proxy": 0,
+          "sortino_rf_proxy": 0,
+          "joint_risk_adjusted_and_mdd": 0
+        },
+        "shrink_minvar": {
+          "cagr": 0,
+          "mdd": 77,
+          "sharpe_rf_proxy": 17,
+          "sortino_rf_proxy": 16,
+          "joint_risk_adjusted_and_mdd": 16
+        },
+        "max_sharpe": {
+          "cagr": 15,
+          "mdd": 7,
+          "sharpe_rf_proxy": 14,
+          "sortino_rf_proxy": 13,
+          "joint_risk_adjusted_and_mdd": 4
+        },
+        "risk_parity": {
+          "cagr": 0,
+          "mdd": 82,
+          "sharpe_rf_proxy": 5,
+          "sortino_rf_proxy": 5,
+          "joint_risk_adjusted_and_mdd": 4
+        }
+      }
+    }
+  }
+}
