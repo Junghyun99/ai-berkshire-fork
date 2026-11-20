@@ -13,7 +13,10 @@ report_audit.py 가 '숫자가 맞는가'를 표본으로 본다면, 이 도구�
             작성일·스킬·데이터 시점·데이터 출처·표본 검사 줄이 있음 · 표본 검사 결과가 실제로 적힘
             ⚠️ 반 별/빈 별(☆, ½) · ⚠️ 주관 표현("내 생각에는", "느낌상", "명백히")
   investment-team      '판정 근거' 절 · '## 부록: 팩트시트' 절 · 같은 폴더의 01~04 관점 보고서 각각의
-                       `**관점 판단**: 매수|관망|회피` 줄 · 05-교차반론.md 의 관점 판단 4개 · README.md
+                       `**관점 판단**: 매수|관망|회피` 줄 · 05-강세약세토론.md 의 네 발언 절(강세·약세 1·2라운드)과
+                       두 최종 주장 줄, `**토론 판정**:` 줄, 토론 판정과 결론 판단의 대응
+                       (강세 우세→매수 / 균형→관망 / 약세 우세(가격)→관망 / 약세 우세(영구 손실)→회피)
+                       (이전 형식 05-교차반론.md 만 있으면 관점 판단 4개를 보고 ⚠️) · README.md
                        · `**실행 계획**` 줄(position_plan.py 형식)과 06-리스크토론-비중.md 의 마지막 실행 계획 줄 일치
                          (06 이 없으면 7.5단계 이전 보고서로 보고 ⚠️)
   investment-research  '판정 근거' · '## 부록: 팩트시트'
@@ -41,6 +44,13 @@ RUN_INFO_KEYS = ("작성일", "스킬", "데이터 시점", "데이터 출처·�
 TEAM_VIEWS = ("01-비즈니스모델분석-돤융핑관점.md", "02-재무밸류에이션분석-버핏관점.md",
               "03-산업경쟁분석-멍거관점.md", "04-리스크경영진평가-리루관점.md")
 _VIEW_RE = re.compile(r"\*\*\s*관점 판단\s*\*\*\s*[:：]\s*(\S+)")
+DEBATE_FILE = "05-강세약세토론.md"
+LEGACY_REBUTTAL_FILE = "05-교차반론.md"
+_DEBATE_TURNS = (("강세", 1), ("약세", 1), ("강세", 2), ("약세", 2))
+_RULING_RE = re.compile(r"\*\*\s*토론 판정\s*\*\*\s*[:：]\s*(강세\s*우세|약세\s*우세|균형)(.*)")
+# 토론 판정 → 허용되는 결론 판단(SKILL.md 7단계 판정 규칙 7)
+RULING_VERDICTS = {"강세 우세": ("매수",), "균형": ("관망",),
+                   "약세 우세(가격)": ("관망",), "약세 우세(영구 손실)": ("회피",)}
 _SUBJECTIVE = ("내 생각에는", "제 생각에는", "느낌상", "명백히")
 # 표본 검사 줄에 결과 대신 예정만 적힌 경우(작성 중 자리표시)
 _AUDIT_PENDING = ("출고 절차에서 기록", "예정", "미실시", "TODO", "{")
@@ -170,20 +180,81 @@ def check_team_dir(c: Checker, report_path: str):
             c.fail(f"{name}: 관점 판단 '{views[-1]}' 은 매수/관망/회피가 아닙니다.")
         else:
             c.ok(f"{name}: 관점 판단 {views[-1]}")
-    path = os.path.join(folder, "05-교차반론.md")
-    if not os.path.exists(path):
-        c.fail("교차 반론 보고서가 없습니다: 05-교차반론.md")
-    else:
-        views = _view_verdicts(path)
-        bad = [v for v in views if v not in dl.VERDICTS]
-        if len(views) < 4 or bad:
-            c.fail(f"05-교차반론.md: 관점 판단이 4개 필요(찾은 것 {len(views)}개" +
-                   (f", 판독 불가 {bad}" if bad else "") + ").")
-        else:
-            c.ok(f"05-교차반론.md: 관점 판단 {len(views)}개 ({', '.join(views)})")
+    check_debate(c, report_path, folder)
     check_plan(c, report_path, folder)
     (c.ok if os.path.exists(os.path.join(folder, "README.md")) else c.warn)(
         "README.md(프레임 개요)" + ("" if os.path.exists(os.path.join(folder, "README.md")) else " 가 없습니다."))
+
+
+def parse_debate(path: str) -> dict:
+    """05-강세약세토론.md → {"ruling": 판정 키 또는 None, "problems": 형식 문제 목록}.
+    판정 키는 RULING_VERDICTS 의 키(약세 우세는 근거가 적혀 있을 때만 세분)."""
+    with open(path, encoding="utf-8") as f:
+        text = _norm(f.read())
+    lines = [line for _, line in _outside_code(text)]
+    problems = []
+    for side, n in _DEBATE_TURNS:
+        pat = re.compile(rf"^#{{2,4}}\s*{side}\s*{n}\s*라운드")
+        if not any(pat.search(line.strip()) for line in lines):
+            problems.append(f"`### {side} {n}라운드` 절이 없습니다")
+    for side in ("강세", "약세"):
+        pat = re.compile(rf"\*\*\s*{side} 최종 주장\s*\*\*\s*[:：]\s*\S")
+        if not any(pat.search(line) for line in lines):
+            problems.append(f"`**{side} 최종 주장**:` 줄이 없습니다")
+    rulings = [m for m in (_RULING_RE.search(line) for line in lines) if m]
+    ruling = None
+    if not rulings:
+        problems.append("`**토론 판정**: 강세 우세|약세 우세|균형 — ...` 줄이 없습니다")
+    else:
+        m = rulings[-1]
+        head, rest = re.sub(r"\s+", " ", m.group(1)), m.group(2)
+        if head == "약세 우세":
+            perm, price = "영구" in rest, "가격" in rest
+            ruling = ("약세 우세(영구 손실)" if perm and not price else
+                      "약세 우세(가격)" if price and not perm else "약세 우세")
+        else:
+            ruling = head
+    return {"ruling": ruling, "problems": problems}
+
+
+def check_debate(c: Checker, report_path: str, folder: str):
+    path = os.path.join(folder, DEBATE_FILE)
+    if not os.path.exists(path):
+        legacy = os.path.join(folder, LEGACY_REBUTTAL_FILE)
+        if not os.path.exists(legacy):
+            c.fail(f"강세·약세 토론 보고서가 없습니다: {DEBATE_FILE}")
+            return
+        views = _view_verdicts(legacy)
+        bad = [v for v in views if v not in dl.VERDICTS]
+        if len(views) < 4 or bad:
+            c.fail(f"{LEGACY_REBUTTAL_FILE}: 관점 판단이 4개 필요(찾은 것 {len(views)}개" +
+                   (f", 판독 불가 {bad}" if bad else "") + ").")
+        else:
+            c.warn(f"{LEGACY_REBUTTAL_FILE}: 이전 형식(교차 반론, 관점 판단 {', '.join(views)}). "
+                   f"새 보고서는 {DEBATE_FILE}(강세·약세 토론)을 쓴다.")
+        return
+    d = parse_debate(path)
+    for p in d["problems"]:
+        c.fail(f"{DEBATE_FILE}: {p}")
+    if not d["ruling"]:
+        return
+    if not d["problems"]:
+        c.ok(f"{DEBATE_FILE}: 강세·약세 2라운드 · 최종 주장 2개 · 토론 판정 {d['ruling']}")
+    with open(report_path, encoding="utf-8") as f:
+        try:
+            verdict = dl.parse_label(_norm(f.read()))["판단"]
+        except (dl.ReportParseError, KeyError):
+            return  # 라벨 줄 문제는 check_label 이 따로 잡는다
+    if d["ruling"] == "약세 우세":
+        allowed = ("관망", "회피")
+        c.warn(f"{DEBATE_FILE}: 약세 우세의 근거(가격 / 영구 손실)를 판정 줄에 적으세요 — 관망과 회피를 가르는 기준입니다.")
+    else:
+        allowed = RULING_VERDICTS[d["ruling"]]
+    if verdict in allowed:
+        c.ok(f"토론 판정 {d['ruling']} ↔ 결론 판단 {verdict} 대응")
+    else:
+        c.fail(f"토론 판정 '{d['ruling']}' 인데 결론 판단이 '{verdict}' 입니다(허용: {'/'.join(allowed)}). "
+               "판단을 고치거나, 판정이 틀렸다면 05의 판정 줄과 근거를 고치세요(SKILL.md 7단계 판정 규칙 7).")
 
 
 def _plan_lines(text: str) -> list:
