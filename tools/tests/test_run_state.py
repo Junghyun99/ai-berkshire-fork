@@ -102,7 +102,8 @@ class RunStateTest(unittest.TestCase):
     def test_redoing_earlier_stage_resets_later_stages_only(self):
         self.finish_inputs()
         self.views()
-        self.write("05-교차반론.md", "\n".join(f"**관점 판단**: 관망 — {i}" for i in range(4)))
+        self.write("05-강세약세토론.md", "### 강세 1라운드\n### 약세 1라운드\n### 강세 2라운드\n### 약세 2라운드\n"
+                   "**강세 최종 주장**: a\n**약세 최종 주장**: b\n**토론 판정**: 균형 — c")
         self.assertEqual(self.cmd("done", "--step", "rebuttal")[0], 0)
         self.write("최종보고서.md", LABEL)
         self.assertEqual(self.cmd("done", "--step", "final")[0], 0)

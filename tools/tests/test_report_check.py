@@ -53,10 +53,18 @@ class ReportCheckTest(unittest.TestCase):
             f.write(text)
         return path
 
-    def team(self, views=("관망", "관망", "관망", "관망"), rebuttal=4):
+    def team(self, views=("관망", "관망", "관망", "관망"), ruling="약세 우세 — 가격: 안전마진 부족", turns=4, legacy=None):
         for name, v in zip(rc.TEAM_VIEWS, views):
             self.write(name, f"# 관점\n본문\n\n**관점 판단**: {v} — 이유")
-        self.write("05-교차반론.md", "\n".join(f"**최종**: **관점 판단**: 관망 유지 — 이유 {i}" for i in range(rebuttal)))
+        if legacy is not None:  # 이전 형식(교차 반론)
+            self.write(rc.LEGACY_REBUTTAL_FILE,
+                       "\n".join(f"**최종**: **관점 판단**: 관망 유지 — 이유 {i}" for i in range(legacy)))
+        else:
+            heads = ["### 강세 1라운드", "### 약세 1라운드", "### 강세 2라운드", "### 약세 2라운드"][:turns]
+            body = "\n\n".join(f"{h}\n논거" for h in heads)
+            self.write(rc.DEBATE_FILE, f"# 토론\n\n{body}\n\n**강세 최종 주장**: 싸다 | 틀리게 되는 조건: X\n"
+                                       f"**약세 최종 주장**: 비싸다 | 틀리게 되는 조건: Y\n\n## Team Lead 판정\n"
+                                       + (f"**토론 판정**: {ruling}\n" if ruling else ""))
         self.write("README.md", "# 개요")
 
     def debate(self, final_line=PLAN):
@@ -74,7 +82,7 @@ class ReportCheckTest(unittest.TestCase):
         self.assertNotIn("⚠️", self.marks(c))
 
     def test_missing_view_line_and_rebuttal_fail(self):
-        self.team(views=("관망", "관망", "강력매수", "관망"), rebuttal=3)
+        self.team(views=("관망", "관망", "강력매수", "관망"), legacy=3)
         os.remove(os.path.join(self.tmp.name, rc.TEAM_VIEWS[0]))
         c = rc.check(self.write("최종보고서.md", final_report()))
         msgs = " ".join(m for _, m in c.items)
@@ -82,6 +90,45 @@ class ReportCheckTest(unittest.TestCase):
         self.assertIn("관점 보고서가 없습니다: 01-", msgs)
         self.assertIn("'강력매수' 은 매수/관망/회피가 아닙니다", msgs)
         self.assertIn("관점 판단이 4개 필요(찾은 것 3개", msgs)
+
+    def test_legacy_rebuttal_file_warns_but_passes(self):
+        self.team(legacy=4)
+        self.debate()
+        c = rc.check(self.write("최종보고서.md", final_report()))
+        self.assertFalse(c.failed, c.items)
+        self.assertIn("이전 형식", " ".join(m for _, m in c.items))
+
+    def test_debate_missing_turns_and_ruling_fail(self):
+        self.team(turns=3, ruling=None)
+        self.debate()
+        c = rc.check(self.write("최종보고서.md", final_report()))
+        msgs = " ".join(m for _, m in c.items)
+        self.assertTrue(c.failed)
+        self.assertIn("`### 약세 2라운드` 절이 없습니다", msgs)
+        self.assertIn("**토론 판정**", msgs)
+
+    def test_ruling_must_match_verdict(self):
+        # 강세 우세인데 관망 → 반려(관망으로 숨는 것을 막는다)
+        self.team(ruling="강세 우세 — 하방 가정 과도")
+        self.debate()
+        c = rc.check(self.write("최종보고서.md", final_report()))
+        self.assertTrue(c.failed)
+        self.assertIn("토론 판정 '강세 우세' 인데 결론 판단이 '관망'", " ".join(m for _, m in c.items))
+        # 강세 우세 + 매수 → 통과
+        c = rc.check(self.write("최종보고서.md", final_report(label=LABEL.replace("관망", "매수"))))
+        self.assertFalse(c.failed, c.items)
+        # 균형 + 관망 → 통과, 약세 우세(영구 손실) + 관망 → 반려
+        self.team(ruling="균형 — 양측 논거 상쇄")
+        self.assertFalse(rc.check(self.write("최종보고서.md", final_report())).failed)
+        self.team(ruling="약세 우세 — 영구 손실 경로 확인")
+        self.assertTrue(rc.check(self.write("최종보고서.md", final_report())).failed)
+
+    def test_bear_ruling_without_basis_warns(self):
+        self.team(ruling="약세 우세 — 근거 표기 없음")
+        self.debate()
+        c = rc.check(self.write("최종보고서.md", final_report()))
+        self.assertFalse(c.failed, c.items)
+        self.assertIn("약세 우세의 근거", " ".join(m for _, m in c.items))
 
     def test_label_and_run_info_errors(self):
         self.team()

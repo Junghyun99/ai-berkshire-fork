@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """리서치 실행 상태 — 긴 멀티 Agent 실행이 중간에 끊겨도 끝난 단계는 건너뛰고 이어서 실행한다. stdlib만.
 
-investment-team 한 번은 Agent 4개 + 교차 반론 + 리스크 토론 + 검사·기록까지 수십 분이 걸린다. 그 사이 Agent 하나가
+investment-team 한 번은 Agent 4개 + 강세·약세 토론 + 리스크 토론 + 검사·기록까지 수십 분이 걸린다. 그 사이 Agent 하나가
 API 오류로 죽거나(실제 사례: 2026-10-28 삼성전자 실행에서 멍거 관점 Agent가 보고서 저장 도중 중단) 세션이 끊기면,
 지금까지는 무엇이 끝났는지 사람이 파일을 열어 보고 판단했다. 이 도구는 단계마다 '끝남'을 기록하고, 다시 시작할 때
 다음에 할 단계만 알려 준다.
@@ -14,7 +14,7 @@ API 오류로 죽거나(실제 사례: 2026-10-28 삼성전자 실행에서 멍�
     (예: 관점 보고서에 `**관점 판단**` 줄이 없으면 — 저장 도중 끊긴 파일이면 — 끝난 것으로 치지 않는다).
   - 같은 기준값으로 재개한다. 팩트시트·교훈·실행 계획 기준선 같은 입력은 put 으로 상태에 넣어 두고, 재개한 실행은
     다시 뽑지 않고 get 으로 같은 값을 쓴다(중간에 주가가 바뀌어 관점마다 기준이 달라지는 것을 막는다).
-  - 앞 단계를 다시 하면 그 뒤에 끝났던 단계는 '대기'로 되돌린다(예: 관점 보고서를 다시 쓰면 교차 반론도 다시).
+  - 앞 단계를 다시 하면 그 뒤에 끝났던 단계는 '대기'로 되돌린다(예: 관점 보고서를 다시 쓰면 강세·약세 토론도 다시).
   - 같은 단계가 2번 실패하면 폴백(Team Lead 대리 작성)을 권한다. 대리 작성은 산출물에 그 사실을 밝힌다.
   - 모든 단계가 끝나면 finish 가 상태 파일을 지운다(체크포인트는 성공하면 남기지 않는다).
 
@@ -63,7 +63,7 @@ SKILL_STEPS = {
         ("context", "1단계 과거 판단·교훈 확인(show/lessons 결과를 put)", None, "has_blob:lessons", 0),
         ("factsheet", "1.6단계 팩트시트(put --key factsheet)", None, "has_blob:factsheet", 0),
         *[(k, f"4단계 관점 보고서 {v}", v, "view", 1) for k, v in _TEAM_VIEWS.items()],
-        ("rebuttal", "5.5단계 교차 반론 05-교차반론.md", "05-교차반론.md", "rebuttal", 2),
+        ("rebuttal", "5.5단계 강세·약세 토론 05-강세약세토론.md", rc.DEBATE_FILE, "rebuttal", 2),
         ("final", "7단계 최종보고서 결론 라벨 줄", "최종보고서.md", "label", 3),
         ("plan", "7.5단계 리스크 토론 06-리스크토론-비중.md + 최종보고서 실행 계획 줄", "06-리스크토론-비중.md", "plan", 4),
         ("readme", "8단계 README.md 갱신", "README.md", "exists", 5),
@@ -153,9 +153,8 @@ def validate(state: dict, step: tuple, path: str) -> str:
             return "`**관점 판단**:` 줄이 없습니다 — 저장이 끝나지 않았거나 중간에 끊긴 파일입니다."
         return "" if views[-1] in dl.VERDICTS else f"관점 판단 '{views[-1]}' 은 매수/관망/회피가 아닙니다."
     if kind == "rebuttal":
-        views = rc._view_verdicts(path)
-        ok = len(views) >= 4 and all(v in dl.VERDICTS for v in views)
-        return "" if ok else f"관점 판단 4개가 필요합니다(찾은 것 {len(views)}개)."
+        problems = rc.parse_debate(path)["problems"]
+        return "; ".join(problems)
     if kind == "label":
         try:
             dl.parse_label(text)
