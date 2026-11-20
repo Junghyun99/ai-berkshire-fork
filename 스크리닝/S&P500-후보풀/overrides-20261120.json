@@ -1,0 +1,123 @@
+{
+ "_as_of": "2026-11-20",
+ "_universe": "Wikipedia 'List of S&P 500 companies' constituents 표, 2026-11-20 조회 503종목",
+ "_note": "quality_screen_us.py --overrides 입력. 금융업·REIT·면제C 후보 업종은 GICS 하위업종으로 자동 분류되고, 여기에는 사람이 판단한 예외만 둔다.",
+ "not_young": {
+  "DD": "2019 DowDuPont 분할로 CIK만 새로 생김",
+  "IR": "2020 Gardner Denver 합병 후 존속법인",
+  "STE": "2019 아일랜드 본사 이전으로 CIK 변경",
+  "VTRS": "2020 Mylan·Upjohn 합병",
+  "MRVL": "2021 미국 본사 이전으로 CIK 변경(2000 상장)",
+  "XYZ": "2015.11 IPO, 10년 경과",
+  "TWLO": "2016.6 IPO, 10년 경과"
+ },
+ "costco_type": [
+  "CDW",
+  "COR",
+  "COST",
+  "KR",
+  "SYY",
+  "TGT"
+ ],
+ "dilution_ok": {
+  "ABNB": "2020.12 IPO 직후 연도 가중평균 주식수 효과(상장 전환), 이후 순감소",
+  "APP": "2021.4 IPO 상장 전환 효과",
+  "COIN": "2021.4 직상장 전환 효과 + 2025 Deribit 주식 대가 인수",
+  "VRT": "2020 SPAC 상장·워런트 전환 효과",
+  "GDDY": "Up-C 구조 해소(LLC 지분→보통주 교환) — 경제적 희석 아님",
+  "IBKR": "Up-C 구조: 창업자 지분 교환으로 상장 보통주 증가 — 경제적 희석 아님",
+  "AMCR": "M&A: Berry Global 전액 주식 합병(2025)",
+  "ADI": "M&A: Maxim Integrated 전액 주식 인수(2021)",
+  "APO": "M&A: Athene 전액 주식 합병(2022)",
+  "AJG": "M&A: AssuredPartners 등 인수 자금 유상증자(2024-25)",
+  "DVN": "M&A: WPX Energy 주식 합병(2021)",
+  "HBAN": "M&A: TCF(2021)·Veritex/Cadence(2025) 주식 합병",
+  "KIM": "M&A: Weingarten(2021)·RPT(2024) 주식 합병",
+  "MTB": "M&A: People's United 주식 합병(2022)",
+  "OKE": "M&A: Magellan(2023)·EnLink(2025) 주식 인수",
+  "PLD": "M&A: Duke Realty 주식 합병(2022)",
+  "O": "M&A: VEREIT(2021)·Spirit Realty(2024) 주식 합병",
+  "SPGI": "M&A: IHS Markit 주식 합병(2022)",
+  "TDY": "M&A: FLIR 주식+현금 인수(2021)",
+  "VICI": "M&A: MGP 인수(2022) + 자산 매입용 증자",
+  "EXR": "M&A: Life Storage 전액 주식 합병(2023)",
+  "XYL": "M&A: Evoqua 전액 주식 인수(2023)",
+  "ARE": "⚠️ REIT 자산 매입용 상시 증자 — M&A 아님이나 REIT 구조상 불가피, 잘못 죽이지 않기 원칙으로 ⚠️ 유지",
+  "WELL": "⚠️ REIT ATM 증자로 자산 매입 — ARE와 같은 이유로 ⚠️ 유지",
+  "LHX": "M&A: Harris·L3 전액 주식 합병(2019.6) — 도구의 5년 창에 합병 연도가 걸림"
+ },
+ "_dilution_fail": {
+  "PLTR": "직상장 효과 제외해도 2021→2025 희석 주식수 약 +25~30%(추정, 주식보상) — 비M&A 희석"
+ },
+ "cell_override": {
+  "UNH": {
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
+  },
+  "ELV": {
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
+  },
+  "CNP": {
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
+  },
+  "VICI": {
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
+  },
+  "INCY": {
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
+  },
+  "CI": {
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
+  },
+  "CNC": {
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
+  },
+  "MOH": {
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
+  },
+  "HUM": {
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
+  }
+ },
+ "_no_data": {
+  "XOM": "SEC XBRL에 과거 연도 순이익 미태깅",
+  "HONA": "분사 신규 상장, 10-K 이력 없음",
+  "SKYD": "재편 후 최신 연간 공시 없음",
+  "VYLR": "신규 상장, 10-K 이력 없음"
+ }
+}
