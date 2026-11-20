@@ -48,6 +48,7 @@ DEBATE_FILE = "05-강세약세토론.md"
 LEGACY_REBUTTAL_FILE = "05-교차반론.md"
 _DEBATE_TURNS = (("강세", 1), ("약세", 1), ("강세", 2), ("약세", 2))
 _RULING_RE = re.compile(r"\*\*\s*토론 판정\s*\*\*\s*[:：]\s*(강세\s*우세|약세\s*우세|균형)(.*)")
+_BASIS_RE = re.compile(r"\s*[(（]?\s*(?:[—–\-:：]\s*)?(가격|영구\s*손실)")
 # 토론 판정 → 허용되는 결론 판단(SKILL.md 7단계 판정 규칙 7)
 RULING_VERDICTS = {"강세 우세": ("매수",), "균형": ("관망",),
                    "약세 우세(가격)": ("관망",), "약세 우세(영구 손실)": ("회피",)}
@@ -209,9 +210,10 @@ def parse_debate(path: str) -> dict:
         m = rulings[-1]
         head, rest = re.sub(r"\s+", " ", m.group(1)), m.group(2)
         if head == "약세 우세":
-            perm, price = "영구" in rest, "가격" in rest
-            ruling = ("약세 우세(영구 손실)" if perm and not price else
-                      "약세 우세(가격)" if price and not perm else "약세 우세")
+            # 근거는 '약세 우세' 바로 뒤 첫 단어로만 읽는다(`약세 우세 — 가격: ...` / `약세 우세(영구 손실) — ...`).
+            # 설명 문장에 다른 쪽 단어가 섞여도("영구 손실 위험은 작다") 판독이 흔들리지 않게.
+            b = _BASIS_RE.match(rest)
+            ruling = f"약세 우세({'영구 손실' if b and b.group(1).startswith('영구') else '가격'})" if b else "약세 우세"
         else:
             ruling = head
     return {"ruling": ruling, "problems": problems}

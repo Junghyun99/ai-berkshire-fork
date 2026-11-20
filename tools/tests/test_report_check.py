@@ -122,6 +122,13 @@ class ReportCheckTest(unittest.TestCase):
         self.assertFalse(rc.check(self.write("최종보고서.md", final_report())).failed)
         self.team(ruling="약세 우세 — 영구 손실 경로 확인")
         self.assertTrue(rc.check(self.write("최종보고서.md", final_report())).failed)
+        # 근거는 바로 뒤 첫 단어로만 — 설명에 '영구 손실'이 섞여도 가격으로 읽는다
+        self.team(ruling="약세 우세 — 가격: 적정가 ≈ 현재가, 영구 손실 위험은 작다는 데 양측 합의")
+        c = rc.check(self.write("최종보고서.md", final_report()))
+        self.assertFalse(c.failed, c.items)
+        self.assertNotIn("⚠️", self.marks(c))
+        self.team(ruling="약세 우세(영구 손실) — 경쟁 구도 붕괴")
+        self.assertTrue(rc.check(self.write("최종보고서.md", final_report())).failed)
 
     def test_bear_ruling_without_basis_warns(self):
         self.team(ruling="약세 우세 — 근거 표기 없음")
