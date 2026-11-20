@@ -10,7 +10,7 @@
 | 02-재무밸류에이션분석-버핏관점.md | 재무·현금흐름·내재가치 | master-buffett Agent | 관망 |
 | 03-산업경쟁분석-멍거관점.md | 산업·경쟁·역발상 | master-munger Agent | 관망 |
 | 04-리스크경영진평가-리루관점.md | 경영진·지배구조·안전 | master-lilu Agent | 관망 |
-| 05-교차반론.md | 1라운드 반론(같은 4개 Agent에 SendMessage) | 4개 Agent | 관망 4(3개 회피 쪽 기울기) |
+| 05-강세약세토론.md | 강세·약세 2라운드 토론 + 토론 판정(약세 우세 — 가격) | bull-researcher·bear-researcher Agent | - |
 | 06-리스크토론-비중.md | 리스크 토론 1·2라운드, 실행 계획 | risk-aggressive/conservative/neutral Agent + Team Lead 결정 | 상한 2.0%, 446,200/393,800/341,200원 |
 | 최종보고서.md | 종합·판정 근거·부록 팩트시트 | Team Lead | 관망 ★2 |
 
