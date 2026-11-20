@@ -21,16 +21,17 @@ python3 tools/run_state.py status --company {회사명}      # 먼저 확인: �
 
 | 단계 | 끝나면 실행 |
 |---|---|
-| 1단계 과거 판단·교훈 | `show`·`lessons` 출력을 파일로 저장 → `put --key lessons --file ...` → `done --step context` |
-| 1.6단계 팩트시트 | `put --key factsheet --file ...` → `done --step factsheet` |
+| 1단계 과거 판단·교훈 | `show`·`lessons` 출력을 `reports/{회사명}/.work/lessons.md` 에 저장 → `put --key lessons --file reports/{회사명}/.work/lessons.md` → `done --step context` |
+| 1.6단계 팩트시트 | 출력을 `reports/{회사명}/.work/factsheet.md` 에 저장 → `put --key factsheet --file reports/{회사명}/.work/factsheet.md` → `done --step factsheet` |
 | 4단계 관점 보고서 | 보고서 파일이 저장될 때마다 `done --step view-duan` / `view-buffett` / `view-munger` / `view-lilu` |
 | 5.5단계 교차 반론 | `done --step rebuttal` |
 | 7단계 최종보고서 | `done --step final` |
-| 7.5단계 리스크 토론 | 기준선은 `put --key plan-baseline`, 끝나면 `done --step plan` |
+| 7.5단계 리스크 토론 | 기준선은 `reports/{회사명}/.work/plan-baseline.md` 에 저장 후 `put --key plan-baseline --file ...`, 끝나면 `done --step plan` |
 | 8단계 README | `done --step readme` |
 | 9단계 검사 | 형식 검사 PASS·표본 검사 기록 후 `done --step check` |
 | 9.5단계 원장 | `done --step ledger` → 마지막에 `finish` |
 
+- **임시 파일은 반드시 `reports/{회사명}/.work/` 아래에 둔다.** `/tmp`·작업 디렉터리 루트·스크래치패드처럼 회사 이름이 없는 공용 경로에 `factsheet.md`·`lessons.md` 같은 고정 이름을 쓰지 않는다. 여러 종목을 병렬로 돌리면 서로 덮어쓴다(실제 사례: 2026-11-20 삼성전자 팩트시트가 SK하이닉스 것으로 덮어써짐). `put` 뒤에는 `get --key factsheet` 첫 줄의 회사명이 대상 회사인지 확인한다. `.work/` 는 .gitignore 대상이다.
 - `done` 은 산출물을 검사해 통과해야만 기록된다. 예: 관점 보고서에 `**관점 판단**` 줄이 없으면(저장 도중 끊긴 파일이면) 거부된다 — 그 Agent만 다시 실행한다.
 - Agent가 실패하면 `fail --step {id} --error "{원인}"`. **같은 단계가 2번 실패하면** 주의사항 2의 폴백으로 Team Lead가 대리 작성하고, 산출물에 대리 작성임을 밝힌 뒤 `done --step {id} --note "Team Lead 대리 작성"`.
 - 앞 단계를 다시 끝내면(예: 관점 보고서 수정) 그 뒤 단계(교차 반론·최종보고서 등)는 자동으로 '대기'로 돌아간다. `status` 를 보고 다시 한다.
