@@ -94,7 +94,17 @@ python3 tools/quality_screen_kr.py 005930 000660 --overrides ov.json           #
 
 도구 결과는 출발점이다. ⑦ 비희석 사유(액면분할·무상증자·합병), 일회성 이익으로 왜곡된 지표, 지분법 지주사 구조, 상장 10년 미만 여부는 사람이 확인해 `--overrides` JSON(`dilution_ok`·`cell_override`·`verdict_override`·`listed_under10`·`costco_type`)으로 반영하고, 보고서에 근거를 적는다. 금융업은 DART가 2020년 이전 재무를 주지 않아 ROE가 5년 평균이 된다. 예시: `스크리닝/KOSPI200-후보풀/overrides-20261031.json`.
 
-그 밖의 시장(미국·홍콩·중국 등)이나 도구가 데이터를 못 찾은 종목은 아래처럼 수집한다.
+**미국 상장사는 `tools/quality_screen_us.py`로 계산한다.** SEC EDGAR XBRL 원본(10-K·20-F·40-F)을 같은 `compute_metrics`·`judge`에 넣어 한국과 같은 정의로 판정한다. 금융업·REIT·면제 C 후보 업종은 GICS 하위업종으로 자동 분류하고, ⑦은 같은 10-K 안의 전년 대비 비율을 이어 붙여 주식분할을 자동 보정한다. 음(-)자본(자사주 매입형)은 ① ⚠️로 두고 배제하지 않는다.
+
+```bash
+python3 tools/quality_screen_us.py --index SP500 --json out.json                       # S&P500(위키백과 구성종목표)
+python3 tools/quality_screen_us.py --universe 스크리닝/나스닥100-후보풀/universe-20261119.json  # 구성종목 파일
+python3 tools/quality_screen_us.py AAPL COST --overrides ov.json --as-of 2025-12-31     # 개별 종목·시점 통제
+```
+
+출력 끝의 '수작업 확인 대상'은 ⑦ 희석 20% 초과(M&A·상장 효과 여부)와 면제 C 후보 업종이다. 사람이 확인해 overrides(`dilution_ok`·`costco_type`·`not_young`·`cell_override`·`verdict_override`)로 반영한다. 예시: `스크리닝/S&P500-후보풀/overrides-20261120.json`.
+
+그 밖의 시장(홍콩·중국 등)이나 도구가 데이터를 못 찾은 종목은 아래처럼 수집한다.
 
 기업별로 독립 백그라운드 Agent를 띄워 WebSearch로 아래 데이터를 수집한다:
 

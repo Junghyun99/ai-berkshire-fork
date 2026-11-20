@@ -1,19 +1,8 @@
 {
- "as_of": "2026-11-20",
- "universe": "Wikipedia 'List of S&P 500 companies' constituents 표, 2026-11-20 조회 503종목",
- "financial_subindustries_na_2345": [
-  "Bank",
-  "Insurance",
-  "Reinsurance",
-  "Investment Banking",
-  "Asset Management",
-  "Consumer Finance",
-  "Multi-Sector Holdings",
-  "Diversified Financial",
-  "Mortgage"
- ],
- "reit_roe_excluded": "GICS 하위업종명에 REIT가 들어가면 ① 판정 제외(핵심운영 ROE 미산정)",
- "listed_under10_excluded": {
+ "_as_of": "2026-11-20",
+ "_universe": "Wikipedia 'List of S&P 500 companies' constituents 표, 2026-11-20 조회 503종목",
+ "_note": "quality_screen_us.py --overrides 입력. 금융업·REIT·면제C 후보 업종은 GICS 하위업종으로 자동 분류되고, 여기에는 사람이 판단한 예외만 둔다.",
+ "not_young": {
   "DD": "2019 DowDuPont 분할로 CIK만 새로 생김",
   "IR": "2020 Gardner Denver 합병 후 존속법인",
   "STE": "2019 아일랜드 본사 이전으로 CIK 변경",
@@ -22,14 +11,13 @@
   "XYZ": "2015.11 IPO, 10년 경과",
   "TWLO": "2016.6 IPO, 10년 경과"
  },
- "costco_type_subindustries": [
-  "Consumer Staples Merchandise Retail",
-  "Food Distributors",
-  "Health Care Distributors",
-  "Drug Retail",
-  "Technology Distributors",
-  "Food Retail",
-  "Hypermarkets"
+ "costco_type": [
+  "CDW",
+  "COR",
+  "COST",
+  "KR",
+  "SYY",
+  "TGT"
  ],
  "dilution_ok": {
   "ABNB": "2020.12 IPO 직후 연도 가중평균 주식수 효과(상장 전환), 이후 순감소",
@@ -53,45 +41,80 @@
   "TDY": "M&A: FLIR 주식+현금 인수(2021)",
   "VICI": "M&A: MGP 인수(2022) + 자산 매입용 증자",
   "EXR": "M&A: Life Storage 전액 주식 합병(2023)",
-  "XYL": "M&A: Evoqua 전액 주식 인수(2023)"
+  "XYL": "M&A: Evoqua 전액 주식 인수(2023)",
+  "ARE": "⚠️ REIT 자산 매입용 상시 증자 — M&A 아님이나 REIT 구조상 불가피, 잘못 죽이지 않기 원칙으로 ⚠️ 유지",
+  "WELL": "⚠️ REIT ATM 증자로 자산 매입 — ARE와 같은 이유로 ⚠️ 유지",
+  "LHX": "M&A: Harris·L3 전액 주식 합병(2019.6) — 도구의 5년 창에 합병 연도가 걸림"
  },
- "dilution_warn_pass": {
-  "ARE": "REIT 자산 매입용 상시 증자 — M&A 아님이나 REIT 구조상 불가피, 잘못 죽이지 않기 원칙으로 ⚠️ 유지",
-  "WELL": "REIT ATM 증자로 자산 매입 — ARE와 같은 이유로 ⚠️ 유지"
- },
- "dilution_fail": {
+ "_dilution_fail": {
   "PLTR": "직상장 효과 제외해도 2021→2025 희석 주식수 약 +25~30%(추정, 주식보상) — 비M&A 희석"
  },
  "cell_override": {
   "UNH": {
-   "4": "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
   },
   "ELV": {
-   "4": "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
   },
   "CNP": {
-   "4": "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
   },
   "VICI": {
-   "4": "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
   },
   "INCY": {
-   "4": "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
   },
   "CI": {
-   "4": "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
   },
   "CNC": {
-   "4": "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
   },
   "MOH": {
-   "4": "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
   },
   "HUM": {
-   "4": "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   "4": [
+    "skip",
+    "해당없음",
+    "N/A — 매출원가 태그 일부만 공시(보험형·특수 구조)"
+   ]
   }
  },
- "no_data": {
+ "_no_data": {
   "XOM": "SEC XBRL에 과거 연도 순이익 미태깅",
   "HONA": "분사 신규 상장, 10-K 이력 없음",
   "SKYD": "재편 후 최신 연간 공시 없음",

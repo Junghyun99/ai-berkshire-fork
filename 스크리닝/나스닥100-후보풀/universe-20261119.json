@@ -1,0 +1,308 @@
+{
+ "_source": "Nasdaq API list-type/nasdaq100, 2026-11-19 조회(나스닥100-부실배제결과-20261120.md 요약표의 101종목)",
+ "constituents": [
+  {
+   "ticker": "AAPL"
+  },
+  {
+   "ticker": "MSFT"
+  },
+  {
+   "ticker": "NVDA"
+  },
+  {
+   "ticker": "GOOGL"
+  },
+  {
+   "ticker": "GOOG"
+  },
+  {
+   "ticker": "AMZN"
+  },
+  {
+   "ticker": "AVGO"
+  },
+  {
+   "ticker": "META"
+  },
+  {
+   "ticker": "TSLA"
+  },
+  {
+   "ticker": "WMT"
+  },
+  {
+   "ticker": "AMD"
+  },
+  {
+   "ticker": "MU"
+  },
+  {
+   "ticker": "ASML"
+  },
+  {
+   "ticker": "COST"
+  },
+  {
+   "ticker": "CSCO"
+  },
+  {
+   "ticker": "PLTR"
+  },
+  {
+   "ticker": "INTC"
+  },
+  {
+   "ticker": "PANW"
+  },
+  {
+   "ticker": "AMAT"
+  },
+  {
+   "ticker": "TXN"
+  },
+  {
+   "ticker": "LRCX"
+  },
+  {
+   "ticker": "CRWD"
+  },
+  {
+   "ticker": "NFLX"
+  },
+  {
+   "ticker": "AMGN"
+  },
+  {
+   "ticker": "LIN"
+  },
+  {
+   "ticker": "GILD"
+  },
+  {
+   "ticker": "PEP"
+  },
+  {
+   "ticker": "ARM"
+  },
+  {
+   "ticker": "KLAC"
+  },
+  {
+   "ticker": "ADI"
+  },
+  {
+   "ticker": "QCOM"
+  },
+  {
+   "ticker": "TMUS"
+  },
+  {
+   "ticker": "SHOP"
+  },
+  {
+   "ticker": "ISRG"
+  },
+  {
+   "ticker": "VRTX"
+  },
+  {
+   "ticker": "APP"
+  },
+  {
+   "ticker": "PDD"
+  },
+  {
+   "ticker": "MRVL"
+  },
+  {
+   "ticker": "STX"
+  },
+  {
+   "ticker": "SBUX"
+  },
+  {
+   "ticker": "ADP"
+  },
+  {
+   "ticker": "WDC"
+  },
+  {
+   "ticker": "BKNG"
+  },
+  {
+   "ticker": "SNDK"
+  },
+  {
+   "ticker": "MAR"
+  },
+  {
+   "ticker": "ABNB"
+  },
+  {
+   "ticker": "FTNT"
+  },
+  {
+   "ticker": "REGN"
+  },
+  {
+   "ticker": "CSX"
+  },
+  {
+   "ticker": "CEG"
+  },
+  {
+   "ticker": "CMCSA"
+  },
+  {
+   "ticker": "CTAS"
+  },
+  {
+   "ticker": "ADBE"
+  },
+  {
+   "ticker": "MNST"
+  },
+  {
+   "ticker": "CDNS"
+  },
+  {
+   "ticker": "MDLZ"
+  },
+  {
+   "ticker": "INTU"
+  },
+  {
+   "ticker": "SNPS"
+  },
+  {
+   "ticker": "MRNA"
+  },
+  {
+   "ticker": "ORLY"
+  },
+  {
+   "ticker": "ROST"
+  },
+  {
+   "ticker": "HON"
+  },
+  {
+   "ticker": "MELI"
+  },
+  {
+   "ticker": "DASH"
+  },
+  {
+   "ticker": "AEP"
+  },
+  {
+   "ticker": "NXPI"
+  },
+  {
+   "ticker": "MPWR"
+  },
+  {
+   "ticker": "FAST"
+  },
+  {
+   "ticker": "DDOG"
+  },
+  {
+   "ticker": "PCAR"
+  },
+  {
+   "ticker": "IDXX"
+  },
+  {
+   "ticker": "CCEP"
+  },
+  {
+   "ticker": "XEL"
+  },
+  {
+   "ticker": "ADSK"
+  },
+  {
+   "ticker": "FANG"
+  },
+  {
+   "ticker": "KDP"
+  },
+  {
+   "ticker": "LITE"
+  },
+  {
+   "ticker": "EXC"
+  },
+  {
+   "ticker": "PYPL"
+  },
+  {
+   "ticker": "BKR"
+  },
+  {
+   "ticker": "ROP"
+  },
+  {
+   "ticker": "TRI"
+  },
+  {
+   "ticker": "FER"
+  },
+  {
+   "ticker": "WDAY"
+  },
+  {
+   "ticker": "PAYX"
+  },
+  {
+   "ticker": "TTWO"
+  },
+  {
+   "ticker": "GEHC"
+  },
+  {
+   "ticker": "ALAB"
+  },
+  {
+   "ticker": "MSTR"
+  },
+  {
+   "ticker": "ODFL"
+  },
+  {
+   "ticker": "TER"
+  },
+  {
+   "ticker": "RKLB"
+  },
+  {
+   "ticker": "MCHP"
+  },
+  {
+   "ticker": "DXCM"
+  },
+  {
+   "ticker": "CPRT"
+  },
+  {
+   "ticker": "NBIS"
+  },
+  {
+   "ticker": "AXON"
+  },
+  {
+   "ticker": "CRWV"
+  },
+  {
+   "ticker": "ALNY"
+  },
+  {
+   "ticker": "SPCX"
+  },
+  {
+   "ticker": "HONA"
+  }
+ ]
+}

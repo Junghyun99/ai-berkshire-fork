@@ -10,9 +10,14 @@
 
 ## 재현
 
-현재 저장소만으로는 **재실행할 수 없다.** 7지표는 SEC EDGAR XBRL companyfacts(10-K·20-F·40-F) 원본 계정을 `tools/quality_screen_kr.py`의 `compute_metrics`·`judge`(한국 스크리닝과 같은 정의)에 넣어 계산했다. SEC 데이터를 이 함수 입력으로 바꾸는 연결 코드는 저장소에 넣지 않았다.
+```bash
+python3 tools/quality_screen_us.py --universe "스크리닝/나스닥100-후보풀/universe-20261119.json" --as-of 2026-11-20   --overrides "스크리닝/나스닥100-후보풀/overrides-20261120.json"
+```
 
-[`overrides-20261120.json`](overrides-20261120.json)은 결과 보고서의 '수작업 조정 (근거)' 표를 `quality_screen_kr.py --overrides` 형식에 가깝게 옮긴 것이다(⑦ 비희석 사유, 셀 조정, 데이터 부족). 내용이 다르면 결과 보고서가 기준이다.
+- [`universe-20261119.json`](universe-20261119.json): 결과 보고서 요약표의 101종목이다. 원 출처는 Nasdaq API로 2026-11-19에 조회했다. Nasdaq API는 자동 요청을 막고 위키백과 나스닥100 문서에는 구성종목표가 없어서, 도구는 지수를 직접 조회하지 않고 이 파일을 쓴다.
+- [`overrides-20261120.json`](overrides-20261120.json): 결과 보고서 '수작업 조정 (근거)' 표를 옮긴 것이다. ALAB ⑦의 상장 효과도 넣었다. 보고서에서는 '상장 5년 미만'으로 처리했고, 도구는 상장 전 연도까지 이어 붙여 +425%로 계산한다. GOOGL·GOOG ⑦은 도구가 희석 가중평균주식수로 직접 계산하므로(약 −7%) override하지 않았다.
+
+같은 시점으로 다시 돌리면 결과 보고서와 판정이 모두 같다. 통과 67 · 면제 통과 5 · 배제 27 · 데이터 부족 2(SPCX·HONA)다.
 
 ## 1차 결과 요약
 
