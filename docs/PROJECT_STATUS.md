@@ -1,5 +1,9 @@
 # AI Berkshire — Project Status / Work Handoff
 
+## SPY·IEF 총수익률 재구성 인계 — 2026-11-20
+
+PR #94·#95는 병합됐다. [후속 재구성 초안](../reports/saa/20261120-tr-rebuild/README.md)에 2026-11-15 실제 실행 기록(각 272개월·회귀 6개 통과)과 코드·다음 전략 비교 조건을 복구했다. 현재 실행 환경 사용 불가로 이번 PR 파일 재검증·report_audit·전체 전략 재평가는 미완료다. Draft PR이며 기존 성과/엔진/정책은 변경하지 않았다. 다음은 기준선 재현 후 공식 분배금·재투자 방식별 CAGR/MDD/Sharpe/Sortino와 비중·순위 민감도 비교다. #53·#54 및 IPS DRAFT 유지.
+
 ## 전략 변경 판단 연구 — 2026-11-14
 
 #85 병합으로 D-017 연구 우선순위를 반영했다. [전략 변경 판단 초안](../reports/saa/20261114-strategy-decisions/README.md)은 5자산 비교 결과에서 후보별 개선·열화를 정량화하고, 교체 보류 사유와 판단을 바꿀 평가 조건을 정리한다.
