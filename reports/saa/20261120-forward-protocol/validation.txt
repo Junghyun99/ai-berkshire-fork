@@ -1,0 +1,6 @@
+2026-11-20 Codex/Work
+Python JSON parsing and document contract checks: PASS / exit 0
+Checked: approved thresholds, DRAFT/disabled boundaries, null freeze blockers and dates, initial cost included, five unique assets.
+No engine tests, fresh market data, or backtest executed.
+Command: python3 decision-research/tools/report_audit.py extract --report forward-protocol/README.md --dry-run --seed 42
+Result: exit 0; extraction preview only, not independent source certification.
