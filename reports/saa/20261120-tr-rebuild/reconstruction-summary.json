@@ -1,0 +1,79 @@
+{
+  "quality": "research_proxy",
+  "execution_date_kst": "2026-11-20",
+  "issuer_manifest_sha256": "f1b01e738154cc8113414494c62213052cc71ce31e3fda0aa856bd3bea57dd0d",
+  "symbols": {
+    "SPY": {
+      "source_sha256": "3e83365a8d52cf1ffde81e712363da988ddbe03f87438713277d4abcb899ec85",
+      "daily_rows": 5722,
+      "start": "2004-01-02",
+      "end": "2026-09-30",
+      "events": 92,
+      "monthly_rows": 272,
+      "monthly_start": "2004-02",
+      "monthly_end": "2026-09",
+      "comparisons": {
+        "yahoo_adjclose -> yahoo_div_backward": {
+          "max_abs_monthly_difference_bp": "0.008093343031481270706690000",
+          "max_difference_month": "2015-07",
+          "signed_difference_at_max_bp": "0.008093343031481270706690000",
+          "terminal_wealth_difference_bp": "-0.0030890248329073676784490000"
+        },
+        "yahoo_div_backward -> issuer_div_backward": {
+          "max_abs_monthly_difference_bp": "0.077228295413387697847030000",
+          "max_difference_month": "2021-12",
+          "signed_difference_at_max_bp": "0.077228295413387697847030000",
+          "terminal_wealth_difference_bp": "0.188500608494721467180020000"
+        },
+        "issuer_div_backward -> issuer_div_ex_close": {
+          "max_abs_monthly_difference_bp": "2.303324567333844926186027000",
+          "max_difference_month": "2020-03",
+          "signed_difference_at_max_bp": "2.303324567333844926186027000",
+          "terminal_wealth_difference_bp": "6.536407342051988703888300000"
+        },
+        "yahoo_adjclose -> issuer_div_ex_close": {
+          "max_abs_monthly_difference_bp": "2.286877217903934538133639000",
+          "max_difference_month": "2020-03",
+          "signed_difference_at_max_bp": "2.286877217903934538133639000",
+          "terminal_wealth_difference_bp": "6.721940060011111201650400000"
+        }
+      }
+    },
+    "IEF": {
+      "source_sha256": "ee0b09bd18ecee55765b8a4d70f9085fc3c1a1e13d977ed3f13257505f267c56",
+      "daily_rows": 5722,
+      "start": "2004-01-02",
+      "end": "2026-09-30",
+      "events": 272,
+      "monthly_rows": 272,
+      "monthly_start": "2004-02",
+      "monthly_end": "2026-09",
+      "comparisons": {
+        "yahoo_adjclose -> yahoo_div_backward": {
+          "max_abs_monthly_difference_bp": "0.020352818949410891462180000",
+          "max_difference_month": "2009-07",
+          "signed_difference_at_max_bp": "0.020352818949410891462180000",
+          "terminal_wealth_difference_bp": "0.000337436024808088306000000"
+        },
+        "yahoo_div_backward -> issuer_div_backward": {
+          "max_abs_monthly_difference_bp": "0.100852489985453771150130000",
+          "max_difference_month": "2004-12",
+          "signed_difference_at_max_bp": "0.100852489985453771150130000",
+          "terminal_wealth_difference_bp": "0.926591557783256681807650000"
+        },
+        "issuer_div_backward -> issuer_div_ex_close": {
+          "max_abs_monthly_difference_bp": "0.5869586920068137742624590000",
+          "max_difference_month": "2010-12",
+          "signed_difference_at_max_bp": "0.5869586920068137742624590000",
+          "terminal_wealth_difference_bp": "0.689531164763082694720450000"
+        },
+        "yahoo_adjclose -> issuer_div_ex_close": {
+          "max_abs_monthly_difference_bp": "0.6613823330726515360288960000",
+          "max_difference_month": "2010-12",
+          "signed_difference_at_max_bp": "0.6613823330726515360288960000",
+          "terminal_wealth_difference_bp": "1.616524104482715892643100000"
+        }
+      }
+    }
+  }
+}
