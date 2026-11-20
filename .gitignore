@@ -12,3 +12,6 @@ __pycache__/
 
 # DART corp_code 매핑 캐시(로컬 생성물, 푸시 제외)
 tools/.cache/
+
+# 스킬 실행 임시 파일(회사별 작업 폴더)
+reports/*/.work/
