@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-11-20",
+  "status": "DRAFT",
+  "frozen": false,
+  "quality": "research_proxy",
+  "execution_enabled": false,
+  "primary": {
+    "candidate": "risk_parity",
+    "baseline": "equal",
+    "delta": "candidate_minus_baseline",
+    "thresholds": {
+      "mdd_delta_min": 0.02,
+      "sharpe_delta_min": 0.0,
+      "sortino_delta_min": 0.0
+    },
+    "require_all": true,
+    "compare_before_rounding": true,
+    "cagr": "disclose_only",
+    "authority": "../20261101-evaluation-plan/risk-parity-comparison.md"
+  },
+  "secondary": {
+    "hypotheses": [
+      "equity_target_matched",
+      "training_risk_matched_with_cash"
+    ],
+    "status": "exploratory",
+    "future_execution_spec": null
+  },
+  "assets": [
+    "KR_EQUITY",
+    "US_SP500",
+    "US_NASDAQ100",
+    "KR_TREASURY10Y",
+    "US_TREASURY7_10Y"
+  ],
+  "fixed_design": {
+    "currency": "KRW",
+    "frequency": "monthly",
+    "lookback_months": 60,
+    "signal_lag_months": 2,
+    "rebalance_months": 12,
+    "cost_bps": 10,
+    "include_initial_cost": true,
+    "downside_target": "same_monthly_KRW_RF"
+  },
+  "schedule": {
+    "earliest_candidate_month": "2026-12",
+    "proposed_months": 36,
+    "frozen_at_utc": null,
+    "start_month": null,
+    "end_month": null,
+    "period_validity_review": null
+  },
+  "freeze_inputs": {
+    "asset_source_recipes": null,
+    "rf_series_vintage_conversion": null,
+    "availability_evidence": null,
+    "simulation_execution_calendar": null,
+    "missing_revision_rules": null,
+    "code_commit": null,
+    "dependencies": null,
+    "initial_manifest": null,
+    "initial_target_weights": null,
+    "exposure_review": null
+  },
+  "outcomes": {
+    "all_thresholds_met": "supports_hypothesis_for_period_only",
+    "any_threshold_missed": "hold_replacement",
+    "zero_denominator": "indeterminate",
+    "data_or_timing_error": "invalid"
+  },
+  "policy_status": "DRAFT",
+  "orders_enabled": false
+}
