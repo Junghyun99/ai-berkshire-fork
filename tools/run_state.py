@@ -38,6 +38,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 from datetime import date, datetime
 
@@ -135,8 +136,9 @@ def validate(state: dict, step: tuple, path: str) -> str:
     if kind == "ledger":
         # 원장 id 날짜는 리포트 작성일이라, 자정을 넘겨 끝난 실행은 시작일 이후 날짜로 기록된다.
         start = state["started"][:10]
-        rid = f"{start}-{state['ticker']}-{state['skill']}"
-        tail = f"-{state['ticker']}-{state['skill']}"
+        tk = re.sub(r'[^0-9A-Za-z.]', '', state['ticker'].upper())  # decision_ledger 의 id 규칙과 같게(BRK-B → BRKB)
+        rid = f"{start}-{tk}-{state['skill']}"
+        tail = f"-{tk}-{state['skill']}"
         ok = any(r["id"].endswith(tail) and r["id"][:10] >= start for r in dl._read(dl.LEDGER))
         return "" if ok else f"원장에 {rid}(또는 시작일 이후 같은 종목·스킬 기록) 가 없습니다(add --from-report)."
     if not path or not os.path.exists(path):
