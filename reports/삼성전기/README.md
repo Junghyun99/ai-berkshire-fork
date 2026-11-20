@@ -6,7 +6,7 @@
 | 02-재무밸류에이션분석-버핏관점.md | 재무·밸류에이션 — 회피(보유자는 관망) | master-buffett Agent |
 | 03-산업경쟁분석-멍거관점.md | 산업·경쟁 — 관망 | master-munger Agent |
 | 04-리스크경영진평가-리루관점.md | 리스크·경영진 — 관망 | master-lilu Agent |
-| 05-교차반론.md | 교차 반론 1라운드(판단 변경 없음) | 네 거장 Agent 회신, Team Lead 정리 |
+| 05-강세약세토론.md | 강세·약세 2라운드 토론 + 토론 판정(약세 우세 — 가격) | bull-researcher·bear-researcher Agent |
 | 06-리스크토론-비중.md | 리스크 토론 2라운드·실행 계획 | risk-aggressive/conservative/neutral Agent, Team Lead 결정 |
 | 최종보고서.md | 종합 판단 | Team Lead |
 

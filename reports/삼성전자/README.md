@@ -7,7 +7,7 @@
 | 02-재무밸류에이션분석-버핏관점.md | master-buffett Agent | 재무·내재가치·3시나리오 — 관망 |
 | 03-산업경쟁분석-멍거관점.md | master-munger Agent | 메모리 사이클·경쟁 — 관망 |
 | 04-리스크경영진평가-리루관점.md | master-lilu Agent | 경영진·지배구조·영구손실 — 관망 |
-| 05-교차반론.md | 4개 거장 Agent 회신 → Team Lead 정리 | 교차 반론 1라운드(판단 변경 없음) |
+| 05-강세약세토론.md | bull-researcher·bear-researcher Agent → Team Lead 판정 | 강세·약세 2라운드 토론 + 토론 판정(약세 우세 — 가격) |
 | 06-리스크토론-비중.md | risk-aggressive·conservative·neutral Agent 2라운드 → Team Lead 결정 | 리스크 토론·실행 계획 |
 | 최종보고서.md | Team Lead | 종합 판단·부록 팩트시트(삼성전자) |
 
