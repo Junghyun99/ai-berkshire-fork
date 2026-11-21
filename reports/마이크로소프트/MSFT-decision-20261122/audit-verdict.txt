@@ -1,0 +1,25 @@
+======================================================================
+보고서 데이터 표본 검사 — 판정
+======================================================================
+
+  ✅ 통과 [ 2] 매출 2025-09                           보고서:     77673.00 USD million
+                                                    https://www.sec.gov/Archives/edgar/data/789019/000119312526436122/msft-ex99_1.htm: 77673.00 (편차 0.00%)  |  https://stockanalysis.com/stocks/msft/financials/income-statement/?p=quarterly: 77673.00 (편차 0.00%)
+  ✅ 통과 [ 1] 매출 2026-09                           보고서:     92279.00 USD million
+                                                    https://www.sec.gov/Archives/edgar/data/789019/000119312526436122/msft-ex99_1.htm: 92279.00 (편차 0.00%)  |  https://stockanalysis.com/stocks/msft/financials/income-statement/?p=quarterly: 92279.00 (편차 0.00%)
+  ✅ 통과 [11] 현금 설비투자 2025-09                      보고서:     19394.00 USD million
+                                                    https://www.sec.gov/Archives/edgar/data/789019/000119312526436122/msft-ex99_1.htm: 19394.00 (편차 0.00%)  |  https://stockanalysis.com/stocks/msft/financials/cash-flow-statement/?p=quarterly: 19394.00 (편차 0.00%)
+
+----------------------------------------------------------------------
+  총 표본 검사: 3  |  통과: 3  |  경고: 0  |  실패: 0
+
+[출고] 표본 검사 전량 통과 — 보고서 발행 가능.
+======================================================================
+{
+  "verdict": "PASS",
+  "pass_count": 3,
+  "warn_count": 0,
+  "fail_count": 0,
+  "total": 3,
+  "fail_items": [],
+  "warn_items": []
+}
