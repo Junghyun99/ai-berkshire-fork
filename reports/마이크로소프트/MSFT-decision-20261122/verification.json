@@ -1,0 +1,170 @@
+{
+  "scope": "8 source pairs and 3 arithmetic commands; no strategy or policy tests",
+  "calculations": {
+    "fcf_current_usd_million": "18633",
+    "fcf_prior_usd_million": "25663",
+    "fcf_yoy_pct": "-27.39352375014612477107119199",
+    "cash_ppe_to_ocf_current_pct": "67.87413793103448275862068966",
+    "cash_ppe_to_ocf_prior_pct": "43.04325631977273231684310984"
+  },
+  "commands": [
+    {
+      "command": [
+        "cross-validate",
+        "--field",
+        "revenue_2026Q3",
+        "--values",
+        "{\"Microsoft\": 92279, \"StockAnalysis\": 92279}",
+        "--unit",
+        "USD million",
+        "--tolerance",
+        "0.01"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n교차 검증: revenue_2026Q3 (Cross-Validation)\n============================================================\n  데이터 소스 수: 2\n  기준 중앙값: 92,279.00 USD million\n\n  ✅ Microsoft           : 92,279.00 USD million  (편차 0.00%)\n  ✅ StockAnalysis       : 92,279.00 USD million  (편차 0.00%)\n\n  ✅ 모든 소스 편차 ≤ 0.01%, 데이터 일치\n\n  컨센서스 값 (가중 중앙값): 92,279.00 USD million\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cross-validate",
+        "--field",
+        "revenue_2025Q3",
+        "--values",
+        "{\"Microsoft\": 77673, \"StockAnalysis\": 77673}",
+        "--unit",
+        "USD million",
+        "--tolerance",
+        "0.01"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n교차 검증: revenue_2025Q3 (Cross-Validation)\n============================================================\n  데이터 소스 수: 2\n  기준 중앙값: 77,673.00 USD million\n\n  ✅ Microsoft           : 77,673.00 USD million  (편차 0.00%)\n  ✅ StockAnalysis       : 77,673.00 USD million  (편차 0.00%)\n\n  ✅ 모든 소스 편차 ≤ 0.01%, 데이터 일치\n\n  컨센서스 값 (가중 중앙값): 77,673.00 USD million\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cross-validate",
+        "--field",
+        "net_income_2026Q3",
+        "--values",
+        "{\"Microsoft\": 36629, \"StockAnalysis\": 36629}",
+        "--unit",
+        "USD million",
+        "--tolerance",
+        "0.01"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n교차 검증: net_income_2026Q3 (Cross-Validation)\n============================================================\n  데이터 소스 수: 2\n  기준 중앙값: 36,629.00 USD million\n\n  ✅ Microsoft           : 36,629.00 USD million  (편차 0.00%)\n  ✅ StockAnalysis       : 36,629.00 USD million  (편차 0.00%)\n\n  ✅ 모든 소스 편차 ≤ 0.01%, 데이터 일치\n\n  컨센서스 값 (가중 중앙값): 36,629.00 USD million\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cross-validate",
+        "--field",
+        "net_income_2025Q3",
+        "--values",
+        "{\"Microsoft\": 27747, \"StockAnalysis\": 27747}",
+        "--unit",
+        "USD million",
+        "--tolerance",
+        "0.01"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n교차 검증: net_income_2025Q3 (Cross-Validation)\n============================================================\n  데이터 소스 수: 2\n  기준 중앙값: 27,747.00 USD million\n\n  ✅ Microsoft           : 27,747.00 USD million  (편차 0.00%)\n  ✅ StockAnalysis       : 27,747.00 USD million  (편차 0.00%)\n\n  ✅ 모든 소스 편차 ≤ 0.01%, 데이터 일치\n\n  컨센서스 값 (가중 중앙값): 27,747.00 USD million\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cross-validate",
+        "--field",
+        "ocf_2026Q3",
+        "--values",
+        "{\"Microsoft\": 58000, \"StockAnalysis\": 58000}",
+        "--unit",
+        "USD million",
+        "--tolerance",
+        "0.01"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n교차 검증: ocf_2026Q3 (Cross-Validation)\n============================================================\n  데이터 소스 수: 2\n  기준 중앙값: 58,000.00 USD million\n\n  ✅ Microsoft           : 58,000.00 USD million  (편차 0.00%)\n  ✅ StockAnalysis       : 58,000.00 USD million  (편차 0.00%)\n\n  ✅ 모든 소스 편차 ≤ 0.01%, 데이터 일치\n\n  컨센서스 값 (가중 중앙값): 58,000.00 USD million\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cross-validate",
+        "--field",
+        "ocf_2025Q3",
+        "--values",
+        "{\"Microsoft\": 45057, \"StockAnalysis\": 45057}",
+        "--unit",
+        "USD million",
+        "--tolerance",
+        "0.01"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n교차 검증: ocf_2025Q3 (Cross-Validation)\n============================================================\n  데이터 소스 수: 2\n  기준 중앙값: 45,057.00 USD million\n\n  ✅ Microsoft           : 45,057.00 USD million  (편차 0.00%)\n  ✅ StockAnalysis       : 45,057.00 USD million  (편차 0.00%)\n\n  ✅ 모든 소스 편차 ≤ 0.01%, 데이터 일치\n\n  컨센서스 값 (가중 중앙값): 45,057.00 USD million\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cross-validate",
+        "--field",
+        "cash_ppe_2026Q3",
+        "--values",
+        "{\"Microsoft\": 39367, \"StockAnalysis\": 39367}",
+        "--unit",
+        "USD million",
+        "--tolerance",
+        "0.01"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n교차 검증: cash_ppe_2026Q3 (Cross-Validation)\n============================================================\n  데이터 소스 수: 2\n  기준 중앙값: 39,367.00 USD million\n\n  ✅ Microsoft           : 39,367.00 USD million  (편차 0.00%)\n  ✅ StockAnalysis       : 39,367.00 USD million  (편차 0.00%)\n\n  ✅ 모든 소스 편차 ≤ 0.01%, 데이터 일치\n\n  컨센서스 값 (가중 중앙값): 39,367.00 USD million\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "cross-validate",
+        "--field",
+        "cash_ppe_2025Q3",
+        "--values",
+        "{\"Microsoft\": 19394, \"StockAnalysis\": 19394}",
+        "--unit",
+        "USD million",
+        "--tolerance",
+        "0.01"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n교차 검증: cash_ppe_2025Q3 (Cross-Validation)\n============================================================\n  데이터 소스 수: 2\n  기준 중앙값: 19,394.00 USD million\n\n  ✅ Microsoft           : 19,394.00 USD million  (편차 0.00%)\n  ✅ StockAnalysis       : 19,394.00 USD million  (편차 0.00%)\n\n  ✅ 모든 소스 편차 ≤ 0.01%, 데이터 일치\n\n  컨센서스 값 (가중 중앙값): 19,394.00 USD million\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "calc",
+        "--expr",
+        "58000-39367"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n정확한 계산 (Exact Calculator)\n============================================================\n  표현: 58000-39367\n  결과:   18,633.00\n  정확한 값: 18633\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "calc",
+        "--expr",
+        "45057-19394"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n정확한 계산 (Exact Calculator)\n============================================================\n  표현: 45057-19394\n  결과:   25,663.00\n  정확한 값: 25663\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "calc",
+        "--expr",
+        "((58000-39367)/(45057-19394)-1)*100"
+      ],
+      "exit_code": 0,
+      "stdout": "============================================================\n정확한 계산 (Exact Calculator)\n============================================================\n  표현: ((58000-39367)/(45057-19394)-1)*100\n  결과:   -27.39\n  정확한 값: -27.39352375014612\n",
+      "stderr": ""
+    }
+  ]
+}
