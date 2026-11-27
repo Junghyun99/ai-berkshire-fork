@@ -151,6 +151,10 @@ def inputs_line(info: dict) -> str:
 # 수집
 # ---------------------------------------------------------------------------
 
+# 본국 상장 티커 → SEC 에 20-F 를 내는 ADR 티커(재무 원본을 SEC 에서 받는다)
+SEC_ALIASES = {"2330.TW": "TSM"}
+
+
 def market_of(ticker: str) -> str:
     t = ticker.upper()
     if re.fullmatch(r"\d{6}(\.K[SQ])?", t):
@@ -217,6 +221,7 @@ def compute(ticker: str, as_of: str = "", financial=None, u_e=None, note: str = 
     """→ {metric, drawdown, u_e, coverage, cov_year, L, financial, source}.
     u_e·l_pen 을 주면 원본 대신 그 값을 쓴다(원본 없는 시장용, note 에 출처)."""
     as_of = as_of or date.today().isoformat()
+    ticker = SEC_ALIASES.get(ticker.upper(), ticker)
     mk = market_of(ticker)
     if u_e is not None:
         fin = bool(financial)
