@@ -11,15 +11,16 @@
 기본 규칙(관점, 인자로 변경 가능):
   - 비중 상한 = 최대 비중(--max-weight, 기본 10%) × 확신도 계수(★1 0 / ★2 0.25 / ★3 0.5 / ★4 0.75 / ★5 1.0).
     판단이 회피면 0.
-  - 업종 기준 안전마진(--mos-class, 기본 일반 25%): 방어 15 / 우량성장 20 / 일반 25 / 경기순환 30 / 고불확실 35.
-    분할 매수 가격대 = 내재가치 중앙값 × (1 − 안전마진). 안전마진은 업종 기준 −10 / 기준 / +10%p
-    (일반이면 15/25/35%), 배분 30/30/40%(--split). --mos 로 직접 주면 분류보다 우선.
+  - 요구 안전마진 M = clip(10% + max(U_v, U_e) + L, 15%, 45%) — 종목별(tools/mos_inputs.py).
+    U_v 는 라벨 내재가치 범위에서, U_e(이익 변동)·L(재무 위험)은 mos_inputs.py calc 결과를 --u-e·--l 로 넣는다.
+    분할 매수 가격대 = 내재가치 중앙값 × (1 − 안전마진), 안전마진은 M −10 / M / M +10 %p, 배분 30/30/40%(--split).
+    --mos 는 가정 점검(what-if)용 직접 지정이며 보고서 실행 계획의 기준선으로 쓰지 않는다.
   - 신규 매수 금지선 = 내재가치 상단 × (1 + 15%)(--stop-premium). 이 가격 이상에서는 새로 사지 않는다.
   - 축소(보유 시에만): 신규 매수 금지선 이상에서 1/3, 내재가치 상단 × (1 + 30%)(--trim-premium) 이상에서 추가 축소.
     반증 조건이 발생하면 가격과 무관하게 즉시 검토.
   - 현재 상태: 현재가가 1차 가격대 이하이고 판단이 매수면 '1차 실행 가능', 아니면 '대기'.
     관망이라도 현재가가 1차 가격대 이하면 '1차 가격 도달'로 표시한다(관망 = 가격 대기이므로 가격이 오면 1차 체결 대상).
-    현재 안전마진이 업종 기준 이상인데 관망이면 '가격이 문제'라는 판정과 맞지 않는다고 경고한다.
+    현재 안전마진이 요구 안전마진 이상인데 관망이면 '가격이 문제'라는 판정과 맞지 않는다고 경고한다.
 
 가격대의 현실성(--ticker 를 주면 자동): 차수마다 현재가 대비 하락률과 52주 최저·3년 최저 대비 위치를 붙인다.
   가격은 바꾸지 않고 표시만 한다(가격을 고치는 것은 리스크 토론의 몫). 모든 차수가 52주 최저 아래면 경고한다.
@@ -45,26 +46,9 @@ from datetime import datetime, timezone
 
 from _us_common import NoDataError, UnavailableError, run
 import decision_ledger as dl
+import mos_inputs as mi
 
 CONVICTION_FACTOR = {1: 0.0, 2: 0.25, 3: 0.5, 4: 0.75, 5: 1.0}
-# 업종 기준 안전마진(%) — investment-team SKILL.md 7단계 '업종별 안전마진 기준' 표와 같아야 한다(관점).
-MOS_BY_CLASS = {"방어": 15, "우량성장": 20, "일반": 25, "경기순환": 30, "고불확실": 35}
-MOS_CLASS_HELP = {
-    "방어": "필수소비재·결제 네트워크·규제 독점 인프라 — 이익 변동이 작고 해자가 확인됨",
-    "우량성장": "해자가 확인된 소프트웨어·플랫폼·헬스케어 — 이익이 꾸준히 늘고 사이클이 약함",
-    "일반": "위·아래에 해당하지 않는 대부분(산업재·통신·은행·보험·IT서비스·소비재 일반)",
-    "경기순환": "반도체·메모리·장비, 증권, 자동차, 화학·소재·에너지, 해운 — 이익이 사이클로 크게 출렁임",
-    "고불확실": "파이프라인 의존 바이오, 적자·초기 사업, 지배구조 위험이 큰 종목",
-}
-TRANCHE_OFFSETS = (-10, 0, 10)
-
-
-def class_mos(mos_class: str) -> tuple:
-    """업종 분류 → 분할 매수 안전마진(기준 −10 / 기준 / +10 %p)."""
-    if mos_class not in MOS_BY_CLASS:
-        raise SystemExit(f"❌ 업종 분류는 {'/'.join(MOS_BY_CLASS)} 중 하나: {mos_class}")
-    base = MOS_BY_CLASS[mos_class]
-    return tuple(base + o for o in TRANCHE_OFFSETS)
 _PLAN_RE = re.compile(r"\*\*\s*실행 계획\s*\*\*\s*[:：]")
 _TRANCHE_RE = re.compile(r"([\d,]+(?:\.\d+)?)\s*[^\d%/(]*?\s+(\d+(?:\.\d+)?)\s*%")
 
@@ -109,15 +93,20 @@ def fetch_ranges(symbol: str) -> dict:
 
 def build_plan(verdict: str, conviction: int, iv_low: float, iv_high: float, price=None, currency="KRW",
                max_weight=10.0, mos=None, split=(30, 30, 40), stop_premium=15.0, trim_premium=30.0,
-               current_weight=None, ranges=None, mos_class="") -> dict:
+               current_weight=None, ranges=None, u_e=None, l_pen=None) -> dict:
     if verdict not in dl.VERDICTS:
         raise SystemExit(f"❌ 판단은 매수/관망/회피 중 하나: {verdict}")
     if conviction not in CONVICTION_FACTOR:
         raise SystemExit(f"❌ 확신도는 1~5: {conviction}")
-    if mos_class:
-        mos = class_mos(mos_class) if mos is None else mos
-    elif mos is None:
-        mos = class_mos("일반")
+    req = None
+    if mos is None:
+        if u_e is None or l_pen is None:
+            raise SystemExit("❌ 요구 안전마진 입력이 없습니다 — tools/mos_inputs.py calc 로 U_e·L 을 계산해 --u-e·--l 로 넣으세요.")
+        if iv_low and iv_high and iv_high >= iv_low > 0:
+            req = mi.required_mos(mi.u_v_from(iv_low, iv_high), u_e, l_pen)
+            mos = mi.tranche_mos(req)
+        else:
+            mos = (0, 0, 0)  # 내재가치 오류는 아래에서 NoDataError
     if len(mos) != len(split):
         raise SystemExit("❌ --mos 와 --split 의 개수가 같아야 합니다.")
     if abs(sum(split) - 100) > 1e-6:
@@ -135,7 +124,8 @@ def build_plan(verdict: str, conviction: int, iv_low: float, iv_high: float, pri
     plan = {"판단": verdict, "확신도": conviction, "통화": currency, "내재가치하단": iv_low, "내재가치상단": iv_high,
             "내재가치중앙": mid, "비중상한": round(cap, 2), "분할매수": tranches,
             "신규매수금지가": stop, "축소": [{"가격": stop, "규모": "1/3"}, {"가격": trim, "규모": "추가"}],
-            "업종분류": mos_class, "업종기준": MOS_BY_CLASS.get(mos_class),
+            "요구안전마진": req, "U_v": mi.u_v_from(iv_low, iv_high) if req is not None else None,
+            "U_e": u_e, "L": l_pen,
             "현재가": price, "현재안전마진": None, "현재상태": "", "보유조정": "", "가격범위": ranges, "경고": []}
     warn = plan["경고"]
     if price:
@@ -155,9 +145,9 @@ def build_plan(verdict: str, conviction: int, iv_low: float, iv_high: float, pri
                              "반증 조건 미발생 시 1차 체결)")
         else:
             plan["현재상태"] = "대기(관망 — 가격대 도달 시 판단 재검토 후 실행)"
-        std = plan["업종기준"]
+        std = plan["요구안전마진"]
         if verdict == "관망" and std is not None and plan["현재안전마진"] >= std:
-            warn.append(f"현재 안전마진 {plan['현재안전마진']:.1f}% 가 업종 기준({mos_class} {std}%) 이상이다 — "
+            warn.append(f"현재 안전마진 {plan['현재안전마진']:.1f}% 가 요구 안전마진 {std:g}% 이상이다 — "
                         "'약세 우세 — 가격' 관망과 맞지 않는다. 판정을 다시 하거나, 라벨 내재가치가 판정에 쓴 범위인지 확인할 것.")
     if price and price >= stop:
         plan["현재상태"] += " · 현재가가 신규 매수 금지 구간"
@@ -213,9 +203,11 @@ def render(plan: dict) -> str:
              f"- 현재가 {fmt_price(plan['현재가'], c) if plan['현재가'] else '미확인'}"
              + (f" · 중앙값 대비 안전마진 {plan['현재안전마진']:+.1f}%" if plan["현재안전마진"] is not None else ""),
              f"- 비중 상한 {plan['비중상한']:g}% (최대 비중 × 확신도 계수)"]
-    if plan["업종분류"]:
-        lines.append(f"- 업종 기준 안전마진: {plan['업종분류']} {plan['업종기준']}% → 분할 매수 "
-                     + "/".join(f"{t['안전마진']:g}" for t in plan["분할매수"]) + "%")
+    if plan["요구안전마진"] is not None:
+        lines.append(f"- 요구 안전마진: 10 + max(U_v {plan['U_v']:g}, U_e {plan['U_e']:g}) + L {plan['L']:g} = "
+                     f"{plan['요구안전마진']:g}% → 분할 매수 " + "/".join(f"{t['안전마진']:g}" for t in plan["분할매수"]) + "%")
+    elif plan["분할매수"]:
+        lines.append("- ⚠️ 분할 매수 안전마진을 --mos 로 직접 지정했다(가정 점검용 — 보고서 기준선 아님)")
     if rng:
         lines.append(f"- 가격 범위: 52주 최저 {fmt_price(rng['52주최저'], c)} · 3년 최저 {fmt_price(rng['3년최저'], c)}"
                      f"({rng['3년최저일']}) — Yahoo 일봉 저가")
@@ -294,9 +286,9 @@ def main():
     p.add_argument("--iv-low", type=float, default=None)
     p.add_argument("--iv-high", type=float, default=None)
     p.add_argument("--max-weight", type=float, default=10.0, help="확신도 ★5일 때 비중 상한(%%, 기본 10)")
-    p.add_argument("--mos-class", default="", choices=("",) + tuple(MOS_BY_CLASS),
-                   help="업종 분류(기본 일반 25%%): " + " / ".join(f"{k} {v}%%" for k, v in MOS_BY_CLASS.items()))
-    p.add_argument("--mos", default="", help="분할 매수 안전마진 직접 지정(%%, 쉼표) — 업종 분류보다 우선")
+    p.add_argument("--u-e", type=float, default=None, help="이익 변동 U_e(%%) — tools/mos_inputs.py calc 결과")
+    p.add_argument("--l", dest="l_pen", type=float, default=None, help="재무 위험 L(0/5/10) — mos_inputs.py calc 결과")
+    p.add_argument("--mos", default="", help="분할 매수 안전마진 직접 지정(%%, 쉼표) — 가정 점검용, 보고서 기준선 아님")
     p.add_argument("--split", default="30,30,40", help="차수별 배분(%%, 합 100)")
     p.add_argument("--stop-premium", type=float, default=15.0, help="신규 매수 금지·1차 축소: 내재가치 상단 대비(%%)")
     p.add_argument("--trim-premium", type=float, default=30.0, help="추가 축소: 내재가치 상단 대비(%%)")
@@ -334,7 +326,7 @@ def main():
         currency = currency or cur
     plan = build_plan(verdict, int(conviction), float(low or 0), float(high or 0), price, currency or "KRW",
                       a.max_weight, _pcts(a.mos, "--mos") if a.mos else None, _pcts(a.split, "--split"),
-                      a.stop_premium, a.trim_premium, a.current_weight, ranges, a.mos_class or "일반")
+                      a.stop_premium, a.trim_premium, a.current_weight, ranges, a.u_e, a.l_pen)
     if a.json:
         print(json.dumps(dict(plan, 실행계획줄=plan_line(plan)), ensure_ascii=False, indent=2))
     else:

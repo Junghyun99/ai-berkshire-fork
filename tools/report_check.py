@@ -20,8 +20,10 @@ report_audit.py 가 '숫자가 맞는가'를 표본으로 본다면, 이 도구�
                        · `**실행 계획**` 줄(position_plan.py 형식)과 06-리스크토론-비중.md 의 마지막 실행 계획 줄 일치
                          (06 이 없으면 7.5단계 이전 보고서로 보고 ⚠️)
                        · 판정 기준 3종(작성일 2026-11-25 이후 ❌, 그 전 보고서는 ⚠️):
-                         ① `**안전마진**: 기준가 P · 중앙 M → X% | **업종 기준**: Y% (분류)` — X가 라벨 내재가치 중앙으로
-                            계산한 값과 같고(라벨 범위 = 판정에 쓴 가치), Y가 업종 표와 같고, 약세 우세(가격)인데 X ≥ Y 가 아님
+                         ① `**안전마진**: 기준가 P · 중앙 M → X% | **요구 안전마진**: 10 + max(U_v a, U_e b) + L c = M%`
+                            와 `**이익 변동**: ... → U_e b% | **재무 위험**: ... → L c` (tools/mos_inputs.py calc 출력) —
+                            X가 라벨 중앙으로 계산한 값과 같고(라벨 범위 = 판정에 쓴 가치), U_v 가 라벨 범위 폭과 같고,
+                            M 이 공식과 같고, U_e·L 이 최대 하락률·이자보상배율과 맞고, 약세 우세(가격)인데 X ≥ M 이 아님
                          ② 원장에 같은 종목의 이전 판단이 있으면 `**가치 변경**: 이전 L~H(날짜) → 이번 L~H |
                             **중앙 변화**: A% = 데이터 B% + 가정 C%` 줄, |C| ≥ 10 이면 `**가정 변화 근거**:` 줄
                          ③ 실행 계획 줄의 `**불확실성 반영**: 안전마진|확인 대기` — 안전마진이면 실적 확인 조건 금지,
@@ -30,7 +32,7 @@ report_audit.py 가 '숫자가 맞는가'를 표본으로 본다면, 이 도구�
   investment-research  '판정 근거' · '## 부록: 팩트시트'
   investment-checklist 라벨 줄(복수 회사면 **종목** 필드로 회사마다 하나)
   research·checklist   판정 기준 ①·② 는 team 과 같다(checklist 복수 회사는 줄 앞에 `**종목**: 회사명 |`, 회사마다).
-                       ③ 대신 관망이면 `**관망 사유**: 가격|균형|확인 대기 — 설명` — 가격인데 안전마진 ≥ 업종 기준이면 반려,
+                       ③ 대신 관망이면 `**관망 사유**: 가격|균형|확인 대기 — 설명` — 가격인데 안전마진 ≥ 요구 안전마진이면 반려,
                        확인 대기면 이벤트 시점 필수. 내재가치가 '-'(미산정)면 ①·② 는 건너뛴다
 
 사용법:
@@ -48,6 +50,7 @@ import unicodedata
 
 from _us_common import EXIT_NO_DATA
 import decision_ledger as dl
+import mos_inputs as mi
 import position_plan as pp
 
 SKILLS = ("investment-team", "investment-research", "investment-checklist")
@@ -349,10 +352,15 @@ def _signed(text: str) -> str:
     return text.replace("−", "-").replace("–", "-")
 
 
+_REQ_RE = re.compile(r"U_v\s*([\d.]+).*?U_e\s*([\d.]+).*?L\s*([\d.]+).*?=\s*([\d.]+)\s*%")
+
+
 def check_margin(c: Checker, text: str, folder: str, strict: bool, name: str = "", team: bool = True):
-    """① 안전마진 줄: 라벨 내재가치 중앙과 기준가로 계산한 값, 업종 기준, 판정과의 정합(team 은 토론 판정과)."""
+    """① 안전마진: 라벨 내재가치 중앙·기준가로 계산한 현재 안전마진, 종목별 요구 안전마진
+    M = clip(10 + max(U_v, U_e) + L, 15, 45) 의 재계산, 입력(이익 변동·재무 위험) 근거, 판정과의 정합."""
     t = _tag(name)
     sev = lambda m: (c.fail if strict else c.warn)(t + m)  # noqa: E731
+    pre = " 복수 회사는 줄 앞에 `**종목**: 회사명 |`." if name else ""
     try:
         label = dl.parse_label(text, name)
     except dl.ReportParseError:
@@ -360,40 +368,83 @@ def check_margin(c: Checker, text: str, folder: str, strict: bool, name: str = "
     if label["판단"] == "회피" or not label["내재가치하단"]:
         return None
     f = _fields(text, "안전마진", name)
-    if not f.get("안전마진") or not f.get("업종 기준"):
-        sev("판정 근거에 `**안전마진**: 기준가 P · 중앙 M → X% | **업종 기준**: Y% (분류)` 줄이 없습니다(안전마진 판정 기준 규칙 8)."
-            + (" 복수 회사는 줄 앞에 `**종목**: 회사명 |`." if name else ""))
+    if not f.get("안전마진") or not f.get("요구 안전마진"):
+        sev("판정 근거에 `**안전마진**: 기준가 P · 중앙 M → X% | **요구 안전마진**: 10 + max(U_v a, U_e b) + L c = M%` "
+            "줄이 없습니다(tools/mos_inputs.py calc 출력)." + pre)
         return None
     pm = re.search(r"기준가\s*([\d,]+(?:\.\d+)?)", f["안전마진"])
     xs = _PCT_RE.findall(_signed(f["안전마진"]))
-    ys = _PCT_RE.findall(f["업종 기준"])
-    cls = next((k for k in pp.MOS_BY_CLASS if k in f["업종 기준"]), "")
-    if not pm or not xs or not ys:
-        sev(f"안전마진 줄을 읽을 수 없습니다: '{f['안전마진']} | {f['업종 기준']}'")
+    rq = _REQ_RE.search(f["요구 안전마진"])
+    if not pm or not xs or not rq:
+        sev(f"안전마진 줄을 읽을 수 없습니다: '{f['안전마진']} | {f['요구 안전마진']}'")
         return None
-    if not cls:
-        sev(f"업종 기준의 분류가 없습니다 — {'/'.join(pp.MOS_BY_CLASS)} 중 하나를 괄호로: '{f['업종 기준']}'")
-        return None
-    price, x, y = _num(pm.group(1)), float(xs[-1]), float(ys[0])
-    mid = (float(label["내재가치하단"]) + float(label["내재가치상단"])) / 2
+    price, x = _num(pm.group(1)), float(xs[-1])
+    uv, ue, lp, m = (float(g) for g in rq.groups())
+    lo, hi = float(label["내재가치하단"]), float(label["내재가치상단"])
+    mid = (lo + hi) / 2
     calc = (1 - price / mid) * 100
+    uv_calc = mi.u_v_from(lo, hi)
     ok = True
-    if y != pp.MOS_BY_CLASS[cls]:
-        sev(f"업종 기준 {y:g}% 가 표의 {cls} {pp.MOS_BY_CLASS[cls]}% 와 다릅니다.")
-        ok = False
     if abs(x - calc) > 1.0:
         sev(f"안전마진 {x:g}% 가 라벨 내재가치 중앙({mid:,.2f})과 기준가로 계산한 {calc:.1f}% 와 다릅니다 — "
             "라벨 범위는 판정에 실제로 쓴 가치여야 합니다(규칙 8).")
         ok = False
+    if abs(uv - uv_calc) > 0.2:
+        sev(f"U_v {uv:g} 가 라벨 내재가치 범위로 계산한 {uv_calc:g} 와 다릅니다.")
+        ok = False
+    if lp not in (0, 5, 10) or not 0 <= ue <= mi.UE_CAP:
+        sev(f"L 은 0/5/10, U_e 는 0~{mi.UE_CAP:g} 이어야 합니다(찾은 값 L {lp:g}, U_e {ue:g}).")
+        ok = False
+    m_calc = mi.required_mos(uv_calc, ue, lp)
+    if abs(m - m_calc) > 0.2:
+        sev(f"요구 안전마진 {m:g}% 가 공식 clip(10 + max(U_v, U_e) + L, 15, 45) = {m_calc:g}% 와 다릅니다.")
+        ok = False
+    ok &= _check_inputs(c, text, name, ue, lp, sev, pre)
     ruling = parse_debate(os.path.join(folder, DEBATE_FILE))["ruling"] if team and os.path.exists(
         os.path.join(folder, DEBATE_FILE)) else None
-    if ruling == "약세 우세(가격)" and calc >= y:
-        sev(f"토론 판정이 '약세 우세 — 가격'인데 현재 안전마진 {calc:.1f}% 가 업종 기준 {cls} {y:g}% 이상입니다 — "
+    if ruling == "약세 우세(가격)" and calc >= m_calc:
+        sev(f"토론 판정이 '약세 우세 — 가격'인데 현재 안전마진 {calc:.1f}% 가 요구 안전마진 {m_calc:g}% 이상입니다 — "
             "가격이 문제라는 판정과 맞지 않습니다. 판정을 다시 하거나 라벨 범위를 판정에 쓴 가치로 고치세요.")
         ok = False
     if ok:
-        c.ok(f"{t}안전마진 {calc:.1f}% (기준가 {price:,.2f} · 중앙 {mid:,.2f}) · 업종 기준 {cls} {y:g}%")
-    return {"price": price, "margin": calc, "std": y, "mid": mid, "verdict": label["판단"]}
+        c.ok(f"{t}안전마진 {calc:.1f}% (기준가 {price:,.2f} · 중앙 {mid:,.2f}) · 요구 {m_calc:g}% "
+             f"(U_v {uv_calc:g}, U_e {ue:g}, L {lp:g})")
+    return {"price": price, "margin": calc, "std": m_calc, "mid": mid, "verdict": label["판단"]}
+
+
+def _check_inputs(c: Checker, text: str, name: str, ue: float, lp: float, sev, pre: str) -> bool:
+    """`**이익 변동**: ... → U_e b% | **재무 위험**: ... → L c` 줄이 요구 안전마진의 U_e·L 과 맞는지."""
+    f = _fields(text, "이익 변동", name)
+    if not f.get("이익 변동") or not f.get("재무 위험"):
+        sev("`**이익 변동**: ... → U_e b% | **재무 위험**: ... → L c` 줄이 없습니다(tools/mos_inputs.py calc 출력, "
+            "재무 원본으로 계산한 근거)." + pre)
+        return False
+    ok = True
+    ev, lv = _signed(f["이익 변동"]), f["재무 위험"]
+    got_ue = re.search(r"U_e\s*([\d.]+)", ev)
+    got_l = re.search(r"L\s*([\d.]+)", lv)
+    if not got_ue or abs(float(got_ue.group(1)) - ue) > 0.05:
+        sev(f"이익 변동 줄의 U_e 가 요구 안전마진의 U_e {ue:g} 와 다릅니다: '{f['이익 변동']}'")
+        ok = False
+    dd = re.search(r"최대\s*하락\s*([\d.]+)\s*%", ev)
+    if dd and "직접" not in ev:
+        want = round(min(mi.UE_FACTOR * float(dd.group(1)), mi.UE_CAP), 1)
+        if abs(want - ue) > 0.1:
+            sev(f"최대 하락 {dd.group(1)}% × {mi.UE_FACTOR:g} = U_e {want:g} 인데 {ue:g} 를 썼습니다.")
+            ok = False
+    elif not dd and "직접" not in ev and abs(ue - mi.UE_CAP) > 0.05:
+        sev(f"이익 변동 줄에 최대 하락률이 없으면(이력 부족·데이터 미확보) U_e 는 {mi.UE_CAP:g} 입니다.")
+        ok = False
+    if not got_l or abs(float(got_l.group(1)) - lp) > 0.05:
+        sev(f"재무 위험 줄의 L 이 요구 안전마진의 L {lp:g} 와 다릅니다: '{f['재무 위험']}'")
+        ok = False
+    cov = re.search(r"이자보상배율\s*(-?[\d.]+)\s*배", lv)
+    if cov:
+        _, want_l = mi.leverage_penalty(float(cov.group(1)), 1.0, False)
+        if want_l != lp:
+            sev(f"이자보상배율 {cov.group(1)}배면 L {want_l:g} 입니다(8배 이상 0, 3~8배 5, 3배 미만 10).")
+            ok = False
+    return ok
 
 
 def check_value_change(c: Checker, text: str, folder: str, run_date: str, strict: bool, ledger_path: str,
@@ -511,7 +562,7 @@ def check_decision_rules(c: Checker, text: str, path: str, skill: str, ledger_pa
 
 def check_hold_reason(c: Checker, text: str, margin, strict: bool, name: str = ""):
     """③' research·checklist: 관망이면 사유(가격 / 균형 / 확인 대기)를 하나 고른다.
-    가격인데 안전마진이 업종 기준 이상이면 반려(규칙 8), 확인 대기면 이벤트 시점 필수(규칙 10)."""
+    가격인데 안전마진이 요구 안전마진 이상이면 반려(규칙 8), 확인 대기면 이벤트 시점 필수(규칙 10)."""
     t = _tag(name)
     sev = lambda m: (c.fail if strict else c.warn)(t + m)  # noqa: E731
     try:
@@ -529,7 +580,7 @@ def check_hold_reason(c: Checker, text: str, margin, strict: bool, name: str = "
         return
     ok = True
     if reason == "가격" and margin and margin["margin"] >= margin["std"]:
-        sev(f"관망 사유가 '가격'인데 현재 안전마진 {margin['margin']:.1f}% 가 업종 기준 {margin['std']:g}% 이상입니다 — "
+        sev(f"관망 사유가 '가격'인데 현재 안전마진 {margin['margin']:.1f}% 가 요구 안전마진 {margin['std']:g}% 이상입니다 — "
             "가격이 문제가 아닙니다. 판단을 다시 하거나 라벨 범위를 판정에 쓴 가치로 고치세요(규칙 8).")
         ok = False
     if reason == "확인 대기" and not re.search(r"\d", value):
