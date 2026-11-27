@@ -1,47 +1,28 @@
 {
-  "kind": "input_contract_and_synthetic_arithmetic_only",
-  "source_commit": "c6f0fa147bf649e133aa0895fd976665eb9b67c2",
+  "input_commit": "c6f0fa147bf649e133aa0895fd976665eb9b67c2",
   "original_opinion": "매수",
-  "original_cap_percent": 5.0,
-  "target_weight": null,
-  "weight_denominator": null,
-  "historical_oos_end": "2026-09",
-  "opinion_written": "2026-11-02",
-  "historical_insertion_allowed": false,
+  "reported_cap_percent": 5.0,
+  "equity_target": null,
+  "adobe_target": null,
   "policy_status": "DRAFT",
   "synthetic_examples": [
     {
-      "synthetic_x": "0",
-      "weights": {
-        "KR_EQUITY": "0.2",
-        "US_SP500": "0.2",
-        "US_NASDAQ100": "0.2",
-        "KR_TREASURY10Y": "0.2",
-        "US_TREASURY7_10Y": "0.2",
-        "ADBE": "0"
-      }
+      "equity": "0.6",
+      "stock_weights": [
+        "0.36",
+        "0.24"
+      ],
+      "theme_weight": "0.0",
+      "other_assets": "0.4"
     },
     {
-      "synthetic_x": "0.02",
-      "weights": {
-        "KR_EQUITY": "0.2",
-        "US_SP500": "0.18",
-        "US_NASDAQ100": "0.2",
-        "KR_TREASURY10Y": "0.2",
-        "US_TREASURY7_10Y": "0.2",
-        "ADBE": "0.02"
-      }
-    },
-    {
-      "synthetic_x": "0.2",
-      "weights": {
-        "KR_EQUITY": "0.2",
-        "US_SP500": "0.0",
-        "US_NASDAQ100": "0.2",
-        "KR_TREASURY10Y": "0.2",
-        "US_TREASURY7_10Y": "0.2",
-        "ADBE": "0.2"
-      }
+      "equity": "0.4",
+      "stock_weights": [
+        "0.20",
+        "0.12"
+      ],
+      "theme_weight": "0.08",
+      "other_assets": "0.6"
     }
   ],
   "sha256": {
