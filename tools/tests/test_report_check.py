@@ -17,7 +17,8 @@ PLAN = ("**실행 계획**: 비중 상한 5% | **분할 매수**: 161,500원 1.5
 REQ = " | **요구 안전마진**: 10 + max(U_v 5.3, U_e 15) + L 0 = 25%"
 INPUTS = ("**이익 변동**: 영업이익 최대 하락 50% (2019→2020, 10개 해, DART) → U_e 15% | "
           "**재무 위험**: 이자보상배율 20배(2025) → L 0")
-MARGIN = "**안전마진**: 기준가 175,000원 · 중앙 190,000원 → 7.9%" + REQ + "\n" + INPUTS
+FORMULA = "**내재가치 산식**: A 일반(2단계 오너어닝스 DCF) | 비관 150,000 / 중립 180,000 / 낙관 220,000 | 범위 165,000~200,000 KRW"
+MARGIN = "**안전마진**: 기준가 175,000원 · 중앙 190,000원 → 7.9%" + REQ + "\n" + INPUTS + "\n" + FORMULA
 RUN_INFO = """## 실행 정보
 - 작성일: 2026-10-28
 - 스킬: {skill}
@@ -315,6 +316,30 @@ class DecisionRulesTest(_Base):
         self.assertIn("기준선(161,500.00) 아래로", self.fails(self.run_check(plan=wait.replace("161,500원", "150,000원"))))
         no_date = wait.replace("대기(4Q26 실적 확인 후 1차)", "대기(실적 확인 후)")
         self.assertIn("이벤트의 시점", self.fails(self.run_check(plan=no_date)))
+
+    def test_formula_cross_check(self):
+        old, rc.IV_RULE_DATE = rc.IV_RULE_DATE, "2026-11-26"           # 픽스처 작성일(2026-11-26)부터 시행으로
+        self.addCleanup(setattr, rc, "IV_RULE_DATE", old)
+        no_formula = MARGIN.replace("\n" + FORMULA, "")
+        self.assertIn("**내재가치 산식**", self.fails(self.run_check(margin=no_formula)))
+        # 공식 중앙 90,000 → 분석가 190,000 은 2.11배 → 괴리 근거 필수
+        far = MARGIN.replace("범위 165,000~200,000", "범위 80,000~100,000")
+        self.assertIn("공식 괴리 근거", self.fails(self.run_check(margin=far)))
+        ok = far + "\n**공식 괴리 근거**: 공식은 10년 평균 마진, 분석가는 증설 후 구조적 마진 상향 가정"
+        self.assertFalse(self.run_check(margin=ok).failed)
+        manual = MARGIN.replace(FORMULA, "**내재가치 산식**: E 가정 의존형(명시 가정 DCF) | 자동 계산 불가(최근 5년 FCF ≤ 0)")
+        self.assertIn("valuation-inputs.json", self.fails(self.run_check(margin=manual)))  # E 는 가정 입력 필수
+        other = MARGIN.replace(FORMULA, "**내재가치 산식**: A 일반(2단계 오너어닝스 DCF) | 자동 계산 불가(주식수 미확보)")
+        self.assertFalse(self.run_check(margin=other).failed)
+        # D 유형: 입력 파일이 있어야 통과
+        import json
+        rel = os.path.relpath(self.write("valuation-inputs.json", json.dumps({"출처": ["사업보고서"], "유형": "D",
+                                                                                 "유형사유": "지주"}, ensure_ascii=False)),
+                              os.path.dirname(os.path.dirname(os.path.abspath(rc.__file__))))
+        d_line = MARGIN.replace(FORMULA, FORMULA.replace("A 일반(2단계 오너어닝스 DCF)", "D 지주·복합(사업부별 합산)")
+                                + f" | 입력: {rel}")
+        self.assertFalse(self.run_check(margin=d_line).failed)
+        self.assertIn("파일이 없습니다", self.fails(self.run_check(margin=d_line.replace(rel, "reports/없음/valuation-inputs.json"))))
 
     # --- investment-research · investment-checklist ---
     def solo(self, skill, label=LABEL, margin=MARGIN, extra="", ledger=None):

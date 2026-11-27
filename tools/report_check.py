@@ -26,6 +26,8 @@ report_audit.py 가 '숫자가 맞는가'를 표본으로 본다면, 이 도구�
                             M 이 공식과 같고, U_e·L 이 최대 하락률·이자보상배율과 맞고, 약세 우세(가격)인데 X ≥ M 이 아님
                          ② 원장에 같은 종목의 이전 판단이 있으면 `**가치 변경**: 이전 L~H(날짜) → 이번 L~H |
                             **중앙 변화**: A% = 데이터 B% + 가정 C%` 줄, |C| ≥ 10 이면 `**가정 변화 근거**:` 줄
+                         ④ `**내재가치 산식**:` 줄(tools/intrinsic_value.py, 교차 검증 기준선) — 분석가 중앙이 공식 중앙과
+                            ±50% 넘게 다르면 `**공식 괴리 근거**:` 줄 필수(작성일 2026-11-28 이후 ❌)
                          ③ 실행 계획 줄의 `**불확실성 반영**: 안전마진|확인 대기` — 안전마진이면 실적 확인 조건 금지,
                             기준선 1차가 이미 도달했으면 현재가에서 체결되는 차수가 있어야 함, 확인 대기면 1차를 기준선
                             아래로 내리지 않음(불확실성 이중 차감 금지)
@@ -70,6 +72,9 @@ RULING_VERDICTS = {"강세 우세": ("매수",), "균형": ("관망",),
 RULE_DATE = "2026-11-25"
 UNCERTAINTY_MODES = ("안전마진", "확인 대기")
 HOLD_REASONS = ("가격", "균형", "확인 대기")
+# 내재가치 표준 산식 교차 검증(tools/intrinsic_value.py) 시행일과 괴리 한도
+IV_RULE_DATE = "2026-11-28"
+IV_GAP = 0.5
 _PCT_RE = re.compile(r"([+\-]?\d+(?:\.\d+)?)\s*%")
 _RANGE_RE = r"{}\s*([\d,]+(?:\.\d+)?)\s*[~∼]\s*([\d,]+(?:\.\d+)?)"
 # 실적·이벤트 확인을 기다리는 조건. '반증 조건 미발생 확인'은 가격과 별개의 상시 조건이라 뺀 뒤 찾는다.
@@ -344,6 +349,18 @@ def _fields(text: str, key: str, name: str = "") -> dict:
     return out
 
 
+def _raw_line(text: str, key: str, name: str = "") -> str:
+    """`**key**:` 가 있는 (코드 밖) 마지막 줄 전체(필드 밖의 `| ... |` 조각까지)."""
+    out = ""
+    pat = re.compile(rf"\*\*\s*{re.escape(key)}\s*\*\*\s*[:：]")
+    for _, line in _outside_code(text):
+        if pat.search(line):
+            row = {k.strip(): v.strip() for k, v in dl._FIELD_RE.findall(line)}
+            if not name or row.get("종목", "").strip("*").strip() == name:
+                out = line
+    return out
+
+
 def _tag(name: str) -> str:
     return f"({name}) " if name else ""
 
@@ -560,6 +577,61 @@ def check_uncertainty(c: Checker, text: str, margin, strict: bool):
         c.ok(f"불확실성 반영: {mode}" + (f" · 기준선 1차 {first:,.2f} 도달" if reached else ""))
 
 
+def check_formula(c: Checker, text: str, name: str, run_date: str):
+    """④ 내재가치 표준 산식 교차 검증: `**내재가치 산식**:` 줄(intrinsic_value.py 출력)이 있고,
+    분석가 범위 중앙이 공식 범위 중앙과 ±50% 넘게 다르면 `**공식 괴리 근거**:` 줄이 있다."""
+    t = _tag(name)
+    sev = lambda m: (c.fail if run_date >= IV_RULE_DATE else c.warn)(t + m)  # noqa: E731
+    try:
+        label = dl.parse_label(text, name)
+    except dl.ReportParseError:
+        return
+    if not label["내재가치하단"]:
+        return
+    f = _fields(text, "내재가치 산식", name)
+    line = f.get("내재가치 산식", "")
+    if not line:
+        sev("`**내재가치 산식**:` 줄이 없습니다 — `python3 tools/intrinsic_value.py calc {종목코드} --as-of {데이터 시점} "
+            "--trade-currency {거래 통화}` 출력을 판정 근거에 옮기세요(교차 검증 기준선).")
+        return
+    whole = _raw_line(text, "내재가치 산식", name)
+    if re.search(r"D 지주|E 가정|입력:", whole):
+        mp = re.search(r"입력:\s*(\S+\.json)", whole)
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        path = os.path.join(root, mp.group(1)) if mp else ""
+        if not mp or not os.path.exists(path):
+            sev("D·E 유형 또는 수기 입력을 쓴 산식인데 `입력: reports/{회사명}/valuation-inputs.json` 경로가 없거나 파일이 없습니다.")
+            return
+        try:
+            import intrinsic_value as iv
+            iv.load_inputs(path)
+        except SystemExit as e:
+            sev(f"수기 입력 파일 검사 실패: {e}")
+            return
+    if "자동 계산 불가" in whole:
+        if re.search(r"D 지주|E 가정", whole):
+            sev("D·E 유형은 자동 계산 불가로 둘 수 없습니다 — valuation-inputs.json 에 가정(D 구성·E 매출 경로·목표 마진)을 넣고 다시 계산하세요.")
+            return
+        c.ok(f"{t}내재가치 산식: 자동 계산 불가(사유 기재)")
+        return
+    m = re.search(_RANGE_RE.format("범위"), whole)
+    if not m:
+        sev(f"내재가치 산식 줄에서 `범위 L~H` 를 읽을 수 없습니다: '{whole[:120]}'")
+        return
+    flo, fhi = _num(m.group(1)), _num(m.group(2))
+    fmid = (flo + fhi) / 2
+    amid = (float(label["내재가치하단"]) + float(label["내재가치상단"])) / 2
+    if fmid <= 0:
+        c.ok(f"{t}내재가치 산식: 공식 중앙 ≤ 0(비교 생략)")
+        return
+    ratio = amid / fmid
+    if abs(ratio - 1) > IV_GAP and not _fields(text, "공식 괴리 근거", name).get("공식 괴리 근거"):
+        sev(f"분석가 중앙 {amid:,.2f} 가 공식 중앙 {fmid:,.2f} 의 {ratio:.2f}배(±{IV_GAP:.0%} 초과)인데 "
+            "`**공식 괴리 근거**:` 줄이 없습니다 — 어느 가정(성장·할인율·정상 마진·시장 할인)이 다른지 쓰세요.")
+        return
+    c.ok(f"{t}내재가치 산식: 공식 중앙 {fmid:,.2f} · 분석가/공식 {ratio:.2f}배")
+
+
 def check_decision_rules(c: Checker, text: str, path: str, skill: str, ledger_path: str):
     """판정 기준 3종(안전마진·가치 변경·불확실성 반영). 복수 회사(checklist)는 **종목** 마다."""
     run_date = dl.parse_run_info(text).get("작성일", "")
@@ -570,6 +642,7 @@ def check_decision_rules(c: Checker, text: str, path: str, skill: str, ledger_pa
     for name in names:
         margin = check_margin(c, text, folder, strict, name, team)
         check_value_change(c, text, folder, run_date, strict, ledger_path, name)
+        check_formula(c, text, name, run_date)
         if team:
             check_uncertainty(c, text, margin, strict)
         else:
