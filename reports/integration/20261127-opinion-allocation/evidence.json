@@ -1,0 +1,56 @@
+{
+  "kind": "input_contract_and_synthetic_arithmetic_only",
+  "source_commit": "c6f0fa147bf649e133aa0895fd976665eb9b67c2",
+  "original_opinion": "매수",
+  "original_cap_percent": 5.0,
+  "target_weight": null,
+  "weight_denominator": null,
+  "historical_oos_end": "2026-09",
+  "opinion_written": "2026-11-02",
+  "historical_insertion_allowed": false,
+  "policy_status": "DRAFT",
+  "synthetic_examples": [
+    {
+      "synthetic_x": "0",
+      "weights": {
+        "KR_EQUITY": "0.2",
+        "US_SP500": "0.2",
+        "US_NASDAQ100": "0.2",
+        "KR_TREASURY10Y": "0.2",
+        "US_TREASURY7_10Y": "0.2",
+        "ADBE": "0"
+      }
+    },
+    {
+      "synthetic_x": "0.02",
+      "weights": {
+        "KR_EQUITY": "0.2",
+        "US_SP500": "0.18",
+        "US_NASDAQ100": "0.2",
+        "KR_TREASURY10Y": "0.2",
+        "US_TREASURY7_10Y": "0.2",
+        "ADBE": "0.02"
+      }
+    },
+    {
+      "synthetic_x": "0.2",
+      "weights": {
+        "KR_EQUITY": "0.2",
+        "US_SP500": "0.0",
+        "US_NASDAQ100": "0.2",
+        "KR_TREASURY10Y": "0.2",
+        "US_TREASURY7_10Y": "0.2",
+        "ADBE": "0.2"
+      }
+    }
+  ],
+  "sha256": {
+    "reports/어도비/최종보고서.md": "5502f63fd3e6ae7f640eff12acd7907e5262d3ab876c5c162de794584360cff9",
+    "reports/어도비/06-리스크토론-비중.md": "0ec36dd63b6fb2793e76460d65f89d3e5971217292358f9100c7af92fdaa17bd",
+    "reports/saa/20261120-equity-matched/README.md": "62ca9ed184282625008984f10dbfb5e8a3bb858b1bb9cba978a958502256fd13",
+    "reports/saa/20261120-equity-matched/results.json": "6a58de0f1d71817834529edd1178dd52408211f537331cf4cd8e3fcfaf88cb83",
+    "reports/policies/ai-berkshire-primary/draft-v0.4-2026-10-28.md": "137ce447445e8d50798016f228ead3c6e3e2b07cee0ebe3cf7a21f80717d695e",
+    "tools/decision_ledger.py": "52d4ddd6c4b36e058c7b2aa94c028972bf70a9eea2f28c5cbf25be67ebe64309",
+    "tools/position_plan.py": "1d08edfc9fb2db45f3a19c0d52a01aad47821664c200674d3f7a10ace9eedc87"
+  }
+}
