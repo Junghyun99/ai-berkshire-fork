@@ -296,6 +296,56 @@ class DecisionRulesTest(_Base):
         no_date = wait.replace("대기(4Q26 실적 확인 후 1차)", "대기(실적 확인 후)")
         self.assertIn("이벤트의 시점", self.fails(self.run_check(plan=no_date)))
 
+    # --- investment-research · investment-checklist ---
+    def solo(self, skill, label=LABEL, margin=MARGIN, extra="", ledger=None):
+        run = RUN_INFO.replace("2026-10-28", "2026-11-26").format(skill=skill)
+        text = final_report(skill=skill, label=label, run_info=run, plan="", margin=margin, extra=extra)
+        return rc.check(self.write("r.md", text), ledger_path=self.ledger() if ledger is None else ledger)
+
+    def test_research_hold_reason(self):
+        self.assertIn("**관망 사유**", self.fails(self.solo("investment-research")))
+        c = self.solo("investment-research", extra="**관망 사유**: 가격 — 안전마진 7.9% < 25%\n")
+        self.assertFalse(c.failed, c.items)
+        self.assertNotIn("⚠️", self.marks(c))
+        self.assertNotIn("불확실성 반영", " ".join(m for _, m in c.items))   # 실행 계획 없는 스킬
+        self.assertIn("**안전마진**", self.fails(self.solo("investment-research", margin="",
+                                                         extra="**관망 사유**: 균형 — X\n")))
+        # 가격 사유인데 안전마진 ≥ 업종 기준 → 반려, 확인 대기는 시점 필수
+        cheap = "**안전마진**: 기준가 140,000원 · 중앙 190,000원 → 26.3% | **업종 기준**: 25% (일반)"
+        self.assertIn("가격이 문제가 아닙니다", self.fails(self.solo(
+            "investment-research", margin=cheap, extra="**관망 사유**: 가격 — 비싸다\n")))
+        self.assertIn("이벤트의 시점", self.fails(self.solo(
+            "investment-research", margin=cheap, extra="**관망 사유**: 확인 대기 — 실적 확인\n")))
+        self.assertFalse(self.solo("investment-research", margin=cheap,
+                                   extra="**관망 사유**: 확인 대기 — 4Q26 대손(2027-02)\n").failed)
+        # 매수면 관망 사유 불필요
+        self.assertFalse(self.solo("investment-research", label=LABEL.replace("관망", "매수")).failed)
+
+    def test_research_value_change(self):
+        name = os.path.basename(self.tmp.name)
+        led = self.ledger([("x", "2026-10-28", name, "200000", "240000")])
+        hold = "**관망 사유**: 가격 — X\n"
+        self.assertIn("**가치 변경**", self.fails(self.solo("investment-research", extra=hold, ledger=led)))
+        good = hold + ("**가치 변경**: 이전 200,000~240,000원(2026-10-28) → 이번 180,000~200,000원 | "
+                       "**중앙 변화**: -13.6% = 데이터 -8.6% + 가정 -5%\n")
+        self.assertFalse(self.solo("investment-research", extra=good, ledger=led).failed)
+
+    def test_checklist_multi_company_rules_per_name(self):
+        labels = ("**종목**: 텐센트 | " + LABEL + "\n\n**종목**: 알리바바 | " + LABEL.replace("관망", "회피")
+                  + "\n\n**종목**: 바이두 | **판단**: 관망 | **확신도**: ★★ | **내재가치**: - | **반증 조건**: X")
+        margin = "**종목**: 텐센트 | " + MARGIN
+        reasons = "**종목**: 텐센트 | **관망 사유**: 가격 — X\n**종목**: 바이두 | **관망 사유**: 균형 — Y\n"
+        c = self.solo("investment-checklist", label=labels, margin=margin, extra=reasons)
+        self.assertFalse(c.failed, c.items)
+        oks = " ".join(m for mark, m in c.items if mark == "✅")
+        self.assertIn("(텐센트) 안전마진 7.9%", oks)
+        self.assertIn("(바이두) 관망 사유: 균형", oks)        # 내재가치 '-' 는 안전마진 검사 생략
+        # 종목 표시 없는 안전마진 줄은 복수 회사에서 인정하지 않는다
+        c = self.solo("investment-checklist", label=labels, margin=MARGIN, extra=reasons)
+        self.assertIn("(텐센트) 판정 근거에 `**안전마진**", self.fails(c))
+        c = self.solo("investment-checklist", label=labels, margin=margin, extra=reasons.split("\n")[0])
+        self.assertIn("(바이두) 관망인데", self.fails(c))
+
 
 if __name__ == "__main__":
     unittest.main()
