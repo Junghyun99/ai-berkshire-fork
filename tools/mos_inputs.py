@@ -12,6 +12,12 @@
        금융(은행·보험·증권·지주)은 지배주주 순이익(영업이익 정의가 업종마다 달라서).
        기간 중 한 해라도 0 이하(적자)면 하락률 100%. 연간 이익이 5개 해 미만이면 이력 부족으로 U_e 30%.
        재무 원본을 받을 수 없는 시장(일본 등)도 U_e 30% — 다른 출처로 계산했으면 --u-e 로 직접 넣는다.
+       초기 적자 제외: 그 이전에 흑자 해가 한 번도 없던 적자(사업 초기 적자)는, 첫 흑자 해 이후 적자 없이
+       5개 해 이상 이어졌으면 계산 구간에서 뺀다. 흑자였다가 적자로 돌아선 해는 그대로 하락률 100%.
+       회계 조정(가산): 현금이 나가지 않은 회계 항목 5종만 reports/decision-mos-adjustments.csv 에 연도별 금액과
+       출처를 적어 이익에 더한다(차감은 음수). 반복 항목(인수 무형자산 상각·금융업 투자손익)은 계산 구간 모든 해의
+       금액이 있어야 하고(한 해라도 없으면 조정하지 않음), 일회성 항목(영업권·무형자산 손상·인수 IPR&D 비용·
+       세법 개정 일회성 법인세)은 발생한 해만 적는다(나머지 해는 0 — 출처에 '그 외 연도 없음'을 적는다).
   L    재무 위험 = 최근 연도 이자보상배율(영업이익 / 이자비용) 8배 이상 0, 3~8배 +5%p, 3배 미만·영업적자 +10%p.
        이자비용이 없으면 0. 금융업은 이자가 영업 원가라 0(자본비율 위험은 리포트 판단으로 +5%p 가능).
   max(U_v, U_e) 인 이유: 정직하게 넓게 잡은 범위에는 이익 변동이 이미 들어 있다. 둘을 더하면 같은 위험을
@@ -47,6 +53,12 @@ MIN_YEARS = 5
 COVERAGE_STEPS = ((8.0, 0.0), (3.0, 5.0))  # 이자보상배율 ≥ 8 → 0, ≥ 3 → 5, 그 밖 → 10
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MOS_CSV = os.path.join(_ROOT, "reports", "decision-mos.csv")
+ADJ_CSV = os.path.join(_ROOT, "reports", "decision-mos-adjustments.csv")
+ADJ_FIELDS = ["티커", "항목", "연도", "금액", "출처"]
+# 이익에 더할 수 있는 회계 항목(현금이 나가지 않거나 사업 밖의 일회성). 값: 반복이면 계산 구간 모든 해 필요.
+ADDBACK_ITEMS = {"인수 무형자산 상각": True, "금융업 투자손익": True, "영업권·무형자산 손상": False,
+                 "인수 IPR&D 비용": False, "세법 개정 일회성 법인세": False}
+STARTUP_RUN = 5
 MOS_FIELDS = ["id", "기록일", "종목", "티커", "통화", "판단", "기록시점가", "내재가치하단", "내재가치상단",
               "U_v", "이익지표", "최대하락", "하락구간", "U_e", "이자보상배율", "L", "요구안전마진",
               "1차", "2차", "3차", "현재안전마진", "상태", "비고", "계산일"]
@@ -56,16 +68,37 @@ MOS_FIELDS = ["id", "기록일", "종목", "티커", "통화", "판단", "기록
 # 순수 함수(테스트 대상)
 # ---------------------------------------------------------------------------
 
+def startup_cut(series: dict):
+    """사업 초기 적자 제외 기준 연도. 첫 흑자 해 이전에 적자가 있고, 첫 흑자 해부터 끝까지 적자 없이
+    STARTUP_RUN 개 해 이상이면 그 첫 흑자 해를 돌려준다. 아니면 None."""
+    ys = sorted(y for y, v in series.items() if v is not None)
+    first = next((y for y in ys if series[y] > 0), None)
+    if first is None or not any(series[y] <= 0 for y in ys if y < first):
+        return None
+    run = [y for y in ys if y >= first]
+    if any(series[y] <= 0 for y in run) or len(run) < STARTUP_RUN:
+        return None
+    return first
+
+
 def earnings_drawdown(series: dict) -> dict:
-    """{연도: 이익} → {하락률, 고점연도, 저점연도, 연도수}. 최근 10개 해만. 0 이하인 해가 있으면 100%."""
-    ys = sorted(y for y, v in series.items() if v is not None)[-10:]
-    out = {"하락률": None, "고점연도": None, "저점연도": None, "연도수": len(ys)}
+    """{연도: 이익}(가능한 전 기간) → {하락률, 고점연도, 저점연도, 연도수, 초기적자제외}. 최근 10개 해만.
+    0 이하인 해가 있으면 100%. 사업 초기 적자는 startup_cut 규칙으로 뺀다."""
+    cut = startup_cut(series)
+    last10 = sorted(y for y, v in series.items() if v is not None)[-10:]
+    if cut is not None and not any(y in last10 for y, v in series.items() if v is not None and y < cut):
+        cut = None  # 제외할 적자가 계산 구간 밖이면(데이터 첫 해의 적자 등) 규칙을 쓰지 않는다
+    ys = sorted(y for y, v in series.items() if v is not None and (cut is None or y >= cut))[-10:]
+    excluded = sorted(y for y, v in series.items() if v is not None and cut is not None and y < cut)
+    out = {"하락률": None, "고점연도": None, "저점연도": None, "연도수": len(ys),
+           "초기적자제외": f"{excluded[0]}~{excluded[-1]}" if excluded else ""}
     if not ys:
         return out
     loss = [y for y in ys if series[y] <= 0]
     if loss:
         out.update(하락률=100.0, 저점연도=loss[0])
-        prior = [y for y in ys if y < loss[0] and series[y] > 0]
+        prior = [y for y, v in series.items() if v is not None and y < loss[0] and v > 0
+                 and (cut is None or y >= cut)]  # 고점은 구간 밖(이전 연도)까지 본다
         out["고점연도"] = max(prior, key=lambda y: series[y]) if prior else None
         return out
     peak_y, best = ys[0], (0.0, None, None)
@@ -78,6 +111,43 @@ def earnings_drawdown(series: dict) -> dict:
             best = (dd, peak_y, y)
     out.update(하락률=round(best[0], 1), 고점연도=best[1], 저점연도=best[2])
     return out
+
+
+def load_adjustments(ticker: str, path: str = "") -> dict:
+    """→ {항목: {"연도별": {연도: 금액}, "출처": [..]}}. 파일이 없거나 종목 행이 없으면 {}."""
+    path = path or ADJ_CSV
+    if not os.path.exists(path):
+        return {}
+    out = {}
+    with open(path, encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            if r["티커"].strip().upper() != ticker.upper():
+                continue
+            item = r["항목"].strip()
+            if item not in ADDBACK_ITEMS:
+                raise SystemExit(f"❌ 조정 항목 '{item}' 은 허용 목록({', '.join(ADDBACK_ITEMS)})에 없습니다: {path}")
+            e = out.setdefault(item, {"연도별": {}, "출처": []})
+            e["연도별"][int(r["연도"])] = float(r["금액"])
+            if r["출처"].strip() and r["출처"].strip() not in e["출처"]:
+                e["출처"].append(r["출처"].strip())
+    return out
+
+
+def apply_adjustments(series: dict, adj: dict) -> tuple:
+    """→ (조정 시계열, 적용 항목 목록, 건너뛴 항목 {항목: 사유}). 반복 항목은 최근 10개 해 금액이 모두 있어야 한다."""
+    window = sorted(y for y, v in series.items() if v is not None)[-10:]
+    out, used, skipped = dict(series), [], {}
+    for item, e in adj.items():
+        amounts = e["연도별"]
+        if ADDBACK_ITEMS[item]:
+            missing = [y for y in window if y not in amounts]
+            if missing:
+                skipped[item] = f"{missing} 금액 없음(반복 항목은 계산 구간 모든 해 필요)"
+                continue
+        for y in window:
+            out[y] = out[y] + amounts.get(y, 0.0)
+        used.append(item)
+    return out, used, skipped
 
 
 def u_e_from(dd: dict) -> float:
@@ -134,7 +204,8 @@ def inputs_line(info: dict) -> str:
         ev = f"**이익 변동**: 이력 부족·데이터 미확보({dd['연도수']}개 해) → U_e {info['u_e']:g}%"
     else:
         span = f"{dd['고점연도']}→{dd['저점연도']}" if dd["저점연도"] else "하락 없음"
-        ev = (f"**이익 변동**: {info['metric']} 최대 하락 {dd['하락률']:g}% ({span}, {dd['연도수']}개 해, "
+        cut = f", 초기 적자 제외 {dd['초기적자제외']}" if dd.get("초기적자제외") else ""
+        ev = (f"**이익 변동**: {info['metric']} 최대 하락 {dd['하락률']:g}% ({span}, {dd['연도수']}개 해{cut}, "
               f"{info['source']}) → U_e {info['u_e']:g}%")
     if info["financial"]:
         lv = f"**재무 위험**: 금융업 → L {info['L']:g}"
@@ -144,7 +215,15 @@ def inputs_line(info: dict) -> str:
         lv = f"**재무 위험**: 이자보상배율 산정 불가({'영업적자' if info['L'] == 10 else '이자비용 없음'}) → L {info['L']:g}"
     else:
         lv = f"**재무 위험**: 이자보상배율 {info['coverage']:g}배({info['cov_year']}) → L {info['L']:g}"
-    return f"{ev} | {lv}"
+    line = f"{ev} | {lv}"
+    if info.get("adjustments"):
+        parts = []
+        for item, e in info["adjustments"].items():
+            amt = ", ".join(f"{y} {v / 1e9:+,.2f}B" if abs(v) >= 1e8 else f"{y} {v:+,.0f}"
+                            for y, v in sorted(e["연도별"].items()) if v)
+            parts.append(f"{item}: {amt or '없음'} (출처: {'; '.join(e['출처']) or '미기재'})")
+        line += "\n**조정 근거**: " + " / ".join(parts)
+    return line
 
 
 # ---------------------------------------------------------------------------
@@ -217,10 +296,12 @@ def fetch_us(ticker: str, as_of: str) -> dict:
     return {"data": data, "financial": _sec_financial(ticker), "source": f"SEC({cur})", "name": ticker}
 
 
-def compute(ticker: str, as_of: str = "", financial=None, u_e=None, note: str = "", l_pen=None) -> dict:
+def compute(ticker: str, as_of: str = "", financial=None, u_e=None, note: str = "", l_pen=None,
+            adj_path: str = "") -> dict:
     """→ {metric, drawdown, u_e, coverage, cov_year, L, financial, source}.
     u_e·l_pen 을 주면 원본 대신 그 값을 쓴다(원본 없는 시장용, note 에 출처)."""
     as_of = as_of or date.today().isoformat()
+    orig = ticker
     ticker = SEC_ALIASES.get(ticker.upper(), ticker)
     mk = market_of(ticker)
     if u_e is not None:
@@ -239,13 +320,19 @@ def compute(ticker: str, as_of: str = "", financial=None, u_e=None, note: str = 
     key = "ni_own" if fin else "op"
     data = got["data"]
     series = {y: r.get(key) for y, r in data.items() if r.get(key) is not None}
+    adj = load_adjustments(orig, adj_path)
+    series, used, skipped = apply_adjustments(series, adj)
     dd = earnings_drawdown(series)
     last = max(series) if series else None
     r = data.get(last, {}) if last else {}
     cov, pen = leverage_penalty(r.get("op"), r.get("int_is") or r.get("int_cf"), fin)
-    return {"metric": "지배순이익" if fin else "영업이익", "drawdown": dd, "u_e": u_e_from(dd), "coverage": cov,
+    metric = "지배순이익" if fin else "영업이익"
+    if used:
+        metric = f"조정 {metric}(" + "·".join(used) + ")"
+    return {"metric": metric, "drawdown": dd, "u_e": u_e_from(dd), "coverage": cov,
             "cov_year": last, "L": pen, "financial": fin, "source": got["source"],
-            "series": {y: series[y] for y in sorted(series)[-10:]}}
+            "series": {y: series[y] for y in sorted(series)[-10:]},
+            "adjustments": {k: adj[k] for k in used}, "adjust_skipped": skipped}
 
 
 def plan_prices(iv_low: float, iv_high: float, m: float) -> list:
@@ -307,8 +394,13 @@ def ledger_rows(ledger_path: str, compute_fn=compute, today_s: str = "") -> list
         row.update(이익지표=info["metric"], 최대하락=dd["하락률"] if dd["하락률"] is not None else "",
                    하락구간=f"{dd['고점연도']}→{dd['저점연도']}" if dd["저점연도"] else "",
                    U_e=info["u_e"], 이자보상배율=info["coverage"] if info["coverage"] is not None else "",
-                   L=info["L"], 비고=("이력 부족·데이터 미확보 → U_e 상한" if dd["연도수"] < MIN_YEARS else
-                                     ("금융업" if info["financial"] else "")) + f" [{info['source']}]")
+                   L=info["L"], 비고=" ".join(x for x in (
+                       "이력 부족·데이터 미확보 → U_e 상한" if dd["연도수"] < MIN_YEARS else "",
+                       "금융업" if info["financial"] else "",
+                       f"초기 적자 제외 {dd['초기적자제외']}" if dd.get("초기적자제외") else "",
+                       ("조정: " + "·".join(info["adjustments"])) if info.get("adjustments") else "",
+                       ("조정 불가: " + "; ".join(f"{k} {v}" for k, v in info["adjust_skipped"].items()))
+                       if info.get("adjust_skipped") else "") if x) + f" [{info['source']}]")
         try:
             lo, hi = float(r["내재가치하단"]), float(r["내재가치상단"])
         except ValueError:
