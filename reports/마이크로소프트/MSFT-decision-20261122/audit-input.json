@@ -1,0 +1,32 @@
+[
+  {
+    "id": 2,
+    "label": "매출 2025-09",
+    "reported_value": 77673,
+    "unit": "USD million",
+    "fetched_value": 77673,
+    "fetched_source": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436122/msft-ex99_1.htm",
+    "fetched_value2": 77673,
+    "fetched_source2": "https://stockanalysis.com/stocks/msft/financials/income-statement/?p=quarterly"
+  },
+  {
+    "id": 1,
+    "label": "매출 2026-09",
+    "reported_value": 92279,
+    "unit": "USD million",
+    "fetched_value": 92279,
+    "fetched_source": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436122/msft-ex99_1.htm",
+    "fetched_value2": 92279,
+    "fetched_source2": "https://stockanalysis.com/stocks/msft/financials/income-statement/?p=quarterly"
+  },
+  {
+    "id": 11,
+    "label": "현금 설비투자 2025-09",
+    "reported_value": 19394,
+    "unit": "USD million",
+    "fetched_value": 19394,
+    "fetched_source": "https://www.sec.gov/Archives/edgar/data/789019/000119312526436122/msft-ex99_1.htm",
+    "fetched_value2": 19394,
+    "fetched_source2": "https://stockanalysis.com/stocks/msft/financials/cash-flow-statement/?p=quarterly"
+  }
+]
