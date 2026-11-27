@@ -28,21 +28,23 @@ assert saa['quality'] == 'research_proxy'
 assert saa['variants']['baseline']['oos_end'] == '2026-09'
 assert dl.parse_run_info(report)['작성일'] == '2026-11-02'
 assert 'DRAFT' in (ROOT / FILES[4]).read_text()
-# 원 SAA 문서의 동일가중 5자산 기준선. 아래 x는 합성 산술 예시일 뿐 제안값이 아니다.
+# 합성 산술 예시. e는 총자산 중 주식 비중, s는 주식 안에서의 종목 비중이다.
 examples = []
-for x in [D('0'), D('0.02'), D('0.2')]:
-    weights = {'KR_EQUITY': D('.2'), 'US_SP500': D('.2')-x,
-               'US_NASDAQ100': D('.2'), 'KR_TREASURY10Y': D('.2'),
-               'US_TREASURY7_10Y': D('.2'), 'ADBE': x}
-    assert sum(weights.values()) == 1
-    assert all(v >= 0 for v in weights.values())
-    assert sum(weights[k] for k in ['KR_EQUITY','US_SP500','US_NASDAQ100','ADBE']) == D('.6')
-    examples.append({'synthetic_x': str(x), 'weights': {k:str(v) for k,v in weights.items()}})
-print(json.dumps({'kind':'input_contract_and_synthetic_arithmetic_only',
-    'source_commit':'c6f0fa147bf649e133aa0895fd976665eb9b67c2',
-    'original_opinion':label['판단'], 'original_cap_percent':plan['비중상한'],
-    'target_weight':None, 'weight_denominator':None,
-    'historical_oos_end':'2026-09','opinion_written':'2026-11-02',
-    'historical_insertion_allowed':False, 'policy_status':'DRAFT',
-    'synthetic_examples':examples,
-    'sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in FILES}},ensure_ascii=False,indent=2))
+for equity, stocks, theme in [
+    (D('.6'), [D('.6'), D('.4')], D('0')),
+    (D('.4'), [D('.5'), D('.3')], D('.2')),
+]:
+    assert sum(stocks) + theme == 1
+    portions = [equity * share for share in stocks]
+    theme_weight = equity * theme
+    assert sum(portions) + theme_weight == equity
+    assert sum(portions) + theme_weight + (1 - equity) == 1
+    examples.append(dict(equity=str(equity), stock_weights=list(map(str, portions)),
+                         theme_weight=str(theme_weight), other_assets=str(1 - equity)))
+
+print(json.dumps(dict(input_commit='c6f0fa147bf649e133aa0895fd976665eb9b67c2',
+    original_opinion=label['판단'], reported_cap_percent=plan['비중상한'],
+    equity_target=None, adobe_target=None, policy_status='DRAFT',
+    synthetic_examples=examples,
+    sha256={f: hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in FILES}),
+    ensure_ascii=False, indent=2))
