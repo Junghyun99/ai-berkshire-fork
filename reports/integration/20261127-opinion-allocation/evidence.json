@@ -1,0 +1,37 @@
+{
+  "input_commit": "c6f0fa147bf649e133aa0895fd976665eb9b67c2",
+  "original_opinion": "매수",
+  "reported_cap_percent": 5.0,
+  "equity_target": null,
+  "adobe_target": null,
+  "policy_status": "DRAFT",
+  "synthetic_examples": [
+    {
+      "equity": "0.6",
+      "stock_weights": [
+        "0.36",
+        "0.24"
+      ],
+      "theme_weight": "0.0",
+      "other_assets": "0.4"
+    },
+    {
+      "equity": "0.4",
+      "stock_weights": [
+        "0.20",
+        "0.12"
+      ],
+      "theme_weight": "0.08",
+      "other_assets": "0.6"
+    }
+  ],
+  "sha256": {
+    "reports/어도비/최종보고서.md": "5502f63fd3e6ae7f640eff12acd7907e5262d3ab876c5c162de794584360cff9",
+    "reports/어도비/06-리스크토론-비중.md": "0ec36dd63b6fb2793e76460d65f89d3e5971217292358f9100c7af92fdaa17bd",
+    "reports/saa/20261120-equity-matched/README.md": "62ca9ed184282625008984f10dbfb5e8a3bb858b1bb9cba978a958502256fd13",
+    "reports/saa/20261120-equity-matched/results.json": "6a58de0f1d71817834529edd1178dd52408211f537331cf4cd8e3fcfaf88cb83",
+    "reports/policies/ai-berkshire-primary/draft-v0.4-2026-10-28.md": "137ce447445e8d50798016f228ead3c6e3e2b07cee0ebe3cf7a21f80717d695e",
+    "tools/decision_ledger.py": "52d4ddd6c4b36e058c7b2aa94c028972bf70a9eea2f28c5cbf25be67ebe64309",
+    "tools/position_plan.py": "1d08edfc9fb2db45f3a19c0d52a01aad47821664c200674d3f7a10ace9eedc87"
+  }
+}
