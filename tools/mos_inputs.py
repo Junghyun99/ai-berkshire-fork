@@ -289,7 +289,7 @@ def fetch_kr(code: str, as_of: str) -> dict:
     data, _, _ = kr.merge_reports(reps, kr._multi_rows(code, base), kr.fred_usdkrw(usd) if usd else {})
     data = {y: r for y, r in data.items() if y <= base}
     return {"data": data, "financial": fin, "source": "DART", "name": comp.get("corp_name", code),
-            "balance": kr_balance(reps)}
+            "balance": kr_balance(reps), "reps": reps, "base": base, "code": code}
 
 
 def kr_balance(reps: list):
@@ -326,7 +326,7 @@ def fetch_us(ticker: str, as_of: str) -> dict:
         if "op" not in r and "pretax" in r:
             r["op"] = r["pretax"] + abs(r.get("int_is") or r.get("int_cf") or 0)
     return {"data": data, "financial": _sec_financial(ticker), "source": f"SEC({cur})", "name": ticker,
-            "balance": us_balance(g, as_of)}
+            "balance": us_balance(g, as_of), "facts": g, "currency": cur}
 
 
 def us_balance(g: dict, as_of: str):
