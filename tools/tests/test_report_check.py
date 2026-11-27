@@ -13,7 +13,8 @@ import report_check as rc  # noqa: E402
 
 LABEL = "**판단**: 관망 | **확신도**: ★★★ | **내재가치**: 180,000~200,000원 | **반증 조건**: 고정가 하락"
 PLAN = ("**실행 계획**: 비중 상한 5% | **분할 매수**: 161,500원 1.5% / 142,500원 1.5% / 123,500원 2% | "
-        "**축소 검토**: 240,000원 이상 또는 반증 조건 발생 | **현재 상태**: 대기")
+        "**축소 검토**: 240,000원 이상 또는 반증 조건 발생 | **현재 상태**: 대기 | **불확실성 반영**: 안전마진")
+MARGIN = "**안전마진**: 기준가 175,000원 · 중앙 190,000원 → 7.9% | **업종 기준**: 25% (일반)"
 RUN_INFO = """## 실행 정보
 - 작성일: 2026-10-28
 - 스킬: {skill}
@@ -23,7 +24,7 @@ RUN_INFO = """## 실행 정보
 """
 
 
-def final_report(skill="investment-team", label=LABEL, run_info=None, extra="", plan=PLAN):
+def final_report(skill="investment-team", label=LABEL, run_info=None, extra="", plan=PLAN, margin=MARGIN):
     return f"""# 테스트 최종보고서
 
 ## 1. 한 문장 결론
@@ -31,6 +32,7 @@ def final_report(skill="investment-team", label=LABEL, run_info=None, extra="", 
 
 ## 5.5 판정 근거
 - 결정한 논거
+{margin}
 
 ## 7. 최종 투자 제안
 {plan}
@@ -42,7 +44,7 @@ def final_report(skill="investment-team", label=LABEL, run_info=None, extra="", 
 {RUN_INFO.format(skill=skill) if run_info is None else run_info}"""
 
 
-class ReportCheckTest(unittest.TestCase):
+class _Base(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
@@ -74,6 +76,9 @@ class ReportCheckTest(unittest.TestCase):
     def marks(self, c):
         return [m for m, _ in c.items]
 
+
+
+class ReportCheckTest(_Base):
     def test_complete_team_report_passes(self):
         self.team()
         self.debate()
@@ -204,6 +209,142 @@ class ReportCheckTest(unittest.TestCase):
     def test_skill_argument_mismatch_fails(self):
         c = rc.check(self.write("r.md", final_report(skill="investment-research")), "investment-checklist")
         self.assertTrue(any("스킬 'investment-research' 과 --skill" in m for _, m in c.items))
+
+
+class DecisionRulesTest(_Base):
+    """판정 기준 3종(SKILL.md 7단계 규칙 8~10) — 작성일 RULE_DATE 이후 보고서는 ❌."""
+
+    NEW_RUN = RUN_INFO.replace("2026-10-28", "2026-11-26").format(skill="investment-team")
+
+    def ledger(self, rows=()):
+        path = os.path.join(self.tmp.name, "ledger.csv")
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("id,기록일,종목,내재가치하단,내재가치상단\n")
+            for r in rows:
+                f.write(",".join(r) + "\n")
+        return path
+
+    def run_check(self, plan=PLAN, margin=MARGIN, extra="", ledger=None):
+        self.team()
+        self.debate(final_line=plan)
+        path = self.write("최종보고서.md", final_report(run_info=self.NEW_RUN, plan=plan, margin=margin, extra=extra))
+        return rc.check(path, ledger_path=self.ledger() if ledger is None else ledger)
+
+    def fails(self, c):
+        return " ".join(m for mark, m in c.items if mark == "❌")
+
+    def test_new_report_passes_with_all_lines(self):
+        c = self.run_check()
+        self.assertFalse(c.failed, c.items)
+        self.assertNotIn("⚠️", self.marks(c))
+
+    def test_margin_line_rules(self):
+        self.assertIn("**안전마진**", self.fails(self.run_check(margin="")))
+        # 라벨 중앙과 다른 가치로 계산한 안전마진(판정에 쓴 가치 ≠ 라벨 범위)
+        self.assertIn("라벨 범위는 판정에 실제로 쓴", self.fails(self.run_check(margin=MARGIN.replace("7.9%", "20%"))))
+        self.assertIn("표의 일반 25%", self.fails(self.run_check(margin=MARGIN.replace("25% (일반)", "15% (일반)"))))
+        self.assertIn("분류가 없습니다", self.fails(self.run_check(margin=MARGIN.replace(" (일반)", ""))))
+        # 약세 우세(가격)인데 안전마진이 업종 기준 이상 → 반려
+        cheap = "**안전마진**: 기준가 140,000원 · 중앙 190,000원 → 26.3% | **업종 기준**: 25% (일반)"
+        self.assertIn("가격이 문제라는 판정과 맞지 않습니다", self.fails(self.run_check(margin=cheap)))
+
+    def test_old_report_only_warns(self):
+        self.team()
+        self.debate()
+        c = rc.check(self.write("최종보고서.md", final_report(margin="")), ledger_path=self.ledger())
+        self.assertFalse(c.failed, c.items)
+        self.assertIn("**안전마진**", " ".join(m for mark, m in c.items if mark == "⚠️"))
+
+    def test_value_change_rules(self):
+        name = os.path.basename(self.tmp.name)
+        led = self.ledger([("x", "2026-10-28", name, "200000", "240000")])
+        self.assertIn("**가치 변경**", self.fails(self.run_check(ledger=led)))
+        # 중앙 220,000 → 190,000 = -13.6%
+        good = ("**가치 변경**: 이전 200,000~240,000원(2026-10-28) → 이번 180,000~200,000원 | "
+                "**중앙 변화**: -13.6% = 데이터 -8.6% + 가정 -5%")
+        c = self.run_check(ledger=led, extra=good)
+        self.assertFalse(c.failed, c.items)
+        self.assertIn("데이터 -8.6% + 가정 -5%", " ".join(m for _, m in c.items))
+        self.assertIn("계산값 -13.6%", self.fails(self.run_check(ledger=led, extra=good.replace("-13.6% =", "-5% ="))))
+        self.assertIn("원장(2026-10-28", self.fails(self.run_check(ledger=led, extra=good.replace("200,000~240", "210,000~240"))))
+        big = good.replace("데이터 -8.6% + 가정 -5%", "데이터 -3.6% + 가정 −10%")
+        self.assertIn("가정 변화 근거", self.fails(self.run_check(ledger=led, extra=big)))
+        c = self.run_check(ledger=led, extra=big + "\n**가정 변화 근거**: 증설 사이클 진입(3Q CapEx +87%)\n")
+        self.assertFalse(c.failed, c.items)
+        # 같은 날 기록(이번 보고서 자신)은 이전 판단이 아니다
+        same = self.ledger([("x", "2026-11-26", name, "200000", "240000")])
+        self.assertFalse(self.run_check(ledger=same).failed)
+
+    def test_uncertainty_rules(self):
+        self.assertIn("불확실성 반영", self.fails(self.run_check(plan=PLAN.replace(" | **불확실성 반영**: 안전마진", ""))))
+        # 안전마진 모드에 실적 확인 조건 → 이중 차감
+        waiting = PLAN.replace("161,500원 1.5%", "161,500원 1.5%(4Q26 실적 확인 후)")
+        self.assertIn("두 번 깎는", self.fails(self.run_check(plan=waiting)))
+        # 반증 조건 미발생 확인은 상시 조건이라 허용
+        ok = PLAN.replace("161,500원 1.5%", "161,500원 1.5%(반증 조건 미발생 확인 후)")
+        self.assertFalse(self.run_check(plan=ok).failed)
+        # 기준선 1차(161,500) 도달: 기준가 155,000 — 모든 차수를 현재가 아래로 내리면 반려
+        reached = "**안전마진**: 기준가 155,000원 · 중앙 190,000원 → 18.4% | **업종 기준**: 25% (일반)"
+        lowered = PLAN.replace("161,500원", "150,000원")
+        self.assertIn("1차를 내린다", self.fails(self.run_check(plan=lowered, margin=reached)))
+        self.assertFalse(self.run_check(margin=reached).failed)
+        # 확인 대기: 1차를 기준선 아래로 내리면 반려, 이벤트 시점 필수
+        wait = PLAN.replace("**현재 상태**: 대기", "**현재 상태**: 대기(4Q26 실적 확인 후 1차)").replace(
+            "**불확실성 반영**: 안전마진", "**불확실성 반영**: 확인 대기")
+        self.assertFalse(self.run_check(plan=wait).failed)
+        self.assertIn("기준선(161,500.00) 아래로", self.fails(self.run_check(plan=wait.replace("161,500원", "150,000원"))))
+        no_date = wait.replace("대기(4Q26 실적 확인 후 1차)", "대기(실적 확인 후)")
+        self.assertIn("이벤트의 시점", self.fails(self.run_check(plan=no_date)))
+
+    # --- investment-research · investment-checklist ---
+    def solo(self, skill, label=LABEL, margin=MARGIN, extra="", ledger=None):
+        run = RUN_INFO.replace("2026-10-28", "2026-11-26").format(skill=skill)
+        text = final_report(skill=skill, label=label, run_info=run, plan="", margin=margin, extra=extra)
+        return rc.check(self.write("r.md", text), ledger_path=self.ledger() if ledger is None else ledger)
+
+    def test_research_hold_reason(self):
+        self.assertIn("**관망 사유**", self.fails(self.solo("investment-research")))
+        c = self.solo("investment-research", extra="**관망 사유**: 가격 — 안전마진 7.9% < 25%\n")
+        self.assertFalse(c.failed, c.items)
+        self.assertNotIn("⚠️", self.marks(c))
+        self.assertNotIn("불확실성 반영", " ".join(m for _, m in c.items))   # 실행 계획 없는 스킬
+        self.assertIn("**안전마진**", self.fails(self.solo("investment-research", margin="",
+                                                         extra="**관망 사유**: 균형 — X\n")))
+        # 가격 사유인데 안전마진 ≥ 업종 기준 → 반려, 확인 대기는 시점 필수
+        cheap = "**안전마진**: 기준가 140,000원 · 중앙 190,000원 → 26.3% | **업종 기준**: 25% (일반)"
+        self.assertIn("가격이 문제가 아닙니다", self.fails(self.solo(
+            "investment-research", margin=cheap, extra="**관망 사유**: 가격 — 비싸다\n")))
+        self.assertIn("이벤트의 시점", self.fails(self.solo(
+            "investment-research", margin=cheap, extra="**관망 사유**: 확인 대기 — 실적 확인\n")))
+        self.assertFalse(self.solo("investment-research", margin=cheap,
+                                   extra="**관망 사유**: 확인 대기 — 4Q26 대손(2027-02)\n").failed)
+        # 매수면 관망 사유 불필요
+        self.assertFalse(self.solo("investment-research", label=LABEL.replace("관망", "매수")).failed)
+
+    def test_research_value_change(self):
+        name = os.path.basename(self.tmp.name)
+        led = self.ledger([("x", "2026-10-28", name, "200000", "240000")])
+        hold = "**관망 사유**: 가격 — X\n"
+        self.assertIn("**가치 변경**", self.fails(self.solo("investment-research", extra=hold, ledger=led)))
+        good = hold + ("**가치 변경**: 이전 200,000~240,000원(2026-10-28) → 이번 180,000~200,000원 | "
+                       "**중앙 변화**: -13.6% = 데이터 -8.6% + 가정 -5%\n")
+        self.assertFalse(self.solo("investment-research", extra=good, ledger=led).failed)
+
+    def test_checklist_multi_company_rules_per_name(self):
+        labels = ("**종목**: 텐센트 | " + LABEL + "\n\n**종목**: 알리바바 | " + LABEL.replace("관망", "회피")
+                  + "\n\n**종목**: 바이두 | **판단**: 관망 | **확신도**: ★★ | **내재가치**: - | **반증 조건**: X")
+        margin = "**종목**: 텐센트 | " + MARGIN
+        reasons = "**종목**: 텐센트 | **관망 사유**: 가격 — X\n**종목**: 바이두 | **관망 사유**: 균형 — Y\n"
+        c = self.solo("investment-checklist", label=labels, margin=margin, extra=reasons)
+        self.assertFalse(c.failed, c.items)
+        oks = " ".join(m for mark, m in c.items if mark == "✅")
+        self.assertIn("(텐센트) 안전마진 7.9%", oks)
+        self.assertIn("(바이두) 관망 사유: 균형", oks)        # 내재가치 '-' 는 안전마진 검사 생략
+        # 종목 표시 없는 안전마진 줄은 복수 회사에서 인정하지 않는다
+        c = self.solo("investment-checklist", label=labels, margin=MARGIN, extra=reasons)
+        self.assertIn("(텐센트) 판정 근거에 `**안전마진**", self.fails(c))
+        c = self.solo("investment-checklist", label=labels, margin=margin, extra=reasons.split("\n")[0])
+        self.assertIn("(바이두) 관망인데", self.fails(c))
 
 
 if __name__ == "__main__":

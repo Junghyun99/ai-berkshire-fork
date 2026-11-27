@@ -32,6 +32,23 @@ def run_cli(argv):
 
 
 class BuildPlanTest(unittest.TestCase):
+    def test_mos_class_sets_tranches_and_warns_on_hold_past_standard(self):
+        self.assertEqual(pp.class_mos("일반"), (15, 25, 35))       # 기존 기본값과 같다
+        self.assertEqual(pp.class_mos("경기순환"), (20, 30, 40))
+        p = pp.build_plan("관망", 3, 100000, 120000, price=80000, mos_class="경기순환")
+        self.assertEqual([t["가격"] for t in p["분할매수"]], [88000.0, 77000.0, 66000.0])
+        self.assertEqual((p["업종분류"], p["업종기준"]), ("경기순환", 30))
+        self.assertFalse(any("업종 기준" in w for w in p["경고"]))  # 27.3% < 30%
+        cheap = pp.build_plan("관망", 3, 100000, 120000, price=75000, mos_class="경기순환")
+        self.assertTrue(any("업종 기준(경기순환 30%) 이상" in w for w in cheap["경고"]))
+        self.assertIn("업종 기준 안전마진: 경기순환 30%", pp.render(cheap))
+        with self.assertRaises(SystemExit):
+            pp.class_mos("반도체")
+        # --mos 직접 지정이 분류보다 우선
+        own = pp.build_plan("매수", 3, 100000, 120000, price=80000, mos=(10, 20, 30), mos_class="경기순환")
+        self.assertEqual(own["분할매수"][0]["안전마진"], 10)
+
+
     def test_buy_baseline_tranches_and_state(self):
         p = pp.build_plan("매수", 4, 180000, 220000, price=165000, current_weight=1)
         self.assertEqual(p["비중상한"], 7.5)                       # 10% × 0.75
@@ -64,10 +81,14 @@ class BuildPlanTest(unittest.TestCase):
         self.assertTrue(any("--ticker 필요" in w for w in none["경고"]))
         self.assertIn("미확인", pp.render(none))
 
-    def test_hold_never_executes_and_avoid_is_zero(self):
-        hold = pp.build_plan("관망", 3, 180000, 220000, price=120000)
-        self.assertIn("대기(관망", hold["현재상태"])
-        self.assertEqual(hold["비중상한"], 5.0)
+    def test_hold_waits_above_first_tranche_and_avoid_is_zero(self):
+        wait = pp.build_plan("관망", 3, 180000, 220000, price=175000)
+        self.assertIn("대기(관망", wait["현재상태"])
+        self.assertEqual(wait["비중상한"], 5.0)
+        # 관망 = 가격 대기. 현재가가 1차 이하면 '1차 가격 도달'(실적 확인 대기로 미루지 않는다)
+        hit = pp.build_plan("관망", 3, 180000, 220000, price=165000)
+        self.assertIn("1차 가격 도달(관망", hit["현재상태"])
+        self.assertIn("**불확실성 반영**: 안전마진", pp.plan_line(hit))
         avoid = pp.build_plan("회피", 5, 180000, 220000, price=120000)
         self.assertEqual((avoid["비중상한"], avoid["분할매수"]), (0.0, []))
         self.assertIn("**분할 매수**: -", pp.plan_line(avoid))

@@ -19,8 +19,19 @@ report_audit.py 가 '숫자가 맞는가'를 표본으로 본다면, 이 도구�
                        (이전 형식 05-교차반론.md 만 있으면 관점 판단 4개를 보고 ⚠️) · README.md
                        · `**실행 계획**` 줄(position_plan.py 형식)과 06-리스크토론-비중.md 의 마지막 실행 계획 줄 일치
                          (06 이 없으면 7.5단계 이전 보고서로 보고 ⚠️)
+                       · 판정 기준 3종(작성일 2026-11-25 이후 ❌, 그 전 보고서는 ⚠️):
+                         ① `**안전마진**: 기준가 P · 중앙 M → X% | **업종 기준**: Y% (분류)` — X가 라벨 내재가치 중앙으로
+                            계산한 값과 같고(라벨 범위 = 판정에 쓴 가치), Y가 업종 표와 같고, 약세 우세(가격)인데 X ≥ Y 가 아님
+                         ② 원장에 같은 종목의 이전 판단이 있으면 `**가치 변경**: 이전 L~H(날짜) → 이번 L~H |
+                            **중앙 변화**: A% = 데이터 B% + 가정 C%` 줄, |C| ≥ 10 이면 `**가정 변화 근거**:` 줄
+                         ③ 실행 계획 줄의 `**불확실성 반영**: 안전마진|확인 대기` — 안전마진이면 실적 확인 조건 금지,
+                            기준선 1차가 이미 도달했으면 현재가에서 체결되는 차수가 있어야 함, 확인 대기면 1차를 기준선
+                            아래로 내리지 않음(불확실성 이중 차감 금지)
   investment-research  '판정 근거' · '## 부록: 팩트시트'
   investment-checklist 라벨 줄(복수 회사면 **종목** 필드로 회사마다 하나)
+  research·checklist   판정 기준 ①·② 는 team 과 같다(checklist 복수 회사는 줄 앞에 `**종목**: 회사명 |`, 회사마다).
+                       ③ 대신 관망이면 `**관망 사유**: 가격|균형|확인 대기 — 설명` — 가격인데 안전마진 ≥ 업종 기준이면 반려,
+                       확인 대기면 이벤트 시점 필수. 내재가치가 '-'(미산정)면 ①·② 는 건너뛴다
 
 사용법:
     python3 tools/report_check.py reports/삼성전자/최종보고서.md            # 스킬은 실행 정보에서 읽음
@@ -52,6 +63,15 @@ _BASIS_RE = re.compile(r"\s*[(（]?\s*(?:[—–\-:：]\s*)?(가격|영구\s*손
 # 토론 판정 → 허용되는 결론 판단(SKILL.md 7단계 판정 규칙 7)
 RULING_VERDICTS = {"강세 우세": ("매수",), "균형": ("관망",),
                    "약세 우세(가격)": ("관망",), "약세 우세(영구 손실)": ("회피",)}
+# 판정 기준 3종(안전마진·가치 변경·불확실성 반영) 시행일. 이 날짜 전 보고서는 경고만 한다.
+RULE_DATE = "2026-11-25"
+UNCERTAINTY_MODES = ("안전마진", "확인 대기")
+HOLD_REASONS = ("가격", "균형", "확인 대기")
+_PCT_RE = re.compile(r"([+\-]?\d+(?:\.\d+)?)\s*%")
+_RANGE_RE = r"{}\s*([\d,]+(?:\.\d+)?)\s*[~∼]\s*([\d,]+(?:\.\d+)?)"
+# 실적·이벤트 확인을 기다리는 조건. '반증 조건 미발생 확인'은 가격과 별개의 상시 조건이라 뺀 뒤 찾는다.
+_CONFIRM_RE = re.compile(r"(실적|발표|가이던스|[1-4]Q|분기).{0,20}(확인|발표)|확인\s*(후|전)")
+_FALSIFY_RE = re.compile(r"반증\s*조건[^,/|)]*")
 _SUBJECTIVE = ("내 생각에는", "제 생각에는", "느낌상", "명백히")
 # 표본 검사 줄에 결과 대신 예정만 적힌 경우(작성 중 자리표시)
 _AUDIT_PENDING = ("출고 절차에서 기록", "예정", "미실시", "TODO", "{")
@@ -305,7 +325,221 @@ def _view_verdicts(path: str) -> list:
     return out
 
 
-def check(path: str, skill: str = "") -> Checker:
+def _num(x: str) -> float:
+    return float(x.replace(",", ""))
+
+
+def _fields(text: str, key: str, name: str = "") -> dict:
+    """`**key**:` 가 있는 (코드 밖) 마지막 줄의 필드 사전. name 이 있으면 `**종목**: name` 이 붙은 줄만(복수 회사)."""
+    out = {}
+    pat = re.compile(rf"\*\*\s*{re.escape(key)}\s*\*\*\s*[:：]")
+    for _, line in _outside_code(text):
+        if pat.search(line):
+            row = {k.strip(): v.strip() for k, v in dl._FIELD_RE.findall(line)}
+            if not name or row.get("종목", "").strip("*").strip() == name:
+                out = row
+    return out
+
+
+def _tag(name: str) -> str:
+    return f"({name}) " if name else ""
+
+
+def _signed(text: str) -> str:
+    return text.replace("−", "-").replace("–", "-")
+
+
+def check_margin(c: Checker, text: str, folder: str, strict: bool, name: str = "", team: bool = True):
+    """① 안전마진 줄: 라벨 내재가치 중앙과 기준가로 계산한 값, 업종 기준, 판정과의 정합(team 은 토론 판정과)."""
+    t = _tag(name)
+    sev = lambda m: (c.fail if strict else c.warn)(t + m)  # noqa: E731
+    try:
+        label = dl.parse_label(text, name)
+    except dl.ReportParseError:
+        return None
+    if label["판단"] == "회피" or not label["내재가치하단"]:
+        return None
+    f = _fields(text, "안전마진", name)
+    if not f.get("안전마진") or not f.get("업종 기준"):
+        sev("판정 근거에 `**안전마진**: 기준가 P · 중앙 M → X% | **업종 기준**: Y% (분류)` 줄이 없습니다(안전마진 판정 기준 규칙 8)."
+            + (" 복수 회사는 줄 앞에 `**종목**: 회사명 |`." if name else ""))
+        return None
+    pm = re.search(r"기준가\s*([\d,]+(?:\.\d+)?)", f["안전마진"])
+    xs = _PCT_RE.findall(_signed(f["안전마진"]))
+    ys = _PCT_RE.findall(f["업종 기준"])
+    cls = next((k for k in pp.MOS_BY_CLASS if k in f["업종 기준"]), "")
+    if not pm or not xs or not ys:
+        sev(f"안전마진 줄을 읽을 수 없습니다: '{f['안전마진']} | {f['업종 기준']}'")
+        return None
+    if not cls:
+        sev(f"업종 기준의 분류가 없습니다 — {'/'.join(pp.MOS_BY_CLASS)} 중 하나를 괄호로: '{f['업종 기준']}'")
+        return None
+    price, x, y = _num(pm.group(1)), float(xs[-1]), float(ys[0])
+    mid = (float(label["내재가치하단"]) + float(label["내재가치상단"])) / 2
+    calc = (1 - price / mid) * 100
+    ok = True
+    if y != pp.MOS_BY_CLASS[cls]:
+        sev(f"업종 기준 {y:g}% 가 표의 {cls} {pp.MOS_BY_CLASS[cls]}% 와 다릅니다.")
+        ok = False
+    if abs(x - calc) > 1.0:
+        sev(f"안전마진 {x:g}% 가 라벨 내재가치 중앙({mid:,.2f})과 기준가로 계산한 {calc:.1f}% 와 다릅니다 — "
+            "라벨 범위는 판정에 실제로 쓴 가치여야 합니다(규칙 8).")
+        ok = False
+    ruling = parse_debate(os.path.join(folder, DEBATE_FILE))["ruling"] if team and os.path.exists(
+        os.path.join(folder, DEBATE_FILE)) else None
+    if ruling == "약세 우세(가격)" and calc >= y:
+        sev(f"토론 판정이 '약세 우세 — 가격'인데 현재 안전마진 {calc:.1f}% 가 업종 기준 {cls} {y:g}% 이상입니다 — "
+            "가격이 문제라는 판정과 맞지 않습니다. 판정을 다시 하거나 라벨 범위를 판정에 쓴 가치로 고치세요.")
+        ok = False
+    if ok:
+        c.ok(f"{t}안전마진 {calc:.1f}% (기준가 {price:,.2f} · 중앙 {mid:,.2f}) · 업종 기준 {cls} {y:g}%")
+    return {"price": price, "margin": calc, "std": y, "mid": mid, "verdict": label["판단"]}
+
+
+def check_value_change(c: Checker, text: str, folder: str, run_date: str, strict: bool, ledger_path: str,
+                       name: str = ""):
+    """② 같은 종목의 이전 판단이 원장에 있으면 내재가치 변경을 데이터 변화·가정 변화로 나눴는지.
+    종목은 복수 회사 보고서면 **종목** 값, 아니면 보고서 폴더 이름(reports/{회사명}/)."""
+    t = _tag(name)
+    sev = lambda m: (c.fail if strict else c.warn)(t + m)  # noqa: E731
+    if not ledger_path or not os.path.exists(ledger_path) or not run_date:
+        return
+    try:
+        label = dl.parse_label(text, name)
+    except dl.ReportParseError:
+        return
+    if not label["내재가치하단"]:
+        return
+    company = name or os.path.basename(folder)
+    prior = sorted((r for r in dl._read(ledger_path)
+                    if r.get("종목") == company and r.get("기록일", "") < run_date
+                    and r.get("내재가치하단") and r.get("내재가치상단")), key=lambda r: r["기록일"])
+    if not prior:
+        c.ok(f"{t}가치 변경 분해: 원장에 이전 판단 없음(첫 리서치)")
+        return
+    last = prior[-1]
+    o_lo, o_hi = float(last["내재가치하단"]), float(last["내재가치상단"])
+    n_lo, n_hi = float(label["내재가치하단"]), float(label["내재가치상단"])
+    f = _fields(text, "가치 변경", name)
+    if not f.get("가치 변경") or not f.get("중앙 변화"):
+        sev(f"원장에 이전 판단({last['기록일']}, 내재가치 {o_lo:,.2f}~{o_hi:,.2f})이 있는데 `**가치 변경**: 이전 L~H(날짜) → "
+            "이번 L~H | **중앙 변화**: A% = 데이터 B% + 가정 C%` 줄이 없습니다(규칙 9).")
+        return
+    before = re.search(_RANGE_RE.format("이전"), f["가치 변경"])
+    after = re.search(_RANGE_RE.format("이번"), f["가치 변경"])
+    pcts = [float(p) for p in _PCT_RE.findall(_signed(f["중앙 변화"]))]
+    if not before or not after or len(pcts) < 3:
+        sev(f"가치 변경 줄을 읽을 수 없습니다: '{f['가치 변경']} | {f['중앙 변화']}'")
+        return
+    close = lambda a, b: abs(a - b) <= max(abs(b) * 0.005, 0.01)  # noqa: E731
+    ok = True
+    if not (close(_num(before.group(1)), o_lo) and close(_num(before.group(2)), o_hi)):
+        sev(f"가치 변경의 이전 범위가 원장({last['기록일']}: {o_lo:,.2f}~{o_hi:,.2f})과 다릅니다.")
+        ok = False
+    if not (close(_num(after.group(1)), n_lo) and close(_num(after.group(2)), n_hi)):
+        sev(f"가치 변경의 이번 범위가 라벨 줄({n_lo:,.2f}~{n_hi:,.2f})과 다릅니다.")
+        ok = False
+    a, b, cc = pcts[0], pcts[1], pcts[2]
+    calc = ((n_lo + n_hi) / (o_lo + o_hi) - 1) * 100
+    if abs(a - calc) > 1.0:
+        sev(f"중앙 변화 {a:+g}% 가 계산값 {calc:+.1f}% 와 다릅니다.")
+        ok = False
+    if abs(b + cc - a) > 1.0:
+        sev(f"데이터 {b:+g}% + 가정 {cc:+g}% 가 중앙 변화 {a:+g}% 와 맞지 않습니다.")
+        ok = False
+    if abs(cc) >= 10 and not _fields(text, "가정 변화 근거", name).get("가정 변화 근거"):
+        sev(f"가정 변화만으로 중앙이 {cc:+g}% 움직였는데 `**가정 변화 근거**:` 줄이 없습니다(±10% 이상은 근거 필수).")
+        ok = False
+    if ok:
+        c.ok(f"{t}가치 변경 분해: 중앙 {a:+g}% = 데이터 {b:+g}% + 가정 {cc:+g}% (이전 {last['기록일']})")
+
+
+def check_uncertainty(c: Checker, text: str, margin, strict: bool):
+    """③ 불확실성은 안전마진 또는 확인 대기 중 하나로만 반영한다(이중 차감 금지)."""
+    sev = c.fail if strict else c.warn
+    if not margin or margin["verdict"] == "회피":
+        return
+    try:
+        plan = pp.parse_plan(text)
+    except dl.NoDataError:
+        return  # 실행 계획 줄 문제는 check_plan 이 잡는다
+    mode = plan.get("불확실성반영", "")
+    if mode not in UNCERTAINTY_MODES:
+        sev(f"실행 계획 줄에 `**불확실성 반영**: 안전마진|확인 대기` 가 없습니다(찾은 값: '{mode or '-'}', 규칙 10).")
+        return
+    conds = " ".join([t["조건"] for t in plan["분할매수"]] + [plan["현재상태"]])
+    waiting = bool(_CONFIRM_RE.search(_FALSIFY_RE.sub("", conds)))
+    first = pp.round_price(margin["mid"] * (1 - (margin["std"] - 10) / 100))
+    top = max((t["가격"] for t in plan["분할매수"]), default=0)
+    reached = margin["price"] <= first
+    ok = True
+    if mode == "안전마진":
+        if waiting:
+            sev("불확실성 반영이 '안전마진'인데 실적·이벤트 확인 조건이 붙어 있습니다 — 같은 불확실성을 두 번 깎는 것입니다. "
+                "확인을 기다리려면 '확인 대기'로 바꾸고 1차를 기준선 가격에 두세요.")
+            ok = False
+        if reached and top < margin["price"] * 0.99:
+            sev(f"기준선 1차({first:,.2f})가 이미 도달했는데(기준가 {margin['price']:,.2f}) 모든 차수를 현재가 아래로 내렸습니다 — "
+                "'관망이라 1차를 내린다'는 금지입니다(규칙 10).")
+            ok = False
+    else:
+        if top < first * 0.99:
+            sev(f"불확실성 반영이 '확인 대기'면 1차를 기준선({first:,.2f}) 아래로 내리지 않습니다(찾은 1차 {top:,.2f}).")
+            ok = False
+        if not re.search(r"\d", plan["현재상태"]):
+            sev("확인 대기인데 현재 상태에 기다리는 이벤트의 시점(예: 4Q26, 2027-02)이 없습니다.")
+            ok = False
+    if ok:
+        c.ok(f"불확실성 반영: {mode}" + (f" · 기준선 1차 {first:,.2f} 도달" if reached else ""))
+
+
+def check_decision_rules(c: Checker, text: str, path: str, skill: str, ledger_path: str):
+    """판정 기준 3종(안전마진·가치 변경·불확실성 반영). 복수 회사(checklist)는 **종목** 마다."""
+    run_date = dl.parse_run_info(text).get("작성일", "")
+    strict = run_date >= RULE_DATE
+    folder = os.path.dirname(os.path.abspath(path))
+    names = sorted({r["종목"] for r in dl._label_lines(text) if r.get("종목")}) or [""]
+    team = skill == "investment-team"
+    for name in names:
+        margin = check_margin(c, text, folder, strict, name, team)
+        check_value_change(c, text, folder, run_date, strict, ledger_path, name)
+        if team:
+            check_uncertainty(c, text, margin, strict)
+        else:
+            check_hold_reason(c, text, margin, strict, name)
+
+
+def check_hold_reason(c: Checker, text: str, margin, strict: bool, name: str = ""):
+    """③' research·checklist: 관망이면 사유(가격 / 균형 / 확인 대기)를 하나 고른다.
+    가격인데 안전마진이 업종 기준 이상이면 반려(규칙 8), 확인 대기면 이벤트 시점 필수(규칙 10)."""
+    t = _tag(name)
+    sev = lambda m: (c.fail if strict else c.warn)(t + m)  # noqa: E731
+    try:
+        verdict = dl.parse_label(text, name)["판단"]
+    except dl.ReportParseError:
+        return
+    if verdict != "관망":
+        return
+    f = _fields(text, "관망 사유", name)
+    value = f.get("관망 사유", "")
+    reason = next((r for r in HOLD_REASONS if value.startswith(r)), "")
+    if not reason:
+        sev(f"관망인데 `**관망 사유**: 가격|균형|확인 대기 — 설명` 줄이 없거나 사유를 읽을 수 없습니다(찾은 값: '{value or '-'}')."
+            + (" 복수 회사는 줄 앞에 `**종목**: 회사명 |`." if name else ""))
+        return
+    ok = True
+    if reason == "가격" and margin and margin["margin"] >= margin["std"]:
+        sev(f"관망 사유가 '가격'인데 현재 안전마진 {margin['margin']:.1f}% 가 업종 기준 {margin['std']:g}% 이상입니다 — "
+            "가격이 문제가 아닙니다. 판단을 다시 하거나 라벨 범위를 판정에 쓴 가치로 고치세요(규칙 8).")
+        ok = False
+    if reason == "확인 대기" and not re.search(r"\d", value):
+        sev("관망 사유가 '확인 대기'인데 기다리는 이벤트의 시점(예: 4Q26 실적, 2027-02)이 없습니다(규칙 10).")
+        ok = False
+    if ok:
+        c.ok(f"{t}관망 사유: {reason}")
+
+
+def check(path: str, skill: str = "", ledger_path=None) -> Checker:
     with open(path, encoding="utf-8") as f:
         text = _norm(f.read())
     c = Checker()
@@ -316,6 +550,8 @@ def check(path: str, skill: str = "") -> Checker:
     check_skill_sections(c, text, skill)
     if skill == "investment-team":
         check_team_dir(c, path)
+    if skill in SKILLS:
+        check_decision_rules(c, text, path, skill, dl.LEDGER if ledger_path is None else ledger_path)
     check_style(c, text)
     return c
 
