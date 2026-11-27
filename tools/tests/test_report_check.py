@@ -14,7 +14,10 @@ import report_check as rc  # noqa: E402
 LABEL = "**판단**: 관망 | **확신도**: ★★★ | **내재가치**: 180,000~200,000원 | **반증 조건**: 고정가 하락"
 PLAN = ("**실행 계획**: 비중 상한 5% | **분할 매수**: 161,500원 1.5% / 142,500원 1.5% / 123,500원 2% | "
         "**축소 검토**: 240,000원 이상 또는 반증 조건 발생 | **현재 상태**: 대기 | **불확실성 반영**: 안전마진")
-MARGIN = "**안전마진**: 기준가 175,000원 · 중앙 190,000원 → 7.9% | **업종 기준**: 25% (일반)"
+REQ = " | **요구 안전마진**: 10 + max(U_v 5.3, U_e 15) + L 0 = 25%"
+INPUTS = ("**이익 변동**: 영업이익 최대 하락 50% (2019→2020, 10개 해, DART) → U_e 15% | "
+          "**재무 위험**: 이자보상배율 20배(2025) → L 0")
+MARGIN = "**안전마진**: 기준가 175,000원 · 중앙 190,000원 → 7.9%" + REQ + "\n" + INPUTS
 RUN_INFO = """## 실행 정보
 - 작성일: 2026-10-28
 - 스킬: {skill}
@@ -242,10 +245,17 @@ class DecisionRulesTest(_Base):
         self.assertIn("**안전마진**", self.fails(self.run_check(margin="")))
         # 라벨 중앙과 다른 가치로 계산한 안전마진(판정에 쓴 가치 ≠ 라벨 범위)
         self.assertIn("라벨 범위는 판정에 실제로 쓴", self.fails(self.run_check(margin=MARGIN.replace("7.9%", "20%"))))
-        self.assertIn("표의 일반 25%", self.fails(self.run_check(margin=MARGIN.replace("25% (일반)", "15% (일반)"))))
-        self.assertIn("분류가 없습니다", self.fails(self.run_check(margin=MARGIN.replace(" (일반)", ""))))
-        # 약세 우세(가격)인데 안전마진이 업종 기준 이상 → 반려
-        cheap = "**안전마진**: 기준가 140,000원 · 중앙 190,000원 → 26.3% | **업종 기준**: 25% (일반)"
+        # 공식과 다른 요구 안전마진, 라벨과 다른 U_v
+        self.assertIn("공식 clip", self.fails(self.run_check(margin=MARGIN.replace("= 25%", "= 20%"))))
+        self.assertIn("U_v 9 가 라벨", self.fails(self.run_check(margin=MARGIN.replace("U_v 5.3", "U_v 9"))))
+        # 입력 근거 줄: 없음 / 하락률과 U_e 불일치 / 이자보상배율과 L 불일치
+        self.assertIn("**이익 변동**", self.fails(self.run_check(margin=MARGIN.split("\n")[0])))
+        self.assertIn("× 0.3 = U_e 12", self.fails(self.run_check(margin=MARGIN.replace("하락 50%", "하락 40%"))))
+        self.assertIn("L 5 입니다", self.fails(self.run_check(margin=MARGIN.replace("20배", "5배"))))
+        no_hist = MARGIN.replace("영업이익 최대 하락 50% (2019→2020, 10개 해, DART)", "이력 부족(3개 해)")
+        self.assertIn("U_e 는 30", self.fails(self.run_check(margin=no_hist)))
+        # 약세 우세(가격)인데 안전마진이 요구 안전마진 이상 → 반려
+        cheap = MARGIN.replace("기준가 175,000원", "기준가 140,000원").replace("7.9%", "26.3%")
         self.assertIn("가격이 문제라는 판정과 맞지 않습니다", self.fails(self.run_check(margin=cheap)))
 
     def test_old_report_only_warns(self):
@@ -284,7 +294,7 @@ class DecisionRulesTest(_Base):
         ok = PLAN.replace("161,500원 1.5%", "161,500원 1.5%(반증 조건 미발생 확인 후)")
         self.assertFalse(self.run_check(plan=ok).failed)
         # 기준선 1차(161,500) 도달: 기준가 155,000 — 모든 차수를 현재가 아래로 내리면 반려
-        reached = "**안전마진**: 기준가 155,000원 · 중앙 190,000원 → 18.4% | **업종 기준**: 25% (일반)"
+        reached = MARGIN.replace("기준가 175,000원", "기준가 155,000원").replace("7.9%", "18.4%")
         lowered = PLAN.replace("161,500원", "150,000원")
         self.assertIn("1차를 내린다", self.fails(self.run_check(plan=lowered, margin=reached)))
         self.assertFalse(self.run_check(margin=reached).failed)
@@ -310,8 +320,8 @@ class DecisionRulesTest(_Base):
         self.assertNotIn("불확실성 반영", " ".join(m for _, m in c.items))   # 실행 계획 없는 스킬
         self.assertIn("**안전마진**", self.fails(self.solo("investment-research", margin="",
                                                          extra="**관망 사유**: 균형 — X\n")))
-        # 가격 사유인데 안전마진 ≥ 업종 기준 → 반려, 확인 대기는 시점 필수
-        cheap = "**안전마진**: 기준가 140,000원 · 중앙 190,000원 → 26.3% | **업종 기준**: 25% (일반)"
+        # 가격 사유인데 안전마진 ≥ 요구 안전마진 → 반려, 확인 대기는 시점 필수
+        cheap = MARGIN.replace("기준가 175,000원", "기준가 140,000원").replace("7.9%", "26.3%")
         self.assertIn("가격이 문제가 아닙니다", self.fails(self.solo(
             "investment-research", margin=cheap, extra="**관망 사유**: 가격 — 비싸다\n")))
         self.assertIn("이벤트의 시점", self.fails(self.solo(
@@ -333,7 +343,7 @@ class DecisionRulesTest(_Base):
     def test_checklist_multi_company_rules_per_name(self):
         labels = ("**종목**: 텐센트 | " + LABEL + "\n\n**종목**: 알리바바 | " + LABEL.replace("관망", "회피")
                   + "\n\n**종목**: 바이두 | **판단**: 관망 | **확신도**: ★★ | **내재가치**: - | **반증 조건**: X")
-        margin = "**종목**: 텐센트 | " + MARGIN
+        margin = "\n".join("**종목**: 텐센트 | " + x for x in MARGIN.split("\n"))
         reasons = "**종목**: 텐센트 | **관망 사유**: 가격 — X\n**종목**: 바이두 | **관망 사유**: 균형 — Y\n"
         c = self.solo("investment-checklist", label=labels, margin=margin, extra=reasons)
         self.assertFalse(c.failed, c.items)

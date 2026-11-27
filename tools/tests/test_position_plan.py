@@ -32,25 +32,29 @@ def run_cli(argv):
 
 
 class BuildPlanTest(unittest.TestCase):
-    def test_mos_class_sets_tranches_and_warns_on_hold_past_standard(self):
-        self.assertEqual(pp.class_mos("일반"), (15, 25, 35))       # 기존 기본값과 같다
-        self.assertEqual(pp.class_mos("경기순환"), (20, 30, 40))
-        p = pp.build_plan("관망", 3, 100000, 120000, price=80000, mos_class="경기순환")
-        self.assertEqual([t["가격"] for t in p["분할매수"]], [88000.0, 77000.0, 66000.0])
-        self.assertEqual((p["업종분류"], p["업종기준"]), ("경기순환", 30))
-        self.assertFalse(any("업종 기준" in w for w in p["경고"]))  # 27.3% < 30%
-        cheap = pp.build_plan("관망", 3, 100000, 120000, price=75000, mos_class="경기순환")
-        self.assertTrue(any("업종 기준(경기순환 30%) 이상" in w for w in cheap["경고"]))
-        self.assertIn("업종 기준 안전마진: 경기순환 30%", pp.render(cheap))
+    def test_required_mos_from_inputs(self):
+        # 범위 폭 U_v = 10/110 = 9.1 < U_e 21.9 → M = 10 + 21.9 + 0 = 31.9, 차수 21.9/31.9/41.9
+        p = pp.build_plan("관망", 3, 100000, 120000, price=80000, u_e=21.9, l_pen=0)
+        self.assertEqual(p["요구안전마진"], 31.9)
+        self.assertEqual([t["안전마진"] for t in p["분할매수"]], [21.9, 31.9, 41.9])
+        self.assertEqual([t["가격"] for t in p["분할매수"]], [85900.0, 74900.0, 63900.0])
+        self.assertFalse(any("요구 안전마진" in w for w in p["경고"]))   # 27.3% < 31.9%
+        cheap = pp.build_plan("관망", 3, 100000, 120000, price=74000, u_e=21.9, l_pen=0)
+        self.assertTrue(any("요구 안전마진 31.9% 이상" in w for w in cheap["경고"]))
+        self.assertIn("10 + max(U_v 9.1, U_e 21.9) + L 0 = 31.9%", pp.render(cheap))
+        # 하한 15%·상한 45%, L 가산
+        self.assertEqual(pp.build_plan("매수", 3, 100, 101, u_e=0, l_pen=0)["요구안전마진"], 15.0)
+        self.assertEqual(pp.build_plan("매수", 3, 50, 150, u_e=30, l_pen=10)["요구안전마진"], 45.0)
+        self.assertEqual(pp.build_plan("매수", 3, 100, 120, u_e=10, l_pen=5)["요구안전마진"], 25.0)
+        # 입력이 없으면 거부, --mos 직접 지정은 가정 점검용
         with self.assertRaises(SystemExit):
-            pp.class_mos("반도체")
-        # --mos 직접 지정이 분류보다 우선
-        own = pp.build_plan("매수", 3, 100000, 120000, price=80000, mos=(10, 20, 30), mos_class="경기순환")
-        self.assertEqual(own["분할매수"][0]["안전마진"], 10)
-
+            pp.build_plan("매수", 3, 100000, 120000)
+        own = pp.build_plan("매수", 3, 100000, 120000, price=80000, mos=(10, 20, 30))
+        self.assertIsNone(own["요구안전마진"])
+        self.assertIn("가정 점검용", pp.render(own))
 
     def test_buy_baseline_tranches_and_state(self):
-        p = pp.build_plan("매수", 4, 180000, 220000, price=165000, current_weight=1)
+        p = pp.build_plan("매수", 4, 180000, 220000, price=165000, current_weight=1, u_e=15, l_pen=0)
         self.assertEqual(p["비중상한"], 7.5)                       # 10% × 0.75
         self.assertEqual([(t["가격"], t["비중"]) for t in p["분할매수"]],
                          [(170000.0, 2.25), (150000.0, 2.25), (130000.0, 3.0)])
@@ -60,7 +64,7 @@ class BuildPlanTest(unittest.TestCase):
 
     def test_stop_and_trim_lines_replace_single_trim_price(self):
         # MSFT 2026-10-28: 내재가치 상단 444 → 금지선 510.60(+15%), 추가 축소 577.20(+30%)
-        p = pp.build_plan("관망", 3, 420, 444, price=531.33, currency="USD")
+        p = pp.build_plan("관망", 3, 420, 444, price=531.33, currency="USD", u_e=15, l_pen=0)
         self.assertEqual(p["신규매수금지가"], 510.6)
         self.assertEqual([(x["가격"], x["규모"]) for x in p["축소"]], [(510.6, "1/3"), (577.2, "추가")])
         self.assertIn("현재가가 신규 매수 금지 구간", p["현재상태"])
@@ -70,31 +74,31 @@ class BuildPlanTest(unittest.TestCase):
         self.assertIn("510.60 USD 이상 신규 매수 금지, 보유 시 510.60 USD 이상 1/3·577.20 USD 이상 추가 축소", line)
 
     def test_tranche_reach_against_price_ranges(self):
-        p = pp.build_plan("관망", 3, 420, 444, price=531.33, currency="USD", ranges=RANGES)
+        p = pp.build_plan("관망", 3, 420, 444, price=531.33, currency="USD", ranges=RANGES, u_e=15, l_pen=0)
         self.assertEqual([t["위치"] for t in p["분할매수"]],
                          ["52주 범위 안", "3년 최저 아래(관측 범위 밖)", "3년 최저 아래(관측 범위 밖)"])
         self.assertEqual(p["분할매수"][1]["현재가대비"], -39.0)
         self.assertFalse(any("모든 차수" in w for w in p["경고"]))      # 1차는 52주 범위 안
-        deep = pp.build_plan("관망", 3, 300, 340, price=531.33, currency="USD", ranges=RANGES)
+        deep = pp.build_plan("관망", 3, 300, 340, price=531.33, currency="USD", ranges=RANGES, u_e=15, l_pen=0)
         self.assertTrue(any("모든 차수가 52주 최저" in w for w in deep["경고"]))
-        none = pp.build_plan("관망", 3, 420, 444, price=531.33, currency="USD")
+        none = pp.build_plan("관망", 3, 420, 444, price=531.33, currency="USD", u_e=15, l_pen=0)
         self.assertTrue(any("--ticker 필요" in w for w in none["경고"]))
         self.assertIn("미확인", pp.render(none))
 
     def test_hold_waits_above_first_tranche_and_avoid_is_zero(self):
-        wait = pp.build_plan("관망", 3, 180000, 220000, price=175000)
+        wait = pp.build_plan("관망", 3, 180000, 220000, price=175000, u_e=15, l_pen=0)
         self.assertIn("대기(관망", wait["현재상태"])
         self.assertEqual(wait["비중상한"], 5.0)
         # 관망 = 가격 대기. 현재가가 1차 이하면 '1차 가격 도달'(실적 확인 대기로 미루지 않는다)
-        hit = pp.build_plan("관망", 3, 180000, 220000, price=165000)
+        hit = pp.build_plan("관망", 3, 180000, 220000, price=165000, u_e=15, l_pen=0)
         self.assertIn("1차 가격 도달(관망", hit["현재상태"])
         self.assertIn("**불확실성 반영**: 안전마진", pp.plan_line(hit))
-        avoid = pp.build_plan("회피", 5, 180000, 220000, price=120000)
+        avoid = pp.build_plan("회피", 5, 180000, 220000, price=120000, u_e=15, l_pen=0)
         self.assertEqual((avoid["비중상한"], avoid["분할매수"]), (0.0, []))
         self.assertIn("**분할 매수**: -", pp.plan_line(avoid))
 
     def test_current_weight_and_usd_rounding(self):
-        p = pp.build_plan("매수", 2, 150.0, 190.0, price=230.0, currency="USD", current_weight=4)
+        p = pp.build_plan("매수", 2, 150.0, 190.0, price=230.0, currency="USD", current_weight=4, u_e=15, l_pen=0)
         self.assertEqual([t["가격"] for t in p["분할매수"]], [144.5, 127.5, 110.5])
         self.assertIn("신규 매수 금지 구간", p["현재상태"])            # 230 ≥ 190 × 1.15 = 218.5
         self.assertIn("초과분 1.5%p", p["보유조정"])
@@ -102,18 +106,18 @@ class BuildPlanTest(unittest.TestCase):
 
     def test_invalid_inputs(self):
         with self.assertRaises(_us_common.NoDataError):
-            pp.build_plan("매수", 3, 0, 0)                          # 내재가치 없이 가격대를 만들지 않음
+            pp.build_plan("매수", 3, 0, 0, u_e=15, l_pen=0)                          # 내재가치 없이 가격대를 만들지 않음
         with self.assertRaises(SystemExit):
             pp.build_plan("매수", 3, 100, 120, split=(50, 40))     # 개수 불일치
         with self.assertRaises(SystemExit):
             pp.build_plan("매수", 3, 100, 120, mos=(10, 20), split=(50, 40))  # 합계 100 아님
         with self.assertRaises(SystemExit):
-            pp.build_plan("매수", 3, 100, 120, stop_premium=30, trim_premium=20)  # 추가 축소선이 금지선 아래
+            pp.build_plan("매수", 3, 100, 120, stop_premium=30, trim_premium=20, u_e=15, l_pen=0)  # 추가 축소선이 금지선 아래
 
 
 class ParsePlanTest(unittest.TestCase):
     def test_round_trip_and_code_block_ignored(self):
-        line = pp.plan_line(pp.build_plan("매수", 4, 180000, 220000, price=165000))
+        line = pp.plan_line(pp.build_plan("매수", 4, 180000, 220000, price=165000, u_e=15, l_pen=0))
         text = f"```\n**실행 계획**: 비중 상한 99% | **분할 매수**: 1원 99%\n```\n\n{line}\n"
         got = pp.parse_plan(text)
         self.assertEqual(got["비중상한"], 7.5)
@@ -152,7 +156,7 @@ class CliTest(unittest.TestCase):
             with mock.patch.object(pp.dl, "resolve_symbol", return_value=("005930.KS", "KRW", 222000.0)), \
                     mock.patch.object(pp, "fetch_ranges", return_value={"52주최저": 94500.0, "3년최저": 49900.0,
                                                                         "3년최저일": "2024-11-14"}):
-                code, out = run_cli(["--from-report", path, "--ticker", "005930", "--json"])
+                code, out = run_cli(["--from-report", path, "--ticker", "005930", "--u-e", "15", "--l", "0", "--json"])
             self.assertEqual(code, 0, out)
             data = json.loads(out)
             self.assertEqual((data["비중상한"], data["분할매수"][0]["가격"]), (5.0, 173000.0))
@@ -167,14 +171,14 @@ class CliTest(unittest.TestCase):
         with mock.patch.object(pp.dl, "resolve_symbol", return_value=("MSFT", "USD", 560.0)), \
                 mock.patch.object(pp, "fetch_ranges", return_value=RANGES):
             code, out = run_cli(["--verdict", "관망", "--conviction", "3", "--iv-low", "420", "--iv-high", "444",
-                                 "--ticker", "MSFT", "--price", "531.33", "--json"])
+                                 "--u-e", "15", "--l", "0", "--ticker", "MSFT", "--price", "531.33", "--json"])
         self.assertEqual(code, 0, out)
         self.assertEqual(json.loads(out)["현재가"], 531.33)
 
     def test_price_lookup_failure_is_unavailable(self):
         with mock.patch.object(pp.dl, "resolve_symbol", side_effect=ConnectionError("down")):
             code, _ = run_cli(["--verdict", "매수", "--conviction", "3", "--iv-low", "100", "--iv-high", "120",
-                               "--ticker", "AAPL"])
+                               "--u-e", "15", "--l", "0", "--ticker", "AAPL"])
         self.assertEqual(code, 4)
 
 
