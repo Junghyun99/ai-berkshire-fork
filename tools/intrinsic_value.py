@@ -13,7 +13,7 @@
   A 일반        그 밖                                                → 2단계 오너어닝스 DCF + 순현금
 
 시나리오(비관 / 중립 / 낙관):
-  A  1단계(5년) 성장 = min(0, CAGR) / CAGR × 0.5 / min(max(CAGR, 0), 15%)  (CAGR: 최대 10년 매출 연평균 성장률)
+  A  1단계(5년) 성장 = min(0, CAGR) / min(CAGR × 0.5, 15%) / min(max(CAGR, 0), 15%)  (CAGR: 최대 10년 매출 연평균 성장률)
      영구성장 1% / 2% / 3%, 할인율 r = USD 9% · KRW 10% · 그 밖 10%
   B  영업이익률 = 10년 하위 3개 해 평균 / 10년 평균 / 상위 3개 해 평균, × 현재 매출 × (1 − 세율),
      PER = 시장 장기 PER × 0.6 / 0.8 / 1.0 (미국 16 → 9.6/12.8/16, 한국 10 → 6/8/10)
@@ -57,8 +57,8 @@ MARKET_PE = {"US": 16.0, "KR": 10.0}
 CYCLE_FACTORS = (0.6, 0.8, 1.0)
 
 
-def cycle_pe(market: str) -> tuple:
-    base = MARKET_PE.get(market, MARKET_PE["KR"])
+def cycle_pe(market: str, override=None) -> tuple:
+    base = float(override) if override else MARKET_PE.get(market, MARKET_PE["KR"])
     return tuple(round(base * f, 2) for f in CYCLE_FACTORS)
 TAX = {"USD": 21.0, "KRW": 22.0}
 TAX_DEFAULT = 22.0
@@ -66,7 +66,7 @@ FIN_G = 2.0
 CYCLE_DD = 50.0
 SCENARIOS = ("비관", "중립", "낙관")
 TYPE_NAME = {"A": "A 일반(2단계 오너어닝스 DCF)", "B": "B 경기순환(정상화 이익 × PER)",
-             "C": "C 금융(정당 PBR)", "E": "E 가정 의존형(수기 가정 필요)"}
+             "C": "C 금융(정당 PBR)", "D": "D 지주·복합(사업부별 합산)", "E": "E 가정 의존형(명시 가정 DCF)"}
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IV_CSV = os.path.join(_ROOT, "reports", "decision-iv.csv")
 IV_FIELDS = ["id", "기록일", "종목", "티커", "통화", "판단", "기록시점가", "분석가하단", "분석가상단", "분석가중앙",
@@ -89,7 +89,7 @@ def cagr(series: dict, max_years: int = 10):
 
 def growth_scenarios(g: float) -> tuple:
     """매출 CAGR(%) → 1단계 성장률 (비관, 중립, 낙관)."""
-    return (min(0.0, g), g * 0.5, min(max(g, 0.0), GROWTH_CAP))
+    return (min(0.0, g), min(g * 0.5, GROWTH_CAP), min(max(g, 0.0), GROWTH_CAP))
 
 
 def dcf_value(oe0: float, g1: float, g2: float, r: float, years: int = STAGE1_YEARS) -> float:
@@ -202,7 +202,8 @@ def us_extras(got: dict, as_of: str) -> dict:
             ltd = (inst(("LongTermDebtNoncurrent",)).get(end, 0) + inst(("LongTermDebtCurrent", "DebtCurrent")).get(end, 0))
         std = inst(("ShortTermBorrowings",)).get(end, 0) + inst(("CommercialPaper",)).get(end, 0)
         out.update(cash=cash[end] + sti, debt=ltd + std, bs_year=int(end[:4]))
-    shs, _ = sec.values_as_of(g, ("WeightedAverageNumberOfDilutedSharesOutstanding",), as_of, us.ANNUAL, us.FORMS)
+    shs, _ = sec.values_as_of(g, ("WeightedAverageNumberOfDilutedSharesOutstanding", "AdjustedWeightedAverageShares",
+                                  "WeightedAverageShares"), as_of, us.ANNUAL, us.FORMS)
     if shs:
         out["shares"] = shs[max(shs)]
     sbc, _ = sec.values_as_of(g, ("ShareBasedCompensation", "AllocatedShareBasedCompensationExpense"), as_of,
@@ -215,7 +216,7 @@ def collect(ticker: str, as_of: str) -> dict:
     t = mi.SEC_ALIASES.get(ticker.upper(), ticker)
     mk = mi.market_of(t)
     if mk == "OTHER":
-        raise NoDataError(f"{ticker}: 재무 원본 미지원 시장")
+        raise NoDataError(f"{ticker}: 재무 원본 미지원 시장 — reports/{{회사명}}/valuation-inputs.json 의 '재무' 로 수기 입력")
     got = mi.fetch_kr(t, as_of) if mk == "KR" else mi.fetch_us(t, as_of)
     ex = kr_extras(got) if mk == "KR" else us_extras(got, as_of)
     cur = "KRW" if mk == "KR" else got.get("currency", "USD")
@@ -224,17 +225,144 @@ def collect(ticker: str, as_of: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# 수기 입력 파일 — reports/{회사명}/valuation-inputs.json
+# ---------------------------------------------------------------------------
+# {
+#   "출처": ["…"],                                  필수: 수기 값마다 공시·보고서 출처
+#   "유형": "A|B|C|D|E", "유형사유": "…",           선택: 자동 분류를 바꿀 때(사유 필수)
+#   "통화": "JPY", "시장": "JP", "시장PER": 15,      '재무'를 쓸 때 필수(시장PER 은 B 유형일 때)
+#   "금융업": false,
+#   "재무": {"2016": {"rev":…, "op":…, "ni_own":…, "eq_own":…, "ocf":…, "capex":…}, …},  원본 없는 시장
+#   "주식수": …, "현금": …, "차입금": …, "ADR비율": 4,  선택: 자동 수집값을 덮어씀
+#   "D": {"구성": [{"이름": "…", "지분율": 0.4, "가치": [비관, 중립, 낙관], "근거": "…"}],
+#         "본사순현금": …, "지주할인": [30, 15, 0]},
+#   "E": {"기준매출": …, "현재영업이익률": …, "매출성장": [비관, 중립, 낙관], "목표영업이익률": [..],
+#         "도달연도": 7, "재투자율": [..], "세율": 22}
+# }
+# 금액은 재무 통화 원 단위, 비율은 %(지분율만 0~1).
+
+INPUTS_NAME = "valuation-inputs.json"
+D_DISCOUNT = (30.0, 15.0, 0.0)  # 지주 할인 기본(구조적 누수: 세금·본사 비용) — 시장 할인을 넣지 않는다
+# ADR: 거래 증권 1주 = 원주 몇 주(각사 20-F 예탁 계약). ASML 뉴욕 등록주는 1:1.
+ADR_RATIO = {"PDD": 4.0, "TSM": 5.0, "ASML": 1.0}
+# FRED 환율: (시리즈, True 면 '통화 1단위당 달러')
+FX_SERIES = {"EUR": ("DEXUSEU", True), "CNY": ("DEXCHUS", False), "TWD": ("DEXTAUS", False),
+             "JPY": ("DEXJPUS", False), "KRW": ("DEXKOUS", False)}
+_FX_CACHE = {}
+
+
+def inputs_path(name: str) -> str:
+    return os.path.join(_ROOT, "reports", name, INPUTS_NAME)
+
+
+def load_inputs(path: str) -> dict:
+    if not path or not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        inp = json.load(f)
+    if not inp.get("출처"):
+        raise SystemExit(f"❌ {path}: '출처' 가 비었습니다 — 수기 값마다 출처를 적는다.")
+    if inp.get("유형") and inp["유형"] not in TYPE_NAME:
+        raise SystemExit(f"❌ {path}: 유형은 {'/'.join(TYPE_NAME)} 중 하나")
+    if inp.get("유형") and not inp.get("유형사유"):
+        raise SystemExit(f"❌ {path}: 유형을 지정하면 '유형사유' 가 필요합니다.")
+    if "재무" in inp and not inp.get("통화"):
+        raise SystemExit(f"❌ {path}: '재무' 를 쓰면 '통화' 가 필요합니다.")
+    return inp
+
+
+def collect_manual(inp: dict) -> dict:
+    data = {}
+    for y, row in inp["재무"].items():
+        r = {k: float(v) for k, v in row.items() if v is not None}
+        if "capex" in r:
+            r["capex_ppe"] = r.pop("capex")
+        data[int(y)] = r
+    ex = {"cash": inp.get("현금"), "debt": inp.get("차입금"), "shares": inp.get("주식수"), "sbc": {}}
+    return {"data": data, "financial": bool(inp.get("금융업")), "currency": inp["통화"], "extras": ex,
+            "source": "수기 입력", "market": inp.get("시장", "OTHER")}
+
+
+def fx_usd_per(cur: str, as_of: str) -> float:
+    """통화 1단위의 달러 가치(as_of 이전 최근 관측, FRED)."""
+    if cur == "USD":
+        return 1.0
+    if cur not in FX_SERIES:
+        raise NoDataError(f"환율 시리즈 없음: {cur}")
+    key = (cur, as_of)
+    if key not in _FX_CACHE:
+        import fred_data as fd
+        from datetime import timedelta
+        sid, direct = FX_SERIES[cur]
+        start = (date.fromisoformat(as_of) - timedelta(days=20)).isoformat()
+        obs = fd._request("series/observations", dict(series_id=sid, observation_start=start,
+                                                      observation_end=as_of, sort_order="desc")).get("observations", [])
+        vals = [float(o["value"]) for o in obs if o.get("value") not in (".", "", None)]
+        if not vals:
+            raise NoDataError(f"{sid} {as_of} 이전 20일 관측 없음")
+        _FX_CACHE[key] = vals[0] if direct else 1 / vals[0]
+    return _FX_CACHE[key]
+
+
+def sotp_values(d: dict, shares: float) -> list:
+    """D: Σ(구성 가치 × 지분율) + 본사 순현금, × (1 − 지주 할인), 주당."""
+    disc = d.get("지주할인", list(D_DISCOUNT))
+    out = []
+    for i in range(3):
+        tot = sum(float(cp["가치"][i]) * float(cp["지분율"]) for cp in d["구성"]) + float(d.get("본사순현금", 0))
+        out.append(tot * (1 - float(disc[i]) / 100) / shares)
+    return out
+
+
+def explicit_dcf(e: dict, r: float, net_cash: float, shares: float) -> list:
+    """E: 매출 = 기준매출 × (1+g)^t, 영업이익률은 현재 → 목표까지 도달연도에 걸쳐 선형, FCF = NOPAT × (1 − 재투자율),
+    도달연도 이후 영구성장(1/2/3%)."""
+    n, tax = int(e["도달연도"]), float(e.get("세율", TAX_DEFAULT))
+    out = []
+    for i in range(3):
+        g, mt, rein, g2 = (float(e["매출성장"][i]) / 100, float(e["목표영업이익률"][i]), float(e["재투자율"][i]) / 100,
+                           TERMINAL[i] / 100)
+        m0, rev, pv, fcf = float(e["현재영업이익률"]), float(e["기준매출"]), 0.0, 0.0
+        for t in range(1, n + 1):
+            rev *= 1 + g
+            m = m0 + (mt - m0) * t / n
+            fcf = rev * m / 100 * (1 - tax / 100) * (1 - rein)
+            pv += fcf / (1 + r / 100) ** t
+        tv = fcf * (1 + g2) / (r / 100 - g2) / (1 + r / 100) ** n
+        out.append((pv + tv + net_cash) / shares)
+    return out
+
+
+# ---------------------------------------------------------------------------
 # 평가
 # ---------------------------------------------------------------------------
 
-def evaluate(ticker: str, as_of: str, trade_currency: str = "", mos_info=None) -> dict:
-    """→ {유형, 시나리오 3개(주당), 라벨 범위, 근거, 경고}. mos_info 는 mos_inputs.compute 결과(재사용)."""
+def evaluate(ticker: str, as_of: str, trade_currency: str = "", mos_info=None, inputs=None, inputs_file: str = "") -> dict:
+    """→ {유형, 시나리오 3개(거래 통화 주당), 라벨 범위, 근거, 경고}. inputs 는 load_inputs 결과."""
     as_of = as_of or date.today().isoformat()
-    c = collect(ticker, as_of)
-    mos_info = mos_info or mi.compute(ticker, as_of)
-    data, ex, cur = c["data"], c["extras"], c["currency"]
-    ys = sorted(data)[-10:]
+    inp = inputs or {}
     warn = []
+    if "재무" in inp:
+        c = collect_manual(inp)
+        key = "ni_own" if c["financial"] else "op"
+        dd = mi.earnings_drawdown({y: r.get(key) for y, r in c["data"].items() if r.get(key) is not None})
+    else:
+        c = collect(ticker, as_of)
+        dd = (mos_info or mi.compute(ticker, as_of))["drawdown"]
+    data, ex, cur = {y: dict(r) for y, r in c["data"].items()}, dict(c["extras"]), c["currency"]
+    # 회계 조정(reports/decision-mos-adjustments.csv)을 요구 안전마진과 같은 이익 지표에 적용 — 비금융 영업이익, 금융 순이익
+    adj = mi.load_adjustments(ticker)
+    if adj:
+        key = "ni_own" if c["financial"] else "op"
+        series, used, _ = mi.apply_adjustments({y: r.get(key) for y, r in data.items() if r.get(key) is not None}, adj)
+        for y, v in series.items():
+            data[y][key] = v
+        if used:
+            warn.append("회계 조정 적용: " + "·".join(used))
+    for k_in, k_ex in (("주식수", "shares"), ("현금", "cash"), ("차입금", "debt")):
+        if inp.get(k_in) is not None:
+            ex[k_ex] = float(inp[k_in])
+    ys = sorted(data)[-10:]
     sbc = ex.get("sbc") or {}
     oe = {}
     for y in ys:
@@ -245,31 +373,44 @@ def evaluate(ticker: str, as_of: str, trade_currency: str = "", mos_info=None) -
         oe[y] = r["ocf"] - capex - abs(sbc.get(y, 0))
     last5 = [oe[y] for y in sorted(oe)[-5:]]
     oe5 = sum(last5) / len(last5) if len(last5) >= 3 else None
-    typ = classify(c["financial"], mos_info["drawdown"], oe5)
+    typ = inp.get("유형") or classify(c["financial"], dd, oe5)
     shares = ex.get("shares")
     net_cash = (ex["cash"] or 0) - (ex["debt"] or 0) if ex.get("cash") is not None else 0.0
-    if ex.get("cash") is None and typ in "AB":
+    if ex.get("cash") is None and typ in "ABE":
         warn.append("현금·차입금 미확보 → 순현금 0으로 계산")
-    out = {"유형": typ, "유형명": TYPE_NAME[typ], "통화": cur, "주식수": shares, "순현금": net_cash,
-           "근거": {}, "경고": warn, "시나리오": None, "범위": None, "source": c["source"]}
-    if trade_currency and trade_currency != cur:
-        warn.append(f"재무 통화 {cur} ≠ 거래 통화 {trade_currency} — 주당가치 비교 불가(ADR 비율·환율 수기 필요)")
-        out["통화불일치"] = True
-    if typ == "E" or not shares:
-        if not shares:
-            warn.append("주식수 미확보")
+    if inp.get("유형"):
+        warn.append(f"유형 수기 지정 {typ}: {inp['유형사유']}")
+    out = {"유형": typ, "유형명": TYPE_NAME[typ], "통화": cur, "재무통화": cur, "주식수": shares, "순현금": net_cash,
+           "근거": {}, "경고": warn, "시나리오": None, "범위": None, "source": c["source"], "입력": inputs_file}
+    if not shares:
+        warn.append("주식수 미확보 — valuation-inputs.json 의 '주식수' 로 입력")
         return out
-    if typ == "A":
+    r_disc = DISCOUNT.get(cur, DISCOUNT_DEFAULT)
+    if typ == "E":
+        if "E" not in inp:
+            return out
+        vals = explicit_dcf(inp["E"], r_disc, net_cash, shares)
+        out["근거"] = dict({k: inp["E"][k] for k in ("매출성장", "목표영업이익률", "도달연도", "재투자율")}, 할인율=r_disc)
+    elif typ == "D":
+        if "D" not in inp:
+            warn.append("D 유형은 valuation-inputs.json 의 'D'(구성·지분율·가치) 가 필요")
+            return out
+        vals = sotp_values(inp["D"], shares)
+        out["근거"] = {"구성": [cp["이름"] for cp in inp["D"]["구성"]], "지주할인": inp["D"].get("지주할인", list(D_DISCOUNT))}
+    elif typ == "A":
         rev = {y: data[y].get("rev") for y in ys}
         g = cagr(rev)
         if g is None:
             warn.append("매출 CAGR 산정 불가 → 0%")
             g = 0.0
-        r = DISCOUNT.get(cur, DISCOUNT_DEFAULT)
+        if oe5 is None or oe5 <= 0:
+            out.update(유형="E", 유형명=TYPE_NAME["E"])
+            warn.append("최근 5년 평균 오너어닝스 ≤ 0 → E(명시 가정 필요)")
+            return out
         gs = growth_scenarios(g)
-        vals = [(dcf_value(oe5, g1, g2, r) + net_cash) / shares for g1, g2 in zip(gs, TERMINAL)]
+        vals = [(dcf_value(oe5, g1, g2, r_disc) + net_cash) / shares for g1, g2 in zip(gs, TERMINAL)]
         out["근거"] = {"OE5": oe5, "매출CAGR": round(g, 2), "1단계성장": [round(x, 2) for x in gs],
-                     "영구성장": list(TERMINAL), "할인율": r}
+                     "영구성장": list(TERMINAL), "할인율": r_disc}
     elif typ == "B":
         margins = [data[y]["op"] / data[y]["rev"] * 100 for y in ys if data[y].get("op") is not None
                    and data[y].get("rev")]
@@ -280,10 +421,13 @@ def evaluate(ticker: str, as_of: str, trade_currency: str = "", mos_info=None) -
         ms = margin_scenarios(margins)
         if ms[1] <= 0:  # 10년 평균 영업이익률이 적자면 정상화할 이익이 없다 → 가정 의존형
             out.update(유형="E", 유형명=TYPE_NAME["E"])
-            warn.append(f"10년 평균 영업이익률 {ms[1]:.1f}% ≤ 0 → E(수기 가정)")
+            warn.append(f"10년 평균 영업이익률 {ms[1]:.1f}% ≤ 0 → E(명시 가정 필요)")
             return out
         tax = TAX.get(cur, TAX_DEFAULT)
-        pes = cycle_pe(c["market"])
+        if c["market"] not in MARKET_PE and not inp.get("시장PER"):
+            warn.append(f"시장 {c['market']} 의 장기 PER 이 없습니다 — valuation-inputs.json 의 '시장PER' 로 입력")
+            return out
+        pes = cycle_pe(c["market"], inp.get("시장PER"))
         vals = [(last_rev * m / 100 * (1 - tax / 100) * pe + net_cash) / shares for m, pe in zip(ms, pes)]
         out["근거"] = {"영업이익률": [round(m, 2) for m in ms], "매출": last_rev, "PER": list(pes), "세율": tax}
     else:  # C
@@ -297,10 +441,26 @@ def evaluate(ticker: str, as_of: str, trade_currency: str = "", mos_info=None) -
         k = 3
         last3 = [roe[y] for y in sorted(roe)[-3:]]
         scen = (sum(rs[:k]) / k, sum(rs) / len(rs), sum(last3) / len(last3))
-        coe = DISCOUNT.get(cur, DISCOUNT_DEFAULT)
         bps = eq[max(eq)] / shares
-        vals = [justified_pbr(x, coe) * bps for x in scen]
-        out["근거"] = {"ROE": [round(x, 2) for x in scen], "COE": coe, "g": FIN_G, "BPS": bps}
+        vals = [justified_pbr(x, r_disc) * bps for x in scen]
+        out["근거"] = {"ROE": [round(x, 2) for x in scen], "COE": r_disc, "g": FIN_G, "BPS": bps}
+    # 재무 통화 → 거래 통화(ADR 비율·환율)
+    t_up = mi.SEC_ALIASES.get(ticker.upper(), ticker.upper())
+    if trade_currency and trade_currency != cur:
+        ratio = float(inp.get("ADR비율") or ADR_RATIO.get(t_up) or 0)
+        if not ratio:
+            warn.append(f"재무 통화 {cur} ≠ 거래 통화 {trade_currency} — ADR 비율 미확보(valuation-inputs.json 'ADR비율')")
+            out["통화불일치"] = True
+            return out
+        try:
+            fx = fx_usd_per(cur, as_of) / fx_usd_per(trade_currency, as_of)
+        except Exception as e:  # noqa: BLE001
+            warn.append(f"환율 조회 실패: {e}")
+            out["통화불일치"] = True
+            return out
+        vals = [v * ratio * fx for v in vals]
+        out["근거"]["환산"] = f"{cur}→{trade_currency} × {fx:.6g} × ADR {ratio:g}"
+        out["통화"] = trade_currency
     bear, mid, bull = sorted(vals)
     out["시나리오"] = {"비관": bear, "중립": mid, "낙관": bull}
     out["범위"] = label_range(bear, mid, bull)
@@ -312,30 +472,41 @@ def fmt(x: float) -> str:
 
 
 def formula_line(res: dict) -> str:
+    src = f" | 입력: {os.path.relpath(res['입력'], _ROOT)}" if res.get("입력") else ""
     if not res.get("시나리오"):
-        return f"**내재가치 산식**: {res['유형명']} | 자동 계산 불가({'; '.join(res['경고']) or '수기 가정 필요'})"
+        return (f"**내재가치 산식**: {res['유형명']} | 자동 계산 불가({'; '.join(res['경고']) or '수기 가정 필요'})"
+                f"{src}")
     s, (lo, hi) = res["시나리오"], res["범위"]
     return (f"**내재가치 산식**: {res['유형명']} | 비관 {fmt(s['비관'])} / 중립 {fmt(s['중립'])} / 낙관 {fmt(s['낙관'])} "
-            f"| 범위 {fmt(lo)}~{fmt(hi)} {res['통화']}")
+            f"| 범위 {fmt(lo)}~{fmt(hi)} {res['통화']}{src}")
 
 
 # ---------------------------------------------------------------------------
 # 명령
 # ---------------------------------------------------------------------------
 
+def evaluate_named(ticker: str, as_of: str, trade_currency: str = "", name: str = "") -> dict:
+    """원장·리포트용: reports/{회사명}/valuation-inputs.json 이 있으면 읽어 평가한다."""
+    path = inputs_path(name) if name else ""
+    inp = load_inputs(path)
+    return evaluate(ticker, as_of, trade_currency, inputs=inp, inputs_file=path if inp else "")
+
+
 def cmd_calc(a):
-    res = evaluate(a.ticker, a.as_of, a.trade_currency)
+    path = a.inputs or (inputs_path(a.name) if a.name else "")
+    inp = load_inputs(path)
+    res = evaluate(a.ticker, a.as_of, a.trade_currency, inputs=inp, inputs_file=path if inp else "")
     if a.json:
         print(json.dumps(res, ensure_ascii=False, indent=2, default=str))
         return
     print(formula_line(res))
     print(f"근거: {json.dumps(res['근거'], ensure_ascii=False, default=str)}")
-    print(f"순현금 {fmt(res['순현금'])} {res['통화']} · 주식수 {fmt(res['주식수'] or 0)}")
+    print(f"순현금 {fmt(res['순현금'])} {res['재무통화']} · 주식수 {fmt(res['주식수'] or 0)}")
     for w in res["경고"]:
         print(f"⚠️ {w}")
 
 
-def ledger_compare(ledger_path: str, today_s: str = "", eval_fn=evaluate, mos_rows=None) -> list:
+def ledger_compare(ledger_path: str, today_s: str = "", eval_fn=evaluate_named, mos_rows=None) -> list:
     import decision_ledger as dl
     rows = dl._read(ledger_path)
     latest = {}
@@ -355,7 +526,7 @@ def ledger_compare(ledger_path: str, today_s: str = "", eval_fn=evaluate, mos_ro
         except ValueError:
             lo = hi = None
         try:
-            res = eval_fn(r["티커"], r["기록일"], r["통화"])
+            res = eval_fn(r["티커"], r["기록일"], r["통화"], r["종목"])
         except Exception as e:  # noqa: BLE001
             row.update(유형="-", 비고=f"계산 실패: {str(e)[:100]}")
             out.append(row)
@@ -408,6 +579,8 @@ def main():
     c.add_argument("ticker")
     c.add_argument("--as-of", default="")
     c.add_argument("--trade-currency", default="", help="거래 통화(재무 통화와 다르면 비교 불가 표시)")
+    c.add_argument("--name", default="", help="회사명 — reports/{회사명}/valuation-inputs.json 을 읽는다")
+    c.add_argument("--inputs", default="", help="수기 입력 파일 경로(직접 지정)")
     c.add_argument("--json", action="store_true")
     lg = sub.add_parser("ledger", help="원장 종목별 최신 → 공식 vs 분석가 범위")
     lg.add_argument("--ledger", default="")

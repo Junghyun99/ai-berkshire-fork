@@ -595,7 +595,23 @@ def check_formula(c: Checker, text: str, name: str, run_date: str):
             "--trade-currency {거래 통화}` 출력을 판정 근거에 옮기세요(교차 검증 기준선).")
         return
     whole = _raw_line(text, "내재가치 산식", name)
+    if re.search(r"D 지주|E 가정|입력:", whole):
+        mp = re.search(r"입력:\s*(\S+\.json)", whole)
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        path = os.path.join(root, mp.group(1)) if mp else ""
+        if not mp or not os.path.exists(path):
+            sev("D·E 유형 또는 수기 입력을 쓴 산식인데 `입력: reports/{회사명}/valuation-inputs.json` 경로가 없거나 파일이 없습니다.")
+            return
+        try:
+            import intrinsic_value as iv
+            iv.load_inputs(path)
+        except SystemExit as e:
+            sev(f"수기 입력 파일 검사 실패: {e}")
+            return
     if "자동 계산 불가" in whole:
+        if re.search(r"D 지주|E 가정", whole):
+            sev("D·E 유형은 자동 계산 불가로 둘 수 없습니다 — valuation-inputs.json 에 가정(D 구성·E 매출 경로·목표 마진)을 넣고 다시 계산하세요.")
+            return
         c.ok(f"{t}내재가치 산식: 자동 계산 불가(사유 기재)")
         return
     m = re.search(_RANGE_RE.format("범위"), whole)

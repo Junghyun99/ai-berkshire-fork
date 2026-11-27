@@ -327,8 +327,19 @@ class DecisionRulesTest(_Base):
         self.assertIn("공식 괴리 근거", self.fails(self.run_check(margin=far)))
         ok = far + "\n**공식 괴리 근거**: 공식은 10년 평균 마진, 분석가는 증설 후 구조적 마진 상향 가정"
         self.assertFalse(self.run_check(margin=ok).failed)
-        manual = MARGIN.replace(FORMULA, "**내재가치 산식**: E 가정 의존형(수기 가정 필요) | 자동 계산 불가(최근 5년 FCF ≤ 0)")
-        self.assertFalse(self.run_check(margin=manual).failed)
+        manual = MARGIN.replace(FORMULA, "**내재가치 산식**: E 가정 의존형(명시 가정 DCF) | 자동 계산 불가(최근 5년 FCF ≤ 0)")
+        self.assertIn("valuation-inputs.json", self.fails(self.run_check(margin=manual)))  # E 는 가정 입력 필수
+        other = MARGIN.replace(FORMULA, "**내재가치 산식**: A 일반(2단계 오너어닝스 DCF) | 자동 계산 불가(주식수 미확보)")
+        self.assertFalse(self.run_check(margin=other).failed)
+        # D 유형: 입력 파일이 있어야 통과
+        import json
+        rel = os.path.relpath(self.write("valuation-inputs.json", json.dumps({"출처": ["사업보고서"], "유형": "D",
+                                                                                 "유형사유": "지주"}, ensure_ascii=False)),
+                              os.path.dirname(os.path.dirname(os.path.abspath(rc.__file__))))
+        d_line = MARGIN.replace(FORMULA, FORMULA.replace("A 일반(2단계 오너어닝스 DCF)", "D 지주·복합(사업부별 합산)")
+                                + f" | 입력: {rel}")
+        self.assertFalse(self.run_check(margin=d_line).failed)
+        self.assertIn("파일이 없습니다", self.fails(self.run_check(margin=d_line.replace(rel, "reports/없음/valuation-inputs.json"))))
 
     # --- investment-research · investment-checklist ---
     def solo(self, skill, label=LABEL, margin=MARGIN, extra="", ledger=None):
