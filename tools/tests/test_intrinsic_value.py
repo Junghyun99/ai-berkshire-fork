@@ -44,6 +44,10 @@ class PureTest(unittest.TestCase):
         self.assertEqual(iv.justified_pbr(1, 10), 0.0)          # ROE < g → 0
         self.assertEqual(iv.label_range(80, 100, 140), (90.0, 120.0))
 
+    def test_cycle_pe_by_market(self):
+        self.assertEqual(iv.cycle_pe("US"), (9.6, 12.8, 16.0))
+        self.assertEqual(iv.cycle_pe("KR"), (6.0, 8.0, 10.0))
+
     def test_classify(self):
         dd = lambda x, n=10: {"하락률": x, "연도수": n}  # noqa: E731
         self.assertEqual(iv.classify(True, dd(80), 10), "C")

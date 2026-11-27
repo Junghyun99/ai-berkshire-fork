@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """내재가치 표준 산식 — 유형을 자동 분류하고 DART·SEC 원본으로 비관·중립·낙관 3개 시나리오와 라벨 범위를 계산한다. stdlib만.
 
-설계: research/내재가치-표준화-계획.md (v0). 기준값(할인율·PER·영구성장률)은 아래 상수의 기본값이며,
-2단계 원장 비교 보고서를 본 뒤 확정한다 — 매수 종목 수에 맞춰 바꾸지 않는다.
+설계: research/내재가치-표준화-계획.md. 기준값(할인율·PER·영구성장률)은 외부 근거로 정한 값이며 매수 종목 수에
+맞춰 바꾸지 않는다. 역할: 리포트 라벨 범위를 대체하지 않는 **교차 검증 기준선**이다(분석가 범위가 공식과 ±50% 넘게
+다르면 리포트에 괴리 근거를 쓴다). 대체 여부는 원장 정산이 쌓인 뒤 데이터로 정한다.
 
 유형(자동 분류, 순서대로):
   C 금융        DART 업종코드·SEC SIC 6000~6799                     → 정당 PBR = (ROE − g) / (COE − g) × BPS
@@ -14,7 +15,8 @@
 시나리오(비관 / 중립 / 낙관):
   A  1단계(5년) 성장 = min(0, CAGR) / CAGR × 0.5 / min(max(CAGR, 0), 15%)  (CAGR: 최대 10년 매출 연평균 성장률)
      영구성장 1% / 2% / 3%, 할인율 r = USD 9% · KRW 10% · 그 밖 10%
-  B  영업이익률 = 10년 하위 3개 해 평균 / 10년 평균 / 상위 3개 해 평균, × 현재 매출 × (1 − 세율), PER 8 / 12 / 15
+  B  영업이익률 = 10년 하위 3개 해 평균 / 10년 평균 / 상위 3개 해 평균, × 현재 매출 × (1 − 세율),
+     PER = 시장 장기 PER × 0.6 / 0.8 / 1.0 (미국 16 → 9.6/12.8/16, 한국 10 → 6/8/10)
   C  ROE = 10년 하위 3개 해 평균 / 10년 평균 / 최근 3개 해 평균, COE = USD 9% · KRW 10%, g = 2%
 라벨 범위(규칙 (나)) = (비관 + 중립) / 2 ~ (중립 + 낙관) / 2
 
@@ -48,7 +50,16 @@ DISCOUNT_DEFAULT = 10.0
 TERMINAL = (1.0, 2.0, 3.0)
 GROWTH_CAP = 15.0
 STAGE1_YEARS = 5
-CYCLE_PE = (8.0, 12.0, 15.0)
+# 경기순환 PER = 시장 장기 PER × (0.6, 0.8, 1.0). 시장 장기 PER(외부 근거, 2026-11 확인):
+#   미국 16 — S&P500 장기 평균 후행 PER 16~18(Advisor Perspectives 16.2, Seeking Alpha 16.8, Kiplinger 17.4)
+#   한국 10 — 코스피 12개월 선행 PER 최근 10년 평균 10.25, 분포 8.6~12.2(블루밍비트·신한투자증권)
+MARKET_PE = {"US": 16.0, "KR": 10.0}
+CYCLE_FACTORS = (0.6, 0.8, 1.0)
+
+
+def cycle_pe(market: str) -> tuple:
+    base = MARKET_PE.get(market, MARKET_PE["KR"])
+    return tuple(round(base * f, 2) for f in CYCLE_FACTORS)
 TAX = {"USD": 21.0, "KRW": 22.0}
 TAX_DEFAULT = 22.0
 FIN_G = 2.0
@@ -272,8 +283,9 @@ def evaluate(ticker: str, as_of: str, trade_currency: str = "", mos_info=None) -
             warn.append(f"10년 평균 영업이익률 {ms[1]:.1f}% ≤ 0 → E(수기 가정)")
             return out
         tax = TAX.get(cur, TAX_DEFAULT)
-        vals = [(last_rev * m / 100 * (1 - tax / 100) * pe + net_cash) / shares for m, pe in zip(ms, CYCLE_PE)]
-        out["근거"] = {"영업이익률": [round(m, 2) for m in ms], "매출": last_rev, "PER": list(CYCLE_PE), "세율": tax}
+        pes = cycle_pe(c["market"])
+        vals = [(last_rev * m / 100 * (1 - tax / 100) * pe + net_cash) / shares for m, pe in zip(ms, pes)]
+        out["근거"] = {"영업이익률": [round(m, 2) for m in ms], "매출": last_rev, "PER": list(pes), "세율": tax}
     else:  # C
         ni = {y: data[y].get("ni_own") for y in ys}
         eq = {y: data[y].get("eq_own") for y in sorted(data)}
