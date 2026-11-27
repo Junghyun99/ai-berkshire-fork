@@ -1,5 +1,11 @@
 # ai-berkshire Roadmap
 
+## 두 번째 연결 사례와 보완 결정 — 2026-11-22
+
+[어도비 대조](../reports/integration/20261122-handoff-repeat/README.md)에서 비중 분모 누락과 차수 조건의 문장 분산이 반복됨을 확인했다. 기존 파서는 전체 상태와 괄호 조건을 보존하므로 현재는 확장하지 않고 [작성·전달 규칙](../methodology/fund-management/skill-reuse-and-handoff.md)을 보완했다. 형식 검사 오류 0·과거 형식 경고 1, 계획 일치 및 합성 형식 assertion 3개 확인. 금융 재검증·전체 테스트는 미실행이다.
+
+다음은 기존 연구 의견을 연구용 자산배분 시나리오 한 건에 연결해 가능/보완 필요를 구분하는 작업이다. 미정 비중이나 정책값을 만들지 않는다. 기존 기업 보고서·Skill·원장·Python은 유지했고 IPS는 DRAFT다. 아래 ‘다음’은 당시 이력이다.
+
 ## 기존 보고서 연결 검증 후 다음 작업 — 2026-11-22
 
 [첫 연결 사례](../reports/integration/20261122-existing-report-handoff/README.md)에서 기존 파싱/계획 일치와 관련 테스트 55개 통과를 확인했다. 의미 불일치와 비중·반증·감사 버전 연결의 보완 항목 H01~H06을 기록했다.
