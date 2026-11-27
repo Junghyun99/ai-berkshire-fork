@@ -19,7 +19,9 @@
        금액이 있어야 하고(한 해라도 없으면 조정하지 않음), 일회성 항목(영업권·무형자산 손상·인수 IPR&D 비용·
        세법 개정 일회성 법인세)은 발생한 해만 적는다(나머지 해는 0 — 출처에 '그 외 연도 없음'을 적는다).
   L    재무 위험 = 최근 연도 이자보상배율(영업이익 / 이자비용) 8배 이상 0, 3~8배 +5%p, 3배 미만·영업적자 +10%p.
-       이자비용이 없으면 0. 금융업은 이자가 영업 원가라 0(자본비율 위험은 리포트 판단으로 +5%p 가능).
+       이자비용이 없으면 0. 금융업(이자가 영업 원가)은 레버리지(총자산 / 지배주주 자기자본, 최근 연도)로 본다:
+       5배 미만 0, 5~10배 +5%p, 10배 이상 +10%p, 자산·자본을 받지 못하면 +10%p. 레버리지 13배면 자산 1% 손실이
+       자본 13% 손실이 된다 — 10년 구간에 신용 사이클이 없었던 은행의 꼬리 위험을 이 항목이 받는다.
   max(U_v, U_e) 인 이유: 정직하게 넓게 잡은 범위에는 이익 변동이 이미 들어 있다. 둘을 더하면 같은 위험을
   두 번 깎는다. U_e 는 범위가 비정상적으로 좁을 때의 바닥 역할이다.
 
@@ -51,6 +53,7 @@ MOS_FLOOR, MOS_CAP = 15.0, 45.0
 TRANCHE_OFFSETS = (-10.0, 0.0, 10.0)
 MIN_YEARS = 5
 COVERAGE_STEPS = ((8.0, 0.0), (3.0, 5.0))  # 이자보상배율 ≥ 8 → 0, ≥ 3 → 5, 그 밖 → 10
+LEVERAGE_STEPS = ((5.0, 0.0), (10.0, 5.0))  # 금융업 총자산/자기자본 < 5 → 0, < 10 → 5, 그 밖 → 10
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MOS_CSV = os.path.join(_ROOT, "reports", "decision-mos.csv")
 ADJ_CSV = os.path.join(_ROOT, "reports", "decision-mos-adjustments.csv")
@@ -60,7 +63,7 @@ ADDBACK_ITEMS = {"인수 무형자산 상각": True, "금융업 투자손익": T
                  "인수 IPR&D 비용": False, "세법 개정 일회성 법인세": False}
 STARTUP_RUN = 5
 MOS_FIELDS = ["id", "기록일", "종목", "티커", "통화", "판단", "기록시점가", "내재가치하단", "내재가치상단",
-              "U_v", "이익지표", "최대하락", "하락구간", "U_e", "이자보상배율", "L", "요구안전마진",
+              "U_v", "이익지표", "최대하락", "하락구간", "U_e", "이자보상배율", "레버리지", "L", "요구안전마진",
               "1차", "2차", "3차", "현재안전마진", "상태", "비고", "계산일"]
 
 
@@ -156,8 +159,19 @@ def u_e_from(dd: dict) -> float:
     return round(min(UE_FACTOR * dd["하락률"], UE_CAP), 1)
 
 
+def financial_penalty(assets, equity):
+    """금융업 → (레버리지 또는 None, L). 총자산/지배주주 자기자본. 받지 못하거나 자본 ≤ 0 이면 +10."""
+    if not assets or not equity or equity <= 0:
+        return None, 10.0
+    lev = assets / equity
+    for th, pen in LEVERAGE_STEPS:
+        if lev < th:
+            return round(lev, 2), pen
+    return round(lev, 2), 10.0
+
+
 def leverage_penalty(op, interest, financial: bool):
-    """→ (이자보상배율 또는 None, L). 금융업은 0."""
+    """비금융 → (이자보상배율 또는 None, L). financial=True 면 (None, 0) — 금융업은 financial_penalty 를 쓴다."""
     if financial:
         return None, 0.0
     interest = abs(interest or 0)
@@ -207,10 +221,13 @@ def inputs_line(info: dict) -> str:
         cut = f", 초기 적자 제외 {dd['초기적자제외']}" if dd.get("초기적자제외") else ""
         ev = (f"**이익 변동**: {info['metric']} 최대 하락 {dd['하락률']:g}% ({span}, {dd['연도수']}개 해{cut}, "
               f"{info['source']}) → U_e {info['u_e']:g}%")
-    if info["financial"]:
-        lv = f"**재무 위험**: 금융업 → L {info['L']:g}"
-    elif info.get("manual_u_e"):
+    if info.get("manual_u_e"):
         lv = f"**재무 위험**: 직접 판정 → L {info['L']:g}"
+    elif info["financial"] and info.get("leverage") is None:
+        lv = f"**재무 위험**: 금융업 레버리지 산정 불가(총자산·자본 미확보) → L {info['L']:g}"
+    elif info["financial"]:
+        lv = (f"**재무 위험**: 금융업 레버리지(총자산/자기자본) {info['leverage']:g}배({info['lev_year']}) "
+              f"→ L {info['L']:g}")
     elif info["coverage"] is None:
         lv = f"**재무 위험**: 이자보상배율 산정 불가({'영업적자' if info['L'] == 10 else '이자비용 없음'}) → L {info['L']:g}"
     else:
@@ -271,7 +288,22 @@ def fetch_kr(code: str, as_of: str) -> dict:
                 break
     data, _, _ = kr.merge_reports(reps, kr._multi_rows(code, base), kr.fred_usdkrw(usd) if usd else {})
     data = {y: r for y, r in data.items() if y <= base}
-    return {"data": data, "financial": fin, "source": "DART", "name": comp.get("corp_name", code)}
+    return {"data": data, "financial": fin, "source": "DART", "name": comp.get("corp_name", code),
+            "balance": kr_balance(reps)}
+
+
+def kr_balance(reps: list):
+    """사업보고서 원문 항목 → (연도, 총자산, 지배주주 자기자본). 가장 최근 보고서의 당기말 값."""
+    import quality_screen_kr as kr
+    for ry, _, cur, items in sorted(reps, key=lambda r: -r[0]):
+        if cur and cur != "KRW":
+            continue
+        bs = {it.get("account_id"): kr.num(it.get("thstrm_amount")) for it in items if it.get("sj_div") == "BS"}
+        a = bs.get("ifrs-full_Assets")
+        e = bs.get("ifrs-full_EquityAttributableToOwnersOfParent") or bs.get("ifrs-full_Equity")
+        if a and e:
+            return ry, a, e
+    return None
 
 
 def _sec_financial(ticker: str) -> bool:
@@ -293,7 +325,21 @@ def fetch_us(ticker: str, as_of: str) -> dict:
             r["ni_own"] = r["ni"]
         if "op" not in r and "pretax" in r:
             r["op"] = r["pretax"] + abs(r.get("int_is") or r.get("int_cf") or 0)
-    return {"data": data, "financial": _sec_financial(ticker), "source": f"SEC({cur})", "name": ticker}
+    return {"data": data, "financial": _sec_financial(ticker), "source": f"SEC({cur})", "name": ticker,
+            "balance": us_balance(g, as_of)}
+
+
+def us_balance(g: dict, as_of: str):
+    """SEC → (연도, 총자산, 지배주주 자기자본). 같은 기말의 가장 최근 값."""
+    import quality_screen_us as us
+    import sec_edgar_data as sec
+    a, _ = sec.values_as_of(g, ("Assets",), as_of, us.INSTANT, us.FORMS)
+    e, _ = sec.values_as_of(g, ("StockholdersEquity", "EquityAttributableToOwnersOfParent"), as_of, us.INSTANT, us.FORMS)
+    ends = {k[0]: v for k, v in e.items()}
+    for (end, _), v in sorted(a.items(), reverse=True):
+        if end in ends:
+            return int(end[:4]), v, ends[end]
+    return None
 
 
 def compute(ticker: str, as_of: str = "", financial=None, u_e=None, note: str = "", l_pen=None,
@@ -310,7 +356,7 @@ def compute(ticker: str, as_of: str = "", financial=None, u_e=None, note: str = 
             raise SystemExit("❌ --l 은 0, 5, 10 중 하나")
         return {"metric": "-", "drawdown": {"하락률": None, "고점연도": None, "저점연도": None, "연도수": 0},
                 "u_e": min(float(u_e), UE_CAP), "manual_u_e": True, "note": note, "coverage": None,
-                "cov_year": None, "L": 0.0 if fin else float(l_pen or 0), "financial": fin, "source": "직접 입력"}
+                "cov_year": None, "L": float(l_pen or 0), "financial": fin, "source": "직접 입력"}
     if mk == "OTHER":
         dd = {"하락률": None, "고점연도": None, "저점연도": None, "연도수": 0}
         return {"metric": "-", "drawdown": dd, "u_e": UE_CAP, "coverage": None, "cov_year": None, "L": 0.0,
@@ -326,13 +372,19 @@ def compute(ticker: str, as_of: str = "", financial=None, u_e=None, note: str = 
     last = max(series) if series else None
     r = data.get(last, {}) if last else {}
     cov, pen = leverage_penalty(r.get("op"), r.get("int_is") or r.get("int_cf"), fin)
+    lev = lev_year = None
+    if fin:
+        bal = got.get("balance")
+        lev, pen = financial_penalty(bal[1], bal[2]) if bal else (None, 10.0)
+        lev_year = bal[0] if bal else None
     metric = "지배순이익" if fin else "영업이익"
     if used:
         metric = f"조정 {metric}(" + "·".join(used) + ")"
     return {"metric": metric, "drawdown": dd, "u_e": u_e_from(dd), "coverage": cov,
             "cov_year": last, "L": pen, "financial": fin, "source": got["source"],
             "series": {y: series[y] for y in sorted(series)[-10:]},
-            "adjustments": {k: adj[k] for k in used}, "adjust_skipped": skipped}
+            "adjustments": {k: adj[k] for k in used}, "adjust_skipped": skipped,
+            "leverage": lev, "lev_year": lev_year}
 
 
 def plan_prices(iv_low: float, iv_high: float, m: float) -> list:
@@ -394,6 +446,7 @@ def ledger_rows(ledger_path: str, compute_fn=compute, today_s: str = "") -> list
         row.update(이익지표=info["metric"], 최대하락=dd["하락률"] if dd["하락률"] is not None else "",
                    하락구간=f"{dd['고점연도']}→{dd['저점연도']}" if dd["저점연도"] else "",
                    U_e=info["u_e"], 이자보상배율=info["coverage"] if info["coverage"] is not None else "",
+                   레버리지=info.get("leverage") if info.get("leverage") is not None else "",
                    L=info["L"], 비고=" ".join(x for x in (
                        "이력 부족·데이터 미확보 → U_e 상한" if dd["연도수"] < MIN_YEARS else "",
                        "금융업" if info["financial"] else "",

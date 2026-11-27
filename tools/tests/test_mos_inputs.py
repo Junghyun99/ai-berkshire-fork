@@ -46,6 +46,18 @@ class PureTest(unittest.TestCase):
         self.assertEqual(mi.leverage_penalty(-5, 10, False), (-0.5, 10.0))    # 영업적자
         self.assertEqual(mi.leverage_penalty(1, 100, True), (None, 0.0))      # 금융업
 
+    def test_financial_leverage_penalty(self):
+        self.assertEqual(mi.financial_penalty(17, 10), (1.7, 0.0))           # 버크셔형
+        self.assertEqual(mi.financial_penalty(68, 10), (6.8, 5.0))           # 손해보험
+        self.assertEqual(mi.financial_penalty(135, 10), (13.5, 10.0))        # 은행 지주
+        self.assertEqual(mi.financial_penalty(100, 10), (10.0, 10.0))        # 경계 10배는 +10
+        self.assertEqual(mi.financial_penalty(None, 10), (None, 10.0))       # 미확보 → 보수적
+        self.assertEqual(mi.financial_penalty(10, -1), (None, 10.0))         # 자본잠식
+        info = {"metric": "지배순이익", "u_e": 1.7, "coverage": None, "cov_year": 2025, "L": 10.0, "financial": True,
+                "leverage": 13.5, "lev_year": 2025, "source": "DART",
+                "drawdown": {"하락률": 5.8, "고점연도": 2021, "저점연도": 2022, "연도수": 10, "초기적자제외": ""}}
+        self.assertIn("**재무 위험**: 금융업 레버리지(총자산/자기자본) 13.5배(2025) → L 10", mi.inputs_line(info))
+
     def test_required_mos_and_lines(self):
         self.assertEqual(mi.u_v_from(95000, 130000), 15.6)
         self.assertEqual(mi.required_mos(15.6, 21.9, 0), 31.9)                # max 를 쓴다(합산 아님)
