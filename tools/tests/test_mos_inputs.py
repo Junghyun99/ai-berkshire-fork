@@ -70,6 +70,62 @@ class PureTest(unittest.TestCase):
         self.assertIn("직접 계산 U_e 18%", mi.inputs_line(man))
 
 
+class StartupAndAdjustmentTest(unittest.TestCase):
+    def test_startup_losses_excluded_after_five_profitable_years(self):
+        s = {2016: -3, 2017: -2, 2018: -1, 2019: 1, 2020: 2, 2021: 3, 2022: 4, 2023: 3.6}
+        dd = mi.earnings_drawdown(s)
+        self.assertEqual((dd["초기적자제외"], dd["연도수"], dd["하락률"]), ("2016~2018", 5, 10.0))
+        # 흑자 4개 해뿐이면 제외하지 않는다
+        self.assertEqual(mi.earnings_drawdown({2016: -1, 2017: 1, 2018: 2, 2019: 3, 2020: 4})["하락률"], 100.0)
+        # 흑자였다가 적자로 돌아선 해는 초기 적자가 아니다(고점은 구간 밖까지 본다)
+        cyc = {y: 10.0 for y in range(2005, 2026)}
+        cyc[2016] = -1
+        dd = mi.earnings_drawdown(cyc)
+        self.assertEqual((dd["하락률"], dd["고점연도"], dd["저점연도"], dd["초기적자제외"]), (100.0, 2005, 2016, ""))
+        # 데이터 첫 해의 적자가 계산 구간 밖이면 규칙을 쓰지 않는다(표시도 없음)
+        old = {2009: -1.0}
+        old.update({y: 5.0 for y in range(2010, 2026)})
+        self.assertEqual(mi.earnings_drawdown(old)["초기적자제외"], "")
+        # 첫 흑자 이후 다시 적자면 제외하지 않는다
+        self.assertEqual(mi.earnings_drawdown({2014: -1, 2015: 1, 2016: 2, 2017: 3, 2018: -1, 2019: 4,
+                                                2020: 5})["하락률"], 100.0)
+
+    def test_adjustments_file_recurring_needs_all_years(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, "adj.csv")
+            with open(path, "w", encoding="utf-8", newline="") as f:
+                w = csv.writer(f)
+                w.writerow(mi.ADJ_FIELDS)
+                for y in range(2016, 2026):
+                    w.writerow(["AVGO", "인수 무형자산 상각", y, 3, "10-K"])
+                w.writerow(["AVGO", "영업권·무형자산 손상", 2020, 5, "10-K, 그 외 연도 없음"])
+                w.writerow(["XYZ", "인수 무형자산 상각", 2025, 1, "10-K"])
+            adj = mi.load_adjustments("avgo", path)
+            series = {y: 10.0 for y in range(2016, 2026)}
+            series[2016], series[2020] = -1.0, 2.0
+            out, used, skipped = mi.apply_adjustments(series, adj)
+            self.assertEqual((out[2016], out[2020], out[2025]), (2.0, 10.0, 13.0))
+            self.assertEqual((used, skipped), (["인수 무형자산 상각", "영업권·무형자산 손상"], {}))
+            # 반복 항목인데 한 해만 있으면 조정하지 않는다
+            out, used, skipped = mi.apply_adjustments({y: 1.0 for y in range(2016, 2026)},
+                                                      mi.load_adjustments("XYZ", path))
+            self.assertEqual(used, [])
+            self.assertIn("인수 무형자산 상각", skipped)
+            with open(path, "a", encoding="utf-8", newline="") as f:
+                csv.writer(f).writerow(["AVGO", "구조조정 비용", 2020, 1, "10-K"])
+            with self.assertRaises(SystemExit):                       # 허용 목록 밖 항목은 거부
+                mi.load_adjustments("AVGO", path)
+
+    def test_adjusted_inputs_line_has_evidence(self):
+        info = {"metric": "조정 영업이익(인수 무형자산 상각)", "u_e": 0.1, "coverage": 7.94, "cov_year": 2025, "L": 5.0,
+                "financial": False, "source": "SEC(USD)",
+                "drawdown": {"하락률": 0.2, "고점연도": 2018, "저점연도": 2019, "연도수": 10, "초기적자제외": ""},
+                "adjustments": {"인수 무형자산 상각": {"연도별": {2016: 2.64e9}, "출처": ["10-K"]}}}
+        line = mi.inputs_line(info)
+        self.assertIn("**이익 변동**: 조정 영업이익(인수 무형자산 상각) 최대 하락 0.2%", line)
+        self.assertIn("**조정 근거**: 인수 무형자산 상각: 2016 +2.64B (출처: 10-K)", line)
+
+
 class LedgerTest(unittest.TestCase):
     def test_ledger_rows_status_and_failures(self):
         with tempfile.TemporaryDirectory() as d:

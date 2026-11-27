@@ -252,6 +252,11 @@ class DecisionRulesTest(_Base):
         self.assertIn("**이익 변동**", self.fails(self.run_check(margin=MARGIN.split("\n")[0])))
         self.assertIn("× 0.3 = U_e 12", self.fails(self.run_check(margin=MARGIN.replace("하락 50%", "하락 40%"))))
         self.assertIn("L 5 입니다", self.fails(self.run_check(margin=MARGIN.replace("20배", "5배"))))
+        # 조정 이익이면 조정 근거 줄(허용 항목·출처) 필수
+        adj = MARGIN.replace("영업이익 최대", "조정 영업이익(인수 무형자산 상각) 최대")
+        self.assertIn("**조정 근거**", self.fails(self.run_check(margin=adj)))
+        ok = adj + "\n**조정 근거**: 인수 무형자산 상각: 2016 +2.64B (출처: 10-K)"
+        self.assertFalse(self.run_check(margin=ok).failed)
         no_hist = MARGIN.replace("영업이익 최대 하락 50% (2019→2020, 10개 해, DART)", "이력 부족(3개 해)")
         self.assertIn("U_e 는 30", self.fails(self.run_check(margin=no_hist)))
         # 약세 우세(가격)인데 안전마진이 요구 안전마진 이상 → 반려

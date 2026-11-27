@@ -435,6 +435,13 @@ def _check_inputs(c: Checker, text: str, name: str, ue: float, lp: float, sev, p
     elif not dd and "직접" not in ev and abs(ue - mi.UE_CAP) > 0.05:
         sev(f"이익 변동 줄에 최대 하락률이 없으면(이력 부족·데이터 미확보) U_e 는 {mi.UE_CAP:g} 입니다.")
         ok = False
+    if "조정" in ev.split("최대")[0]:
+        adj = _fields(text, "조정 근거", name).get("조정 근거", "")
+        items = [i for i in mi.ADDBACK_ITEMS if i in adj]
+        if not adj or not items or "출처" not in adj:
+            sev("조정 이익을 썼는데 `**조정 근거**: 항목: 연도별 금액 (출처: ...)` 줄이 없거나 허용 항목·출처가 없습니다 "
+                f"(허용: {', '.join(mi.ADDBACK_ITEMS)}).")
+            ok = False
     if not got_l or abs(float(got_l.group(1)) - lp) > 0.05:
         sev(f"재무 위험 줄의 L 이 요구 안전마진의 L {lp:g} 와 다릅니다: '{f['재무 위험']}'")
         ok = False

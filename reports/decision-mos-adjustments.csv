@@ -1,0 +1,45 @@
+티커,항목,연도,금액,출처
+AVGO,인수 무형자산 상각,2016,2640000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+AVGO,인수 무형자산 상각,2017,4290000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+AVGO,인수 무형자산 상각,2018,3570000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+AVGO,인수 무형자산 상각,2019,5240000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+AVGO,인수 무형자산 상각,2023,3250000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+AVGO,인수 무형자산 상각,2024,9270000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+AVGO,인수 무형자산 상각,2025,8060000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+AVGO,인수 무형자산 상각,2020,6220000000,"FY2022 10-K 손익계산서 'Amortization of acquisition-related intangible assets' 매출원가+영업비용(FY20 3,819+2,401, FY21 3,427+1,976, FY22 2,847+1,512 백만 달러)"
+AVGO,인수 무형자산 상각,2021,5403000000,"FY2022 10-K 손익계산서 'Amortization of acquisition-related intangible assets' 매출원가+영업비용(FY20 3,819+2,401, FY21 3,427+1,976, FY22 2,847+1,512 백만 달러)"
+AVGO,인수 무형자산 상각,2022,4359000000,"FY2022 10-K 손익계산서 'Amortization of acquisition-related intangible assets' 매출원가+영업비용(FY20 3,819+2,401, FY21 3,427+1,976, FY22 2,847+1,512 백만 달러)"
+RTX,인수 무형자산 상각,2015,720000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,인수 무형자산 상각,2016,780000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,인수 무형자산 상각,2017,830000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,인수 무형자산 상각,2018,740000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,인수 무형자산 상각,2019,1240000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,인수 무형자산 상각,2020,2120000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,인수 무형자산 상각,2021,2440000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,인수 무형자산 상각,2022,2000000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,인수 무형자산 상각,2023,2100000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,인수 무형자산 상각,2024,2200000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,인수 무형자산 상각,2025,2100000000,SEC XBRL us-gaap:AmortizationOfIntangibleAssets(10-K)
+RTX,영업권·무형자산 손상,2020,3180000000,"SEC XBRL us-gaap:GoodwillImpairmentLoss(10-K, 2018~2022 중 2020만 발생, 그 외 연도 태그 없음)"
+VRTX,인수 IPR&D 비용,2017,160000000,"SEC XBRL us-gaap:ResearchAndDevelopmentInProcess(~2022)·ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff(2021~), 그 외 연도 0"
+VRTX,인수 IPR&D 비용,2020,180000000,"SEC XBRL us-gaap:ResearchAndDevelopmentInProcess(~2022)·ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff(2021~), 그 외 연도 0"
+VRTX,인수 IPR&D 비용,2021,1110000000,"SEC XBRL us-gaap:ResearchAndDevelopmentInProcess(~2022)·ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff(2021~), 그 외 연도 0"
+VRTX,인수 IPR&D 비용,2022,120000000,"SEC XBRL us-gaap:ResearchAndDevelopmentInProcess(~2022)·ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff(2021~), 그 외 연도 0"
+VRTX,인수 IPR&D 비용,2023,530000000,"SEC XBRL us-gaap:ResearchAndDevelopmentInProcess(~2022)·ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff(2021~), 그 외 연도 0"
+VRTX,인수 IPR&D 비용,2024,4630000000,"SEC XBRL us-gaap:ResearchAndDevelopmentInProcess(~2022)·ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff(2021~), 그 외 연도 0"
+VRTX,인수 IPR&D 비용,2025,130000000,"SEC XBRL us-gaap:ResearchAndDevelopmentInProcess(~2022)·ResearchAndDevelopmentAssetAcquiredOtherThanThroughBusinessCombinationWrittenOff(2021~), 그 외 연도 0"
+BRK-B,금융업 투자손익,2015,-6090500000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,금융업 투자손익,2016,-4907500000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,금융업 투자손익,2017,-916500000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,금융업 투자손익,2018,17506400000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,금융업 투자손익,2019,-56184800000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,금융업 투자손익,2020,-32318900000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,금융업 투자손익,2021,-61288200000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,금융업 투자손익,2022,53641000000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,금융업 투자손익,2023,-59139400000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,금융업 투자손익,2024,-41712000000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,금융업 투자손익,2025,-30873200000,"SEC XBRL us-gaap:GainLossOnInvestments(세전) × (1−법정세율 35%/21%, 추정 세후)을 순이익에서 차감"
+BRK-B,세법 개정 일회성 법인세,2017,-28200000000,SEC XBRL us-gaap:EffectiveIncomeTaxRateReconciliationTaxCutsAndJobsActOf2017Amount(2017 TCJA 이연법인세 재측정 이익 차감)
+BRK-B,세법 개정 일회성 법인세,2018,-300000000,SEC XBRL us-gaap:EffectiveIncomeTaxRateReconciliationTaxCutsAndJobsActOf2017Amount(2017 TCJA 이연법인세 재측정 이익 차감)
+BRK-B,영업권·무형자산 손상,2019,90000000,"SEC XBRL us-gaap:GoodwillImpairmentLoss(2019)·GoodwillAndIntangibleAssetImpairment(2020, 세전), 그 외 연도 없음"
+BRK-B,영업권·무형자산 손상,2020,10670000000,"SEC XBRL us-gaap:GoodwillImpairmentLoss(2019)·GoodwillAndIntangibleAssetImpairment(2020, 세전), 그 외 연도 없음"
