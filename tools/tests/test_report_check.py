@@ -257,6 +257,11 @@ class DecisionRulesTest(_Base):
         self.assertIn("**조정 근거**", self.fails(self.run_check(margin=adj)))
         ok = adj + "\n**조정 근거**: 인수 무형자산 상각: 2016 +2.64B (출처: 10-K)"
         self.assertFalse(self.run_check(margin=ok).failed)
+        # 금융업: 레버리지와 L 이 맞아야 한다
+        fin = MARGIN.replace("이자보상배율 20배(2025) → L 0", "금융업 레버리지(총자산/자기자본) 13.5배(2025) → L 0")
+        self.assertIn("레버리지 13.5배면 L 10", self.fails(self.run_check(margin=fin)))
+        self.assertIn("레버리지(총자산/자기자본)가 없습니다", self.fails(self.run_check(
+            margin=MARGIN.replace("이자보상배율 20배(2025) → L 0", "금융업 → L 0"))))
         no_hist = MARGIN.replace("영업이익 최대 하락 50% (2019→2020, 10개 해, DART)", "이력 부족(3개 해)")
         self.assertIn("U_e 는 30", self.fails(self.run_check(margin=no_hist)))
         # 약세 우세(가격)인데 안전마진이 요구 안전마진 이상 → 반려

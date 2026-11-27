@@ -445,6 +445,15 @@ def _check_inputs(c: Checker, text: str, name: str, ue: float, lp: float, sev, p
     if not got_l or abs(float(got_l.group(1)) - lp) > 0.05:
         sev(f"재무 위험 줄의 L 이 요구 안전마진의 L {lp:g} 와 다릅니다: '{f['재무 위험']}'")
         ok = False
+    lev = re.search(r"레버리지[^\d]*?([\d.]+)\s*배", lv)
+    if lev:
+        _, want_l = mi.financial_penalty(float(lev.group(1)), 1.0)
+        if want_l != lp:
+            sev(f"금융업 레버리지 {lev.group(1)}배면 L {want_l:g} 입니다(5배 미만 0, 5~10배 5, 10배 이상 10).")
+            ok = False
+    elif "금융업" in lv and "산정 불가" not in lv and "직접" not in lv:
+        sev("금융업 재무 위험 줄에 레버리지(총자산/자기자본)가 없습니다 — mos_inputs.py calc 출력을 옮기세요.")
+        ok = False
     cov = re.search(r"이자보상배율\s*(-?[\d.]+)\s*배", lv)
     if cov:
         _, want_l = mi.leverage_penalty(float(cov.group(1)), 1.0, False)
