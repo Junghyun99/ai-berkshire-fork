@@ -19,12 +19,20 @@
       "note": ""
     },
     "view-duan": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-28 00:03:22",
+      "error": "",
+      "note": "",
+      "sha": "6585a298cdb8da3a"
     },
     "view-buffett": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-28 00:02:36",
+      "error": "",
+      "note": "",
+      "sha": "4eafa1ffb74a47e1"
     },
     "view-munger": {
       "status": "끝남",
@@ -85,6 +93,9 @@
     "2026-11-27 18:36:48 put factsheet",
     "2026-11-27 18:36:49 done factsheet",
     "2026-11-27 18:46:37 done view-munger",
-    "2026-11-27 18:47:16 done view-lilu"
+    "2026-11-27 18:47:16 done view-lilu",
+    "2026-11-28 00:02:36 done view-duan",
+    "2026-11-28 00:02:36 done view-buffett",
+    "2026-11-28 00:03:22 done view-duan"
   ]
 }
