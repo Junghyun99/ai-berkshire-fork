@@ -27,8 +27,12 @@
       "sha": "b19e9d1296fb23fd"
     },
     "view-buffett": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-28 08:03:24",
+      "error": "",
+      "note": "",
+      "sha": "cac8642bf0edfd1f"
     },
     "view-munger": {
       "status": "끝남",
@@ -90,6 +94,7 @@
     "2026-11-28 07:46:15 done factsheet",
     "2026-11-28 07:56:24 done view-munger",
     "2026-11-28 08:00:26 done view-duan",
-    "2026-11-28 08:00:36 done view-lilu"
+    "2026-11-28 08:00:36 done view-lilu",
+    "2026-11-28 08:03:24 done view-buffett"
   ]
 }
