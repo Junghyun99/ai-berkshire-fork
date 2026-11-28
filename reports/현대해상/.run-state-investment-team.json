@@ -31,8 +31,12 @@
       "attempts": 0
     },
     "view-munger": {
-      "status": "대기",
-      "attempts": 0
+      "status": "끝남",
+      "attempts": 0,
+      "finished": "2026-11-28 00:27:50",
+      "error": "",
+      "note": "",
+      "sha": "a84c34289998376a"
     },
     "view-lilu": {
       "status": "끝남",
@@ -85,6 +89,7 @@
     "2026-11-28 00:16:33 put factsheet",
     "2026-11-28 00:16:33 done factsheet",
     "2026-11-28 00:23:36 done view-duan",
-    "2026-11-28 00:25:24 done view-lilu"
+    "2026-11-28 00:25:24 done view-lilu",
+    "2026-11-28 00:27:50 done view-munger"
   ]
 }
